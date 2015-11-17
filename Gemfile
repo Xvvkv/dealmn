@@ -5,7 +5,11 @@ gem 'rails', '3.2.18'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+gem 'pg'
+
+gem 'react-rails', '~> 1.4.0'
+
+gem 'active_model_serializers'
 
 
 # Gems used only for assets and not required
