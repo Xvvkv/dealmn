@@ -11,6 +11,15 @@ gem 'react-rails', '~> 1.4.0'
 
 gem 'active_model_serializers'
 
+gem "twitter-bootstrap-rails"
+
+gem 'devise'
+
+gem "paperclip", "~> 4.2"
+gem "jquery-fileupload-rails"
+
+gem 'rinku', :require => 'rails_rinku'
+
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -25,6 +34,16 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+group :development, :test do
+  gem "rspec-rails"
+end
+
+
+# omniauth
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+gem 'omniauth-google-oauth2'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
