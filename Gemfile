@@ -15,6 +15,8 @@ gem "twitter-bootstrap-rails"
 
 gem 'devise'
 
+#gem 'rails-i18n', '~> 3.0.0'
+
 gem "paperclip", "~> 4.2"
 gem "jquery-fileupload-rails"
 

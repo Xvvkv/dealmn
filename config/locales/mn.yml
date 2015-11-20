@@ -1,5 +1,12 @@
 mn:
   user:
     validations:
-      username: "Зөвхөн латин үсэг, тоо, доогуур зураас зөвшөөрөгдөнө"
-      name: "Тусгай тэмдэгт болон тоо ашиглах боломжгүй"
+      name: оруулахад тусгай тэмдэгт болон тоо ашиглах боломжгүй
+  activerecord:
+    attributes:
+      user:
+        first_name: Нэр
+        last_name: Овог
+        password: Нууц үг
+        password_confirmation: Нууц үг /давт/
+        email: И-Мэйл хаяг

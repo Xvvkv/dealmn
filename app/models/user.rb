@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,  
     :recoverable, :rememberable, :trackable, :validatable
         
-  attr_accessible :email, :password, :password_confirmation, :remember_me
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :first_name, :last_name
   
   validates :first_name,
     format: {
@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
       message: I18n.t('user.validations.name')
     },
     presence: true,
-    length: { maximum: 100 },
+    length: { minimum:2, maximum: 100 },
     if: "!provider"
   
   validates :last_name,
@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
       message: I18n.t('user.validations.name')
     },
     presence: true,
-    length: { maximum: 100 },
+    length: { minimum:1, maximum: 100 },
     if: "!provider"
   
 

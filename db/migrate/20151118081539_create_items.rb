@@ -2,8 +2,7 @@ class CreateItems < ActiveRecord::Migration
   def change
     create_table :items do |t|
       t.string :title
-      t.string :short_description
-      t.text :full_description
+      t.text :text_description
       t.string :wanted_description
 
       t.references :itemable, :polymorphic => true
