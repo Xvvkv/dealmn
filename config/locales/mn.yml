@@ -10,3 +10,8 @@ mn:
         password: Нууц үг
         password_confirmation: Нууц үг /давт/
         email: И-Мэйл хаяг
+  view:
+    header:
+      top_stat: 'Нийт: <strong>%{listing_total}</strong> тохиролцоо. Өнөөдөр: <strong>%{listing_today}</strong> тохиролцоо орсон байна.'
+      about_us: Бидний тухай
+      terms_of_use: Үйлчилгээний нөхцөл

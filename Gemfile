@@ -11,9 +11,13 @@ gem 'react-rails', '~> 1.4.0'
 
 gem 'active_model_serializers'
 
-gem "twitter-bootstrap-rails"
-
 gem 'devise'
+
+gem 'thin'
+
+gem 'sticky-rails'
+
+gem 'simple_form'
 
 #gem 'rails-i18n', '~> 3.0.0'
 
