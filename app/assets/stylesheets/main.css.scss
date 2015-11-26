@@ -14,16 +14,17 @@ body{
   background: #fff;
 }
 .header_top_stat{
+  font-size: 12px;
   float:left;
-  padding:10px 0;
+  padding:8px 0 5px 0;
 }
 .header_top_menu{
   float:right;
   margin-right: 15px;
 }
 .header_top_menu ul li a{
-  padding-top:10px;
-  padding-bottom:10px;
+  padding-top:5px;
+  padding-bottom:5px;
 }
 .header_top_menu ul li{
   border-left: 1px solid #e5e5e5;
@@ -37,6 +38,12 @@ body{
   float: left;
   background: #fff;
   border-bottom: 1px solid #0081ff;
+  z-index: 99999;
+  box-shadow: 0px 5px 10px #eee;
+}
+.header-sticked .header_mid{
+  padding:10px 0 5px 0;
+  transition-duration:0.5s;
 }
 .logo{
   float: left;
@@ -53,12 +60,12 @@ body{
   padding-left: 0;
   font-size: 14px;
 }
-.header-banner{
+.header-side-search{
   float: left;
   width: 590px;
   padding: 0 15px;
 }
-.header-banner img{
+.header-side-search img{
   width: calc(100% - 30px);
   margin-left: 15px;
 }
@@ -92,6 +99,9 @@ body{
   padding: 0;
   margin: 0;
 }
+.header-mid{
+  z-index: 9999;
+}
 .header-profile-chat, .header-profile-all-deals, .header-profile-done-deals{
   float: left;
   border-radius: 3px;
@@ -100,12 +110,14 @@ body{
   font-weight: bold;
   color:#0081ff;
   font-size:12px;
+  cursor:pointer;
 }
 .header-profile-chat img, .header-profile-all-deals img, .header-profile-done-deals img{
   border:none;
   width: auto;
   height: 12px;
   margin-right: 5px;
+  margin-top:-2px;
 }
 .header_bottom{
   border-bottom: #e5e5e5 1px solid;
@@ -653,6 +665,14 @@ body{
     width: 300px;
     margin-bottom: 15px;
   }
-  .header-banner .input-group{
+  .header-side-search .input-group{
     width: 100%;
+  }
+  .header-side-search .dropdown-toggle{
+  width:170px;
+  text-align:left;
+  }
+  .header-side-search .dropdown-toggle .caret{
+  float:right;
+  margin-top:8px;
   }

@@ -21,7 +21,7 @@
               <%= link_to t('view.header.terms_of_use'), '#' %>
             </li>
             <li class="header_top_menu_last">
-              <%= link_to tag(:span, class: ["glyphicon","glyphicon-question-sign"]), '#', style: "font-size:20px;" %>
+              <%= link_to tag(:span, class: ["glyphicon","glyphicon-question-sign"]), '#', style: "font-size:14px;" %>
             </li>
           </ul>
         </div>
@@ -30,18 +30,17 @@
 
     <div class="clearfix"></div>
 
-    <div class="header_mid">
+    <div id="testid" class="header_mid">
       <div class="container">
         <a href="#"><div class="logo"></div></a>
         <div class="logo-right-category"> </div>
         
-        <div class="header-banner">
+        <div class="header-side-search">
           <div class="input-group">
             <div class="input-group-btn">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Бүгд <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="#">Бүгд</a></li>
                 <li><a href="#">Бараа бүтээгдэхүүн</a></li>
                 <li><a href="#">Үл хөдлөх хөрөнгө</a></li>
                 <li><a href="#">Автомашин</a></li>
@@ -73,8 +72,8 @@
               </div>
             </div>
             <div class="header-profile-notification">
-              <div class="header-profile-chat"><img src="_includes/img/header-chat-icon.png"/> 1</div>
-              <div class="header-profile-all-deals"><img src="_includes/img/deals-icon.png"/> 5</div>
+              <div class="header-profile-chat"><%= image_tag('header-chat-icon.png')%> 1</div>
+              <div class="header-profile-all-deals"><%= image_tag('deals-icon.png')%> 5</div>
             </div>
           </div>
         </div>
@@ -86,8 +85,9 @@
     <%= yield %>
 
     <script>
-    $(document).ready(function(){
-      $("#header").sticky({topSpacing:0});
+
+    $(window).load(function(){
+      $("#testid").sticky({ topSpacing: 0, className: 'header-sticked' });
     });
 
     $(".dropdown-menu li a").click(function(){

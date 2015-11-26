@@ -12,6 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.sticky.js
+//= require jquery.hoverIntent.minified.js
+//= require jquery.dcverticalmegamenu.1.3.js
 //= require bootstrap.min
 //= require react
 //= require react_ujs
