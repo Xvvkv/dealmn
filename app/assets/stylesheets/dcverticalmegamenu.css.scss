@@ -1,27 +1,17 @@
-/* Page */
 ul,ol,li,dl,dt,dd{border:0;outline:none;margin:0;padding:0;}
 ul{list-style:none;}
 
-/* Demo Page Styles */
-body {font: normal 13px Arial, sans-serif;}
-h2 {font: normal 26px Arial, sans-serif; padding: 20px 0; margin: 0 0 30px 0;}
-.wrap {width: 960px; margin: 0 auto;}
-.demo-container {padding: 20px 0; width: 250px; float: left;}
-.demo-container.right {float: right;}
-.demo-container h4 {font-size: 14px; margin: 0 0 5px 0;}
-.clear {clear: both;}
-
 /* Vertical Mega Menu Styles */
 .mega-menu{
-font: bold 13px Arial, sans-serif; 
+font:normal 13px Arial, sans-serif; 
 line-height: 16px; 
 background: #fff;
 position: relative; /* Required */
 }
 .mega-menu li a {
 display: block; 
-color: #565656; 
-padding: 12px 38px 12px 25px; 
+color: #666; 
+padding: 10px 38px 10px 25px; 
 text-decoration: none; 
 border-top: 1px solid #fff;
 border-bottom: 1px solid #fff;
@@ -38,11 +28,11 @@ position: relative;
 .mega-menu li a .dc-mega-icon {
 display: block; 
 position: absolute; 
-top: 18px; 
+top: 14px; 
 right: 15px; 
 width: 6px; 
 height: 8px; 
-background: url(images/arrow_right.png) no-repeat 0 0;
+background: image-url('arrow_right.png') no-repeat 0 0;
 }
 /* Mega menu container */
 .mega-menu li .sub-container {
@@ -91,12 +81,12 @@ color: #000;
 }
 .mega-menu .sub li.mega-hdr li a {
 padding: 4px 5px 4px 20px; 
-background: url(images/arrow_white.png) no-repeat 5px 8px; 
+background: image-url('arrow_white.png') no-repeat 5px 8px; 
 font-weight: normal;
 }
 .mega-menu .sub li.mega-hdr li a:hover {
 color: #0081ff; 
-background: #f6f6f6 url(images/arrow_on.png) no-repeat 5px 8px;
+background: #f6f6f6 image-url('arrow_on.png') no-repeat 5px 8px;
 }
 .mega-menu .sub ul li {
 padding-right: 0;
@@ -111,9 +101,9 @@ width: 150px;
 }
 .mega-menu li .sub-container.non-mega li a {
 padding: 7px 5px 7px 22px; 
-background: url(images/arrow_white.png) no-repeat 7px 10px;
+background: image-url('arrow_white.png') no-repeat 7px 10px;
 }
 .mega-menu li .sub-container.non-mega li a:hover {
 color: #a32403; 
-background: #efefef url(images/arrow_on.png) no-repeat 7px 10px;
+background: #efefef image-url('arrow_on.png') no-repeat 7px 10px;
 }
