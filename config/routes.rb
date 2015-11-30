@@ -3,6 +3,10 @@ Dealmn::Application.routes.draw do
 
   root :to => 'home#index'
 
+  namespace :rest do
+    resources :categories
+  end
+
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get
   match 'test3' => 'home#page3', via: :get
