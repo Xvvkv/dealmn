@@ -1,5 +1,5 @@
 class Category < ActiveRecord::Base
-  attr_accessible :name, :is_active, :position_order, :parent_id
+  attr_accessible :name, :is_active, :column_num, :column_order, :parent_id
   
   has_many :listing_categories
   has_many :listings, :through => :listing_categories

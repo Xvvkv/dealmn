@@ -2,7 +2,7 @@ class Rest::CategoriesController < ApplicationController
   respond_to :json
 
   def index
-    respond_with Category.top_level.active.order(:position_order), exclude_children: params[:exclude_children]
+    respond_with Category.top_level.active.order(:column_order), exclude_children: params[:exclude_children]
   end
 
   def show
