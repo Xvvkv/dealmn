@@ -44,6 +44,7 @@ body{
 .header-sticked > .header_mid{
   padding:10px 0 5px 0;
   transition-duration:0.5s;
+  z-index: 99999;
 }
 .logo{
   float: left;
@@ -690,10 +691,6 @@ body{
     visibility: visible;
   }
 
-  .header-side-search .dropdown-toggle .caret{
-  float:right;
-  margin-top:8px;
-  }
   .full-detail-images{
     width: 50%;
     float: left;
@@ -816,3 +813,77 @@ body{
   .full-detail-spec-table tr td{
     padding:5px;
     font-size: 12px;
+  }
+
+
+
+
+
+.menu-container{
+  position: relative;
+}
+.main-menu{
+font:normal 13px Arial, sans-serif; 
+line-height: 16px; 
+background: #fff;
+position: relative; /* Required */
+height: 420px;
+max-width: 300px;
+}
+.main-menu li a {
+display: block; 
+color: #666; 
+padding: 10px 38px 10px 25px; 
+text-decoration: none; 
+border-top: 1px solid #fff;
+border-bottom: 1px solid #fff;
+}
+.main-menu li a:hover, .mega-menu li.mega-hover a {
+color: #565656;
+border-top: 1px solid #eee;
+border-bottom: 1px solid #eee;
+background: #fff;
+}
+/* Add arrow icon to parent links */
+.main-menu li a .dc-mega-icon {
+display: block; 
+position: absolute; 
+top: 14px; 
+right: 15px; 
+width: 6px; 
+height: 8px; 
+background: image-url('arrow_right.png') no-repeat 0 0;
+}
+.sub-menu{
+  position: absolute;
+  top:0;
+  left:249px;
+  padding: 15px;
+  height: 420px;
+  width: 512px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-left: 1px solid #eee;
+  z-index: 99990;
+}
+.sub-menu ul li{
+  width: 150px;
+  margin-right: 10px;
+  float: left;
+}
+.sub-menu ul li a{
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+.sub-menu ul li ul li {
+  float: none;
+  list-style: none;
+}
+.sub-menu ul li ul li a{
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: none;
+  line-height: 20px;
+}
