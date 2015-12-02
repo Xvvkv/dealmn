@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>Dealmn</title>
+    <script>window.I18n = <%= current_translations.to_json.html_safe %></script>
+    
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
@@ -44,24 +46,7 @@
           <% end %>
         </div>
         
-        <div class="header-side-search">
-          <div class="input-group">
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Бүгд <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a href="#">Бараа бүтээгдэхүүн</a></li>
-                <li><a href="#">Үл хөдлөх хөрөнгө</a></li>
-                <li><a href="#">Автомашин</a></li>
-                <li><a href="#">Үйлчилгээ</a></li>
-              </ul>
-            </div>
-            <input type="text" class="form-control" placeholder="Search for..." />
-            <span class="input-group-btn">
-              <button class="btn btn-default" type="button">Хайх</button>
-            </span>
-          </div>
-        </div>
+        <%= react_component("SearchBar", url: "/rest/categories.json?exclude_children=true") %>
         
         <div class="header-profile">
           <div class="header-profile-img"><%= image_tag('profile_sample.png')%></div>
@@ -99,10 +84,6 @@
       $(".header_mid").sticky({ topSpacing: 0, className: 'header-sticked' });
     });
 
-    $(".dropdown-menu li a").click(function(){
-      var selText = $(this).text();
-      $(this).parents('.input-group-btn').find('button[data-toggle="dropdown"]').html(selText+' <span class="caret"></span>');
-    });
     </script> 
 
 
