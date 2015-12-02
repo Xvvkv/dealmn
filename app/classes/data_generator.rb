@@ -15,6 +15,7 @@ class DataGenerator
   end
 
   def self.generate_categories
-    puts 'world'
+    
   end
+
 end

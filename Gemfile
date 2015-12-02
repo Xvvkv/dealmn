@@ -9,7 +9,7 @@ gem 'pg'
 
 gem 'react-rails', '~> 1.4.0'
 
-gem 'active_model_serializers'
+gem "active_model_serializers", "~> 0.8.0"
 
 gem 'devise'
 

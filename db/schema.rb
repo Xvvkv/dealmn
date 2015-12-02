@@ -11,7 +11,28 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151119103944) do
+ActiveRecord::Schema.define(:version => 20151125064248) do
+
+  create_table "banner_items", :force => true do |t|
+    t.integer  "banner_id"
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.boolean  "is_active"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+  end
+
+  create_table "banners", :force => true do |t|
+    t.string   "name"
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "bids", :force => true do |t|
     t.integer  "listing_id"
@@ -20,9 +41,12 @@ ActiveRecord::Schema.define(:version => 20151119103944) do
   end
 
   create_table "categories", :force => true do |t|
+    t.string   "name"
+    t.boolean  "is_active"
+    t.integer  "position_order"
     t.integer  "parent_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "images", :force => true do |t|
@@ -117,8 +141,10 @@ ActiveRecord::Schema.define(:version => 20151119103944) do
   end
 
   create_table "tags", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name"
+    t.integer  "search_count"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "user_permissions", :force => true do |t|
