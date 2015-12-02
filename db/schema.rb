@@ -43,10 +43,11 @@ ActiveRecord::Schema.define(:version => 20151125064248) do
   create_table "categories", :force => true do |t|
     t.string   "name"
     t.boolean  "is_active"
-    t.integer  "position_order"
+    t.integer  "column_num"
+    t.integer  "column_order"
     t.integer  "parent_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "images", :force => true do |t|
