@@ -1,13 +1,27 @@
+// = require ./mixins/react_menu_aim
 var CategoryMenu = React.createClass({
-
-  getInitialState: function () {
-    return {items: []};
+  mixins: [ReactMenuAim],
+  getDefaultProps: function() {
+    return {
+      submenuDirection: 'right'
+    };
+  },
+  getInitialState: function() {
+    return {
+      activeMenuIndex: -1,
+      items: []
+    };
+  },
+  componentWillMount: function() {
+    this.initMenuAim({
+      submenuDirection: this.props.submenuDirection,
+      menuSelector: '.menu',
+      delay: 300,
+      tolerance: 75
+    });
   },
   componentDidMount: function() {
     this.loadDataFromServer();
-  },
-  componentDidUpdate: function() {
-    this.constructMenu();
   },
   loadDataFromServer: function () {
     $.ajax({
@@ -21,55 +35,104 @@ var CategoryMenu = React.createClass({
       }.bind(this)
     });
   },
-  constructMenu: function () {
-    $(this._menu).dcVerticalMegaMenu({
-      rowItems: '3',
-      speed: 'fast',
-      effect: 'fade',
-      direction: 'right'
+  handleSwitchMenuIndex: function(index) {
+    this.setState({
+      activeMenuIndex: index
+    });
+  },
+  handleLeaveMenu: function() {
+    this.setState({
+      activeMenuIndex: -1
     });
   },
   render: function() {
-    var items = this.state.items.map(function (item, index) {
-      return (
-        <CategoryMenuItem name={item.name} children={item.children} key={index} />
-      );
-    });
+    var self = this;
+    var sub;
+
+    if(this.state.items.length > 0 && this.state.activeMenuIndex >= 0){
+      var columns = [];
+    
+      this.state.items[self.state.activeMenuIndex].children.forEach(function(child) {
+        columns[child.column_num] = columns[child.column_num] || [];
+        columns[child.column_num].push(child);
+      });
+      
+      columns.forEach(function(col){
+
+      });
+
+      sub = <div className="sub-menu">
+              <ul>
+                {columns.map(function(col,index) {
+                  return (
+                    <SubMenuColumn key={index} items={col} />
+                  );
+                })}
+              </ul>
+            </div>;
+    }
+
+    console.log(sub);
+    
+
+
+    
     return (
-    <div className="main-menu">
-      {this.props.include_header && <div className="main-menu-header">{I18n.category.header}</div>}
-      <ul ref={(c) => this._menu = c} className="mega-menu">
-        {items}
-      </ul>
-    </div>
+      <div className="menu-container" onMouseLeave={function(){
+                      self.handleMouseLeaveMenu.call(self, self.handleLeaveMenu);
+                    }}>
+        <div className="main-menu">
+          {this.props.include_header && <div className="main-menu-header">{I18n.category.header}</div>}
+          <ul className="menu" onMouseLeave={this.handleMouseLeaveMenu}>
+            {this.state.items.map(function(menu, index) {
+              var className = 'menu-item';
+              if (index === self.state.activeMenuIndex) {
+                className += ' active';
+              }
+              return (
+                <li className={className} key={index} onMouseEnter={function(){
+                      self.handleMouseEnterRow.call(self, index, self.handleSwitchMenuIndex);
+                    }}>
+                  <a href="#">{menu.name} <span className="dc-mega-icon"></span></a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        {sub}
+      </div>
     );
   }
 });
 
-var CategoryMenuItem = React.createClass({
+
+
+var SubMenuItem = React.createClass({
   render: function() {
-    var children;
-    if(this.props.children){
-      var children = this.props.children.map(function (child, index) {
-      return (
-        <CategoryMenuItem name={child.name} children={child.children} key={index} />
-        );
-      });
-      children = <ul>{children}</ul>
-    }
+    return (
+      <ul>
+        <a href="#">{this.props.name}</a>
+        {this.props.children.map(function(child, index){
+          return (
+            <li key={index}>
+              <a href="#">{child.name}</a>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+});
+
+var SubMenuColumn = React.createClass({
+  render: function() {
     return (
       <li>
-        <a href="#">{this.props.name}</a>
-        {children}
+        {this.props.items.map(function(item, index){
+          return <SubMenuItem name={item.name} children={item.children} />
+        })}
       </li>
     );
   }
 });
 
-
-
-    
-
-                    
-                        
-                        

@@ -41,9 +41,10 @@ body{
   z-index: 99999;
   box-shadow: 0px 5px 10px #eee;
 }
-.header-sticked .header_mid{
+.header-sticked > .header_mid{
   padding:10px 0 5px 0;
   transition-duration:0.5s;
+  z-index: 99999;
 }
 .logo{
   float: left;
@@ -51,6 +52,7 @@ body{
   width: 120px;
   background: image-url('logo.png') no-repeat center center;
   margin-right: 25px;
+  margin-top: 5px;
 }
 .logo-right-category{
   height: 28px;
@@ -269,7 +271,7 @@ body{
 .timeline-deal-item-detail{
   border-bottom: 1px solid #dbdbdb;
   padding-bottom: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .timeline-deal-item-img{
   float: left;
@@ -336,11 +338,11 @@ body{
 .timeline-deal-item-bottom-check .checkbox{
   margin-top: 0;
 }
-.timeline-deal-item-bottom-chat .btn-success{
+.btn-success{
   background: #038c00;
-  border: 1px solid #026e00;
+  border: 1px solid #037600;
 }
-.timeline-deal-item-bottom-chat .btn-success:hover{
+.btn-success:hover{
   background: #026e00;
   border: 1px solid #025e00;
 }
@@ -583,7 +585,7 @@ body{
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
-  .add-deal-page{
+  .add-deal-page, .deal-full-detail-page{
     float: left;
     width: calc(100% - 315px);
     background: #fff;
@@ -688,3 +690,216 @@ body{
     opacity:1;
     visibility: visible;
   }
+
+  .full-detail-images{
+    width: 50%;
+    float: left;
+  }
+  .full-detail-images img{
+    width: 100%;
+    border: 1px solid #eee;
+  }
+  .breadcrumb-container{
+    background: #fff;
+    width: 100%;
+    border-bottom:1px solid #dbdbdb;
+  }
+  .breadcrumb-container .breadcrumb{
+    margin: 0;
+    background: none;
+    padding: 10px 0;
+  }
+  .full-detail-title{
+    font-size: 20px;
+    color:#111;
+    font-weight: bold;
+    line-height: 28px;
+    width: 100%;
+  }
+  .full-detail-short-info{
+    float: right;
+    width: 50%;
+    padding-left: 20px;
+  }
+  .full-detail-watchers{
+    width: 100%;
+    font-size: 12px;
+    color:#0081ff;
+    padding:5px 0;
+    border-bottom: 1px solid #dbdbdb;
+    margin-bottom: 15px; 
+  }
+  .full-detail-rate{
+    float: right;
+  }
+  .full-detail-rate img{
+    margin-top: -3px;
+    margin-right: 3px;
+  }
+  .full-detail-rate span{
+    vertical-align: middle;
+  }
+  .full-detail-short-wanted{
+    margin-top: 5px;
+  }
+  .full-detail-short-wanted div a{
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: normal;
+  }
+  .full-detail-short-information{
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .full-detail-short-description-intro{
+    margin-top: 5px;
+    font-size: 12px;
+  }
+  .readmore-1{
+    font-size: 12px;
+  }
+  .full-detail-short-deals-intro-items{
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .full-detail-short-deals-intro-items img{
+    margin-bottom: 10px;
+    margin-right: 10px;
+    height: 60px;
+    width: 60px;
+    border: 1px solid #dbdbdb;
+    float: left;
+  }
+  .full-detail-deal-buttons .btn-primary, .full-detail-deal-buttons .btn-success{
+    float: right;
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+  .full-detail-image-thumb img{
+    float: left;
+    width: 17%;
+    margin: 10px 10px 10px 0;
+  }
+  .full-detail-image-thumb .active img{
+    border: 1px solid #1c8fff;
+  }
+  .full-detail-full{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+  .full-detail-full-title{
+    font-size: 16px;
+    color:#0081ff;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+  .full-detail-description{
+    font-size: 12px;
+    line-height: 20px;
+  }
+  .full-detail-description p{
+    margin-top: 5px;
+    padding:0 10px;
+  }
+  .full-detail-spec{
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  .full-detail-spec-table{
+    width: 95%;
+    margin: 10px;
+  }
+  .full-detail-spec-table tr td{
+    padding:5px;
+    font-size: 12px;
+  }
+
+
+
+
+
+.menu-container{
+  position: relative;
+}
+.main-menu{
+font:normal 13px Arial, sans-serif; 
+line-height: 16px; 
+background: #fff;
+position: relative; /* Required */
+height: 460px;
+max-width: 300px;
+}
+.main-menu li a {
+display: block; 
+color: #666; 
+padding: 10px 38px 10px 25px; 
+text-decoration: none; 
+border-top: 1px solid #fff;
+border-bottom: 1px solid #fff;
+position: relative;
+}
+.main-menu li a:hover, .mega-menu li.mega-hover a,.main-menu li.active a{
+border-top: 1px solid #eee;
+border-bottom: 1px solid #eee;
+background: #f7f7f7;
+color:#000;
+}
+/* Add arrow icon to parent links */
+.main-menu li a .dc-mega-icon{
+display: block; 
+position: absolute; 
+top: 14px; 
+right: 15px; 
+width: 6px; 
+height: 8px; 
+background: image-url('arrow_right.png') no-repeat 0 0;
+}
+.sub-menu{
+  position: absolute;
+  top:0;
+  left:249px;
+  padding: 15px;
+  height: 460px;
+  width: 572px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-left: 1px solid #eee;
+  z-index: 99990;
+}
+.sub-menu ul li{
+  width: 170px;
+  margin-right: 10px;
+  float: left;
+}
+.sub-menu ul li a{
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+.sub-menu ul li ul a:hover{
+  text-decoration:none;
+}
+.sub-menu ul li ul li{
+  float: none;
+  list-style: none;
+  line-height: 22px;
+  margin-left: 5px;
+}
+.sub-menu  ul li ul{
+  margin-bottom: 15px;
+}
+.sub-menu ul li ul li a{
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: none;
+  color:#666;
+  padding-left: 13px;
+}
+.sub-menu ul li ul li a:hover{
+  background:image-url('arrow_on.png') no-repeat left center;
+  color:#337ab7;
+}
+
+.menu-container ul, .menu-container ol,.menu-container li,.menu-container dl,.menu-container dt,.menu-container dd{border:0;outline:none;margin:0;padding:0;}
+.menu-container ul{list-style:none;}
