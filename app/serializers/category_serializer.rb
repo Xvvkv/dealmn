@@ -1,5 +1,5 @@
 class CategorySerializer < ActiveModel::Serializer
-  attributes :name, :column_num
+  attributes :id, :name, :column_num
   has_many :children
 
   def include_children?

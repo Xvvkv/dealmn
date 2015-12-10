@@ -60,6 +60,7 @@ module Dealmn
     config.assets.version = '1.0'
 
     config.assets.paths << "#{Rails}/vendor/assets/fonts"
+    config.assets.paths << "#{Rails}/vendor/assets/images"
     config.assets.paths << "#{Rails}/vendor/assets/sound"
 
     I18n.available_locales = [:mn,:en]

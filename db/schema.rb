@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151125064248) do
+ActiveRecord::Schema.define(:version => 20151208025931) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -35,9 +35,10 @@ ActiveRecord::Schema.define(:version => 20151125064248) do
   end
 
   create_table "bids", :force => true do |t|
-    t.integer  "listing_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "biddable_id"
+    t.string   "biddable_type"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "categories", :force => true do |t|
@@ -59,66 +60,54 @@ ActiveRecord::Schema.define(:version => 20151125064248) do
     t.datetime "updated_at",         :null => false
   end
 
-  create_table "item_images", :id => false, :force => true do |t|
-    t.integer  "item_id"
+  create_table "listing_images", :id => false, :force => true do |t|
+    t.integer  "listing_id"
     t.integer  "image_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  add_index "item_images", ["item_id", "image_id"], :name => "index_item_images_on_item_id_and_image_id", :unique => true
+  add_index "listing_images", ["listing_id", "image_id"], :name => "index_listing_images_on_listing_id_and_image_id", :unique => true
 
-  create_table "item_ratings", :force => true do |t|
+  create_table "listing_ratings", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "item_tags", :force => true do |t|
-    t.integer  "item_id"
+  create_table "listing_tags", :force => true do |t|
+    t.integer  "listing_id"
     t.integer  "tag_id"
     t.integer  "type"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
-  create_table "items", :force => true do |t|
+  create_table "listings", :force => true do |t|
+    t.integer  "user_id"
     t.string   "title"
     t.text     "text_description"
     t.string   "wanted_description"
-    t.integer  "itemable_id"
-    t.string   "itemable_type"
-    t.integer  "listing_id"
-    t.integer  "primary_image_id"
+    t.integer  "item_id"
+    t.string   "item_type"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
-  end
-
-  create_table "listing_categories", :id => false, :force => true do |t|
-    t.integer  "listing_id"
+    t.integer  "status",             :null => false
     t.integer  "category_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
   end
 
-  add_index "listing_categories", ["listing_id", "category_id"], :name => "index_listing_categories_on_listing_id_and_category_id", :unique => true
-
-  create_table "listing_updates", :force => true do |t|
-    t.integer  "listing_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
-  create_table "listings", :force => true do |t|
-    t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "product_conditions", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.boolean  "need_user_description"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
   create_table "products", :force => true do |t|
-    t.integer  "condition"
-    t.string   "condition_description"
     t.datetime "created_at",            :null => false
     t.datetime "updated_at",            :null => false
+    t.integer  "product_condition_id"
+    t.string   "condition_description"
   end
 
   create_table "services", :force => true do |t|
@@ -134,7 +123,7 @@ ActiveRecord::Schema.define(:version => 20151125064248) do
   end
 
   create_table "specs", :force => true do |t|
-    t.integer  "item_id"
+    t.integer  "listing_id"
     t.string   "name"
     t.string   "value"
     t.datetime "created_at", :null => false

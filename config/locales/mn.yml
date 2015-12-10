@@ -16,8 +16,34 @@ mn:
       about_us: Бидний тухай
       terms_of_use: Үйлчилгээний нөхцөл
   js_view:
-    category:
-      header: Ангилал
-    search_bar:
-      all_category: Бүгд
-      search: Хайх
+    general:
+      category:
+        header: Ангилал
+      search_bar:
+        all_category: Бүгд
+        search: Хайх
+    listings:
+      new:
+        title: Тохиролцоо нэмэх
+        general_info:
+          section_title: Ерөнхий мэдээлэл
+          title: Гарчиг
+          category: Ангилал
+          choose_category: Сонго
+          condition: Барааны төлөв
+          condition_desc: Төлөвийн тайлбар
+        detailed_info:
+          section_title: Дэлгэрэнгүй мэдээлэл
+          image: Зураг
+          description: Барааны тайлбар
+          add_spec: Өөр үзүүлэлт нэмэх
+          remove_spec: Хасах
+        contact_info:
+          section_title: Холбоо барих мэдээлэл
+          phone: Утас
+          email: Имэйл
+        wanted:
+          section_title: Сонирхож буй
+          title: Сонирхож буй бараа бүтээгдэхүүн
+          tooltip: test_tooltip
+          placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"

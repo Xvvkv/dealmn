@@ -22,7 +22,6 @@ gem 'simple_form'
 #gem 'rails-i18n', '~> 3.0.0'
 
 gem "paperclip", "~> 4.2"
-gem "jquery-fileupload-rails"
 
 gem 'rinku', :require => 'rails_rinku'
 
@@ -43,6 +42,7 @@ gem 'jquery-rails'
 
 group :development, :test do
   gem "rspec-rails"
+  gem 'fog'
 end
 
 
