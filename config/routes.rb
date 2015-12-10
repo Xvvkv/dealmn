@@ -15,4 +15,8 @@ Dealmn::Application.routes.draw do
   match 'test6' => 'home#page6', via: :get
   match 'test7' => 'home#page7', via: :get
   match 'test8' => 'home#page8', via: :get
+  match 'test9' => 'home#page9', via: :get
+  match 'test10' => 'home#page10', via: :get
+  match 'test11' => 'home#page11', via: :get
+  match 'test12' => 'home#page12', via: :get
 end
