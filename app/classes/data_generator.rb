@@ -3,6 +3,7 @@ class DataGenerator
   def self.run_all
     generate_users
     generate_categories
+    generate_product_conditions
   end
 
   def self.generate_users
@@ -15,7 +16,33 @@ class DataGenerator
   end
 
   def self.generate_categories
-    
+    DataLoader.load_categories_from_file Rails.root.join("data","loader_files","categories.json")
+  end
+
+  def self.generate_product_conditions
+    pc = ProductCondition.new
+    pc.title = 'Шинэ'
+    pc.description = 'description placeholder'
+    pc.need_user_description = false
+    pc.save!
+
+    pc = ProductCondition.new
+    pc.title = 'Шинэвтэр'
+    pc.description = 'description placeholder2'
+    pc.need_user_description = true
+    pc.save!
+
+    pc = ProductCondition.new
+    pc.title = 'Цэвэрхэн хэрэглэсэн'
+    pc.description = 'description placeholder3'
+    pc.need_user_description = true
+    pc.save!
+
+    pc = ProductCondition.new
+    pc.title = 'Хуучин'
+    pc.description = 'description placeholder4'
+    pc.need_user_description = true
+    pc.save!
   end
 
 end

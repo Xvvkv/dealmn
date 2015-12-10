@@ -56,10 +56,6 @@ var CategoryMenu = React.createClass({
         columns[child.column_num] = columns[child.column_num] || [];
         columns[child.column_num].push(child);
       });
-      
-      columns.forEach(function(col){
-
-      });
 
       sub = <div className="sub-menu">
               <ul>
@@ -71,11 +67,6 @@ var CategoryMenu = React.createClass({
               </ul>
             </div>;
     }
-
-    console.log(sub);
-    
-
-
     
     return (
       <div className="menu-container" onMouseLeave={function(){
@@ -129,7 +120,7 @@ var SubMenuColumn = React.createClass({
     return (
       <li>
         {this.props.items.map(function(item, index){
-          return <SubMenuItem name={item.name} children={item.children} />
+          return <SubMenuItem key={index} name={item.name} children={item.children} />
         })}
       </li>
     );

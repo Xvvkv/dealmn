@@ -1,0 +1,337 @@
+var ListingNewPage = React.createClass({
+  getDefaultProps: function() {
+    return {
+      //listingId: null,
+    };
+  },
+  getInitialState: function() {
+    return {
+      images: [],
+      categories: [],
+      selectedCat: [-1,-1,-1],
+      condition_id: 1,
+      listing: {},
+      spec_suggestions: {
+            'Бүтээгдэхүүний загвар':{name:'Бүтээгдэхүүний загвар', placeholder:'iPhone 6 Plus'},
+            'Дэлгэцийн хэмжээ':{name:'Дэлгэцийн хэмжээ', placeholder:'5.5 inch'},
+            'Үйлдлийн систем':{name:'Үйлдлийн систем', placeholder:'IOS 5.0.0'}},
+      specs: {
+            'Бүтээгдэхүүний загвар2':{name:'Бүтээгдэхүүний загвар2', placeholder:'iPhone 6 Plus', value: 'iPhone 4s'},
+            'Дэлгэцийн хэмжээ':{name:'Дэлгэцийн хэмжээ', placeholder:'5.5 inch', value: '5 inch'},
+            'Үйлдлийн систем2':{name:'Үйлдлийн систем2', placeholder:'IOS 5.0.0', value: 'IOS v5'}}
+      
+    };
+  },
+  componentDidMount: function() {
+    this.loadDataFromServer();
+  },
+  loadDataFromServer: function () {
+
+    $.ajax({
+      url: '/rest/listings/' + this.props.listing_id + '.json',
+      dataType: 'json',
+      success: function (listing) {
+        this.setState({
+          selectedCat: listing.category,
+          title: listing.title,
+          text_description: listing.text_description,
+          wanted_description: listing.wanted_description,
+          condition_id: (((listing.item || {}).product_condition || {}).id || 1),
+          condition_desc: (listing.item || {}).condition_description,
+          images: listing.images
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/listings.json', status, err.toString());
+      }.bind(this)
+    });
+
+    $.ajax({
+      url: '/rest/categories.json',
+      dataType: 'json',
+      success: function (categories) {
+        this.setState({categories: categories});
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/categories.json', status, err.toString());
+      }.bind(this)
+    });
+  },
+  _handleImageAdd: function (image) {
+    this.setState((state) => { images: state.images.unshift(image) });
+  },
+  _handleImageDelete: function () {
+
+  },
+  _handleErrorMessage: function (message) {
+    // TODO change this
+    console.log(message);
+  },
+  _handleSave: function () {
+    console.log('aaaa2');
+    var data = {};
+    data["title"] = this.state.title;
+    data["text_description"] = this.state.text_description;
+    data["wanted_description"] = this.state.wanted_description;
+    data["category"] = this.state.selectedCat;
+    data["condition_id"] = this.state.condition_id;
+    data["condition_desc"] = this.state.condition_desc;
+    data["images"] = this.state.images.map(function(image) { return image.id;});
+
+    console.log(data);
+
+    $.ajax({
+      url: '/rest/listings/' + this.props.listing_id,
+      type: "put",
+      dataType: 'json',
+      data: data,
+      success: function (listing) {
+        console.log('UPDATED');
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/listings', status, err.toString());
+      }.bind(this)
+    });
+
+    
+
+    console.log('aaaa3');
+  },
+  _handleSubmit: function () {
+    // set status to published
+    this._handleSave();
+    // redirect to show listing page
+  },
+  _handleSelectCategory: function (level, e) {
+    if(level == 1){
+      this.setState({
+        selectedCat: [e.target.value,-1,-1]
+      });
+    }else if(level == 2){
+      var tmp = this.state.selectedCat
+      this.setState({
+        selectedCat: [tmp[0],e.target.value,-1]
+      });
+    }else{
+      var tmp = this.state.selectedCat
+      this.setState({
+        selectedCat: [tmp[0],tmp[1],e.target.value]
+      });
+    }
+  },
+  _handleChange: function (e) {
+    this.setState({ [e.target.name]: e.target.value});
+  },
+  _handleSpecChange: function (e) {
+    var specs = this.state.specs;
+    var spec = {name: e.target.name, value: e.target.value, placeholder: ''};
+    
+    if(spec.name in this.state.spec_suggestions){
+      spec['placeholder'] = this.state.spec_suggestions[spec.name]['placeholder'];
+    }
+    specs[spec.name] = spec;
+    this.setState({ specs: specs});  
+  },
+  render: function() {
+    return (
+      <div className="add-deal-page">
+        <div className="home-module-title big-title">{I18n.page.title}</div>
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">{I18n.page.general_info.section_title}</div>
+        </div>
+        <div className="form-group col-md-12">
+          <label>{I18n.page.general_info.title}</label>
+          <input name="title" type="text" className="form-control" onChange={this._handleChange} value={this.state.title} />
+        </div>
+        <CategorySelector selectedCat={this.state.selectedCat} onSelectCategory={this._handleSelectCategory} categories={this.state.categories}/>
+        {this.props.service_cat != this.state.selectedCat[0]
+          && <ConditionSelector p_conditions={this.props.p_conditions} changeHandler={this._handleChange} condition_id={this.state.condition_id} condition_desc={this.state.condition_desc} />
+        }
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">{I18n.page.detailed_info.section_title}</div>
+        </div>
+        <div className="col-md-12">
+          <label>{I18n.page.detailed_info.image} <a href="#">[?]</a></label>
+          <ImageUpload url="/rest/images" images={this.state.images}
+                onImageAdd={this._handleImageAdd}
+                onImageDelete={this._handleImageDelete}
+                onErrorMessage={this._handleErrorMessage} />
+        </div>
+        <div className="clearfix"></div>
+        <div className="form-group col-md-12">
+          <label>Барааны тайлбар <a href="#">[?]</a></label>
+          <textarea name="text_description" className="form-control" rows="5" value={this.state.text_description} onChange={this._handleChange} />
+        </div>
+        <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} />
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">Холбоо барих мэдээлэл</div>
+        </div>
+        <div className="form-group col-md-12">
+          <label>Холбоо барих утас <a href="#">[?]</a></label>
+          <input type="text" className="form-control half-width" placeholder="Холбоо барих утас" />
+        </div>
+        <div className="form-group col-md-12">
+          <label>Имэйл <a href="#">[?]</a></label>
+          <input type="text" className="form-control half-width" placeholder="Имэйл" />
+        </div>
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">Сонирхож буй</div>
+        </div>
+        <div className="form-group col-md-12">
+          <label>Сонирхож буй бараа бүтээгдэхүүн <a href="#">[?]</a></label>
+          <textarea name="wanted_description" className="form-control" rows="5" value={this.state.wanted_description} onChange={this._handleChange} placeholder={I18n.page.wanted.placeholder} />
+        </div>
+        <div className="hairly-line"></div>
+        <div className="col-md-12 text-center">
+          <button type="button" onClick={this._handleSave} className="btn btn-success">Хадгалах</button>&nbsp;
+          <button type="button" onClick={this._handleSubmit} className="btn btn-success">Нэмэх</button>
+        </div>
+      </div>
+    );
+  }
+});
+
+var ConditionSelector = React.createClass({
+  changeHandler: function(e) {
+    this.props.changeHandler(e);
+  },
+  render: function() {
+    var descriptionField;
+    if(this.props.condition_id != 1){
+      descriptionField = (
+        <div className="form-group col-md-12">
+          <label>Төлөвийн тайлбар <a href="#">[?]</a></label>
+          <textarea name="condition_desc" className="form-control" rows="3" value={this.props.condition_desc} onChange={this.changeHandler} />
+        </div>
+      )
+    }
+    return (
+      <div>
+        <div className="form-group col-md-12">
+          <label>Барааны төлөв <a href="#">[?]</a></label>
+          <select name="condition_id" value={this.props.condition_id} className="form-control auto_width" onChange={this.changeHandler}>
+            {this.props.p_conditions.map(function(condition,index) {
+              return (
+                <option value={condition.id} key={index}>{condition.title}</option>
+              );
+            })}
+          </select>
+        </div>
+        {descriptionField}
+      </div>
+    );
+  }
+});
+
+var CategorySelector = React.createClass({
+  getDefaultProps: function() {
+    return {
+      //listingId: null,
+    };
+  },
+  selectHandler: function(level, e) {
+    this.props.onSelectCategory(level, e);
+  },
+  render: function() {
+    var leftCategory, midCategory, rightCategory;
+    var leftItems = [], midItems = [], rightItems = [];
+
+    if (this.props.categories.length > 0){
+      leftItems = this.props.categories;
+      leftCategory = <CategorySelectorItem level={1} onSelectCategory={this.selectHandler} className="col-md-4 padding_left_delete" header={I18n.page.general_info.category} items={leftItems} selected={this.props.selectedCat[0]}/>;
+    }
+
+    if (leftItems.length > 0 && this.props.selectedCat[0] > -1){
+      leftItems.forEach(function (category) {
+        if(category.id == this.props.selectedCat[0]){
+          midItems = category.children;
+        } 
+      }.bind(this));
+      midCategory = <CategorySelectorItem level={2} onSelectCategory={this.selectHandler} className="col-md-4" items={midItems} selected={this.props.selectedCat[1]}/>;
+    }
+
+    if (midItems.length > 0 && this.props.selectedCat[1] > -1){
+      midItems.forEach(function (category) {
+        if(category.id == this.props.selectedCat[1]){
+          rightItems = category.children;
+        } 
+      }.bind(this));
+      rightCategory = <CategorySelectorItem level={3} onSelectCategory={this.selectHandler} className="col-md-4 padding_right_delete" items={rightItems} selected={this.props.selectedCat[2]} />;
+    }
+
+    return (
+      <div className="form-group col-md-12">
+        {leftCategory} 
+        {midCategory}
+        {rightCategory}
+      </div>
+    );
+  }
+});
+
+var CategorySelectorItem = React.createClass({
+  changeHandler: function(e) {
+    this.props.onSelectCategory(this.props.level, e);
+  },
+  render: function() {
+    return (
+      <div className={this.props.className}>
+        <label>{this.props.header || "\u00a0"}</label>
+        <select value={this.props.selected} onChange={this.changeHandler} className="form-control">
+          <option value={-1} key={-1}>{I18n.page.general_info.choose_category}</option>
+          {this.props.items.map(function(item,index) {
+            return (
+              <option value={item.id} key={index}>{item.name}</option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  }
+});
+
+
+var SpecEditor = React.createClass({
+  changeHandler: function(e) {
+    this.props.changeHandler(e);
+  },
+  addHandler: function(e) {
+
+  },
+  removeHandler: function(e) {
+
+  },
+  render: function() {
+    var items = Object.keys(this.props.items).map(function(name,index) {
+        return (
+          <SpecItem key={index} item={this.props.items[name]} changeHandler={this.changeHandler} removeHandler={this.removeHandler}  />
+        );
+      }.bind(this));
+    return (
+      <div>
+        {items}
+        <div className="form-group col-md-12">
+          <a className="btn btn-primary" href="javascript:;" onClick={this.addHandler}>Үзүүлэлт нэмэх</a>
+        </div>
+      </div>
+    );
+  }
+});
+
+var SpecItem = React.createClass({
+  changeHandler: function(e) {
+    this.props.changeHandler(e);
+  },
+  removeHandler: function(e){
+    this.props.removeHandler(e);
+  },
+  render: function() {
+    return (
+      <div className="form-group col-md-12">
+        <label>{this.props.item.name} <a href="javascript:;" onClick={this.removeHandler}>[хасах]</a></label>
+        <input name={this.props.item.name} type="text" className="form-control half-width" onChange={this.changeHandler} value={this.props.item.value} placeholder={this.props.item.placeholder} />
+      </div>
+    );
+  }
+});
+

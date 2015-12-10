@@ -1,7 +1,8 @@
 class CreateBids < ActiveRecord::Migration
   def change
     create_table :bids do |t|
-      t.references :listing
+      t.references :biddable, :polymorphic => true
+      
       t.timestamps
     end
   end
