@@ -23,25 +23,21 @@ class DataGenerator
     pc = ProductCondition.new
     pc.title = 'Шинэ'
     pc.description = 'description placeholder'
-    pc.need_user_description = false
     pc.save!
 
     pc = ProductCondition.new
     pc.title = 'Шинэвтэр'
     pc.description = 'description placeholder2'
-    pc.need_user_description = true
     pc.save!
 
     pc = ProductCondition.new
     pc.title = 'Цэвэрхэн хэрэглэсэн'
     pc.description = 'description placeholder3'
-    pc.need_user_description = true
     pc.save!
 
     pc = ProductCondition.new
     pc.title = 'Хуучин'
     pc.description = 'description placeholder4'
-    pc.need_user_description = true
     pc.save!
   end
 
