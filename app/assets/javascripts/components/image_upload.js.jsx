@@ -80,8 +80,10 @@ var ImageUpload = React.createClass({
       image.src    = _file.target.result;              // url.createObjectURL(file);
       image.onload = function() {
         var w = image.width, h = image.height, s = file.size;
-        if (w < 200 || h < 200 || s > 20*1024*1024){
+        if (w < 2000 || h < 2000 || s > 20*1024*1024){
           // TODO handle error...
+          $.growl.error({ title: '', message: "Зургийн хэмжээ 200х200 пиксэлээс багагүй, файлын хэмжээ 20МВ-аас ихгүй байх хэрэгтэй" , location: "br", delayOnHover: true});
+  
           console.log('min 200px, max 20mb');
         }else{
           this.setState({

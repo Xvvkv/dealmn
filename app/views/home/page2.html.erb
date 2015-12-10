@@ -341,11 +341,10 @@
 
 <script type="text/javascript">
 $("#botSimple1 ").click(function () {
-    $.smallBox({
-        title: "Small Information box ",
-        content: "No Picture, 4 seconds timeout, no icon and custom color.",
-        color: "#1ba1e2"
-    })
+  $.growl({ title: "Growl", message: "The kitten is awake!", url: "/kittens", location: "br"});
+  $.growl.error({ message: "The kitten is attacking!", location: "br", size: "small" });
+  $.growl.notice({ message: "The kitten is cute!" , location: "br", delayOnHover: true});
+  $.growl.warning({ message: "The kitten is ugly!", location: "br", fixed: true });
 });
 $("#botSimple2 ").click(function () {
     $.smallBox({

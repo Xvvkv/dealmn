@@ -15,7 +15,7 @@
 //= require jquery.sticky.js
 //= require bootstrap.min
 //= require jquery.Jcrop.min
-//= require scriptgates
+//= require growl
 //= require react
 //= require react_ujs
 //= require components

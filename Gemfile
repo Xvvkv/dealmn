@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 
 gem 'rails', '3.2.18'
 
@@ -18,6 +19,8 @@ gem 'thin'
 gem 'sticky-rails'
 
 gem 'simple_form'
+
+gem 'rails-assets-growl'
 
 #gem 'rails-i18n', '~> 3.0.0'
 
