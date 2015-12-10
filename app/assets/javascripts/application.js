@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery.sticky.js
 //= require bootstrap.min
+//= require scriptgates
 //= require react
 //= require react_ujs
 //= require components

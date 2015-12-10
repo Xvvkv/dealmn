@@ -1,10 +1,18 @@
 @charset "utf-8";
 /* CSS Document */
+
+html{
+  height: 100%;
+}
+
 body{
   margin:0;
   padding:0;
   background: #f4f4f4;
+  position: relative;
+  min-height: 100%;
 }
+
 
 
 .header_top{
@@ -39,12 +47,14 @@ body{
   background: #fff;
   border-bottom: 1px solid #0081ff;
   z-index: 99999;
-  box-shadow: 0px 5px 10px #eee;
 }
 .header-sticked > .header_mid{
   padding:10px 0 5px 0;
   transition-duration:0.5s;
   z-index: 99999;
+  -webkit-box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 5px 15px 0px rgba(0,0,0,0.2);
 }
 .logo{
   float: left;
@@ -89,7 +99,7 @@ body{
   float: left;
 }
 .header-profile-name{
-  margin-top: 0px;
+  margin-top: -4px;
 }
 .header-profile-name .btn, .header-profile-name .open .btn-default,  .header-profile-name .open .btn-default:active,
  .header-profile-name .open .btn-default:focus{
@@ -108,7 +118,7 @@ body{
   float: left;
   border-radius: 3px;
   padding: 3px 5px;
-  margin:3px 7px 0 0;
+  margin:0px 7px 0 0;
   font-weight: bold;
   color:#0081ff;
   font-size:12px;
@@ -386,6 +396,7 @@ body{
     position: absolute;
     padding: 15px;
     display: none;
+    font-size: 12px;
   }
   .hovercard-content{
     position: absolute;
@@ -439,11 +450,11 @@ body{
     color:#000;
   }
   .timeline-dealer-info-name{
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     border-bottom:1px solid #dbdbdb; 
   }
   .timeline-dealer-info-rank{
-    margin-top: 10px;
+    margin-top: 5px;
   }
   .timeline-dealer-info-rank table tr td{
     padding:0 0 10px 0;
@@ -585,14 +596,26 @@ body{
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
-  .add-deal-page, .deal-full-detail-page{
+  .add-deal-page{
     float: left;
     width: calc(100% - 315px);
     background: #fff;
     border:1px solid #dbdbdb;
     padding:10px;
     margin-top: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+  }
+  .deal-full-detail-page{
+    width: 100%;
+    background: #fff;
+    border:1px solid #dbdbdb;
+    padding:10px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  .deal-full-detail-page-container{
+    width: calc(100% - 315px);
+    float: left;
   }
   .big-title{
     font-size:16px;
@@ -645,7 +668,7 @@ body{
   }
   .hairly-line{
     clear:both;
-    border-bottom: 1px solid #dbdbdb;
+    border-bottom: 1px solid #eee;
     margin-bottom:10px;
     margin-top: 10px;
   }
@@ -720,6 +743,7 @@ body{
     float: right;
     width: 50%;
     padding-left: 20px;
+    padding-right: 10px;
   }
   .full-detail-watchers{
     width: 100%;
@@ -867,6 +891,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   border-left: 1px solid #eee;
   z-index: 99990;
 }
+.logo-right-category .main-menu,.logo-right-category .sub-menu{
+  height: 420px;
+}
 .sub-menu ul li{
   width: 170px;
   margin-right: 10px;
@@ -903,3 +930,381 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 
 .menu-container ul, .menu-container ol,.menu-container li,.menu-container dl,.menu-container dt,.menu-container dd{border:0;outline:none;margin:0;padding:0;}
 .menu-container ul{list-style:none;}
+
+
+
+.full-detail-user-information{
+    width: 100%;
+    min-width: 150px;
+    background: #fff;
+    border: 1px solid #dbdbdb;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.full-detail-user-info-short{
+  width: 100%;
+}
+.full-detail-user-info-img{
+  float: left;
+  margin-right: 10px;
+}
+.full-detail-user-info-img img{
+  width: 55px;
+  border: 1px solid #dbdbdb;
+}
+.full-detail-user-info-name{
+  margin-top: 5px;
+}
+.full-detail-user-info-name a{
+  font-weight: bold;
+  font-size: 12px;
+  color:#0081ff;
+}
+.full-detail-user-info-rate{
+  font-size: 11px;
+  color:#0081ff;
+  margin-top: 3px;
+}
+.full-detail-user-info-raters{
+  margin-top: 3px;
+}
+.full-detail-user-info-deals{
+  font-size: 11px;
+  color:#666;
+  text-align: left;
+}
+.full-detail-user-info-deals-reg{
+  padding-left: 10px; 
+}
+.full-detail-user-info-deals-all-deal{
+  margin-top: 8px;
+  padding-left: 10px;
+}
+.full-detail-user-info-deals-done-deal{
+  margin-top: 8px;
+  padding-left: 10px;
+}
+.full-detail-user-info-deals-active-deal{
+  margin-top: 8px;
+  padding-left: 10px;
+}
+.full-detail-user-info-deals-phone{
+  margin-top: 8px;
+  padding-left: 10px;
+}
+.full-detail-user-info-deals-email{
+  margin-top: 8px;
+  padding-left: 10px;
+}
+.full-detail-user-info-deals .glyphicon{
+  font-size: 12px;
+  color:#9d9d9d;
+  margin-right: 8px;
+}
+.full-detail-bid-item{
+  margin-top: 10px;
+  width: calc(50% - 10px);
+  border: 1px solid #dbdbdb;
+  padding: 10px;
+  float: left;
+  margin-right: 10px;
+}
+.full-detail-bid-user{
+  padding-bottom: 2px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
+  margin-top: -3px;
+}
+.full-detail-bid-user a{
+  font-size: 11px;
+  color:#999;
+}
+.full-detail-bid-item-detail{
+  float: left;
+  width: 70%;
+}
+.full-detail-bid-item-detail-title a{
+  font-size: 14px;
+  color:#333;
+  font-weight: bold;
+}
+.full-detail-bid-item-detail-img{
+  width: 30%;
+  float: left;
+}
+.full-detail-bid-item-detail-img img{
+  width: 100%;
+  padding-right: 10px;
+}
+.full-detaul-bid-item-detail-description{
+  font-size: 11px;
+  color:#333;
+}
+
+  .upload-photo{
+    cursor: pointer;
+    float: left;
+    height: 120px;
+    width: 125px;
+    background: image-url('add_picture_button.png') #eee no-repeat center center;
+  }
+  .upload-photo input{
+    cursor: pointer;
+    display: block !important;
+    width: 125px !important;
+    height: 120px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+  }
+  .add-photo{
+    margin-left: 10px;
+    cursor: pointer;
+    float: left;
+    height: 120px;
+    width: 125px;
+    background: image-url('add_picture_upload.png') #eee no-repeat center center;
+  }
+  .add-photo input{
+    cursor: pointer;
+    display: block !important;
+    width: 125px !important;
+    height: 120px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+  }
+  .crop-pic img{
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+  .progress-photo{
+    margin-left: 10px;
+    float: left;
+    height: 120px;
+    width: 125px;
+    background: image-url('loader.gif') #eee no-repeat center center;
+    padding: 10px;
+  }
+  .deal-full-similar-items{
+    width: 100%;
+  }
+  .deal-full-similar-item{
+    width: 190px;
+    margin-right: 10px;
+    padding:10px;
+    border: 1px solid #eee;
+    float: left; 
+  }
+  .deal-full-similar-item-img img{
+    width: 100%;
+    margin-bottom: 5px;
+    height: 170px;
+  }
+  .deal-full-similar-item-name a{
+    font-size: 14px;
+  }
+  .deal-full-similar-item-user{
+    margin-top: -3px;
+    margin-bottom: 3px;
+  }
+  .deal-full-similar-item-user a{
+    font-size: 11px;
+    color:#666;
+  }
+  .deal-full-similar-item-discription{
+    font-size: 11px;
+    color: #333;
+  }
+  .similar-items{
+    position: relative;
+  }
+  .similar-arrow-right{
+    background: image-url('arrow-right.png') no-repeat center center;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    right: -10px;
+    top:160px;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+  .similar-arrow-left{
+    background: image-url('arrow-left.png') no-repeat center center;
+    height: 30px;
+    width: 30px;
+    position: absolute;
+    left: -10px;
+    top:160px;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+  .similar-arrow-left:hover, .similar-arrow-right:hover{
+    opacity: 0.9;
+  }
+  .footer{
+    border-top: 1px solid #dbdbdb;
+    background: #fff;
+    padding-top: 10px;
+    min-height: 100px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+  }
+  .links{
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+  }
+  .links a{
+    font-size: 12px;
+    color:#666;
+    margin-right: 15px;
+  }
+  .links a:hover{
+    color:#333;
+  }
+  .footer-tm{
+    background: image-url('logo-footer.png') no-repeat center bottom;
+    padding-bottom: 35px;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color:#666;
+    margin-bottom: 20px;
+  }
+  .main{
+    min-height: 100%;
+    padding-bottom: 120px;
+    position: relative;
+  }
+  .main:after {
+  content: "";
+  display: block;
+  height: 100%;
+}
+.profile-left{
+  width: 300px;
+  min-height: 150px;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  float: left;
+}
+.profile-img{
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.profile-img img{
+  width: 70%;
+  border-radius: 50%;
+}
+.profile-name{
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color:#333;
+}
+.profile-rank{
+  text-align: center;
+  font-size: 12px;
+  margin:10px 0;
+}
+.profile-rank img{
+  margin-bottom: 5px;
+}
+.rating {
+    overflow: hidden;
+    display: inline-block;
+    font-size: 0;
+    position: relative;
+}
+.rating-input {
+    float: right;
+    width: 3px;
+    height: 3px;
+    padding: 0;
+    margin: 0 0 0 -16px;
+    opacity: 0;
+}
+.rating:hover .rating-star:hover,
+.rating:hover .rating-star:hover ~ .rating-star,
+.rating-input:checked ~ .rating-star {
+    background-position: 0 0;
+}
+.rating-star,
+.rating:hover .rating-star {
+    position: relative;
+    float: right;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: image-url('rank-star.png') 0 -16px;
+}
+.profile-right{
+  width: calc( 100% - 315px);
+  min-height: 150px;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  float: right;
+  margin-left: 15px;
+}
+.badge{
+  float: right;
+}
+.profile-user-deals{
+  width: 32%;
+  border:1px solid #eee;
+  padding:10px; 
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.profile-user-deals-img img{
+  width: 100%;
+  margin-bottom: 10px;
+}
+.profile-user-deals-name a{
+  font-size: 14px;
+  font-weight: bold;
+}
+.profile-user-deals-information{
+  font-size: 12px;
+  margin-top: 5px;
+  color:#666;
+}
+.profile-user-deals .btn{
+  font-size: 11px;
+  padding: 3px 6px;
+}
+.bs-callout {
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout-info {
+    border-left-color: #337ab7;
+    position: relative;
+}
+.bid-accept-button{
+  position: absolute;
+  right: 10px;
+  top:10px;
+}
+.add-page-success{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+}
