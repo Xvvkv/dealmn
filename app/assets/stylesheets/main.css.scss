@@ -1312,3 +1312,78 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   right: 20px;
   z-index: 999999;
 }
+.added-picture{
+  position: relative;
+  height: 120px;
+  width: 120px;
+  float: left;
+  margin-right: 10px;
+}
+.delete-button-img{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #fff;
+  padding: 5px 8px 3px 8px;
+  font-size: 12px;
+  color: #000;
+  border-radius: 3px;
+  transition:.5s;
+  opacity: 0.3;
+}
+.delete-button-img:hover{
+  transition:.5s;
+  background-color:red;
+  color:white;
+  cursor: pointer;
+  opacity: 1;
+  degree:360;
+}
+.delete-button-img:active{
+  background-color:#8B0000;
+  color:white;
+  cursor: pointer;
+  transition:.2s;
+}
+.prev-contact-info{
+  border: 1px solid #dbdbdb;
+  padding: 10px 15px;
+  width: auto;
+  margin-bottom: 20px;
+  color:#337ab7;
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 22px;
+  margin-right: 10px;
+}
+.prev-contact-info:hover{
+  cursor: pointer;
+  border: 1px solid #337ab7;
+}
+.title_information{
+  font-size: 12px;
+  color:#666;
+  margin-bottom: 10px;
+}
+.right-deal-item{
+    width: 100%;
+    border: 1px solid #dbdbdb;
+    padding: 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .right-deal-item:hover{
+    border: 1px solid #337ab7;
+  }
+  .right-deal-item-img{
+    height: 60px;
+    width: 60px;
+    position: relative;
+    float: left;
+    margin-right: 10px;
+  }
+  .right-deal-item-img img{
+    height: 60px;
+    width: 60px;
+    border: 1px solid #dbdbdb;
+  }
