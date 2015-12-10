@@ -61,6 +61,7 @@ module Dealmn
 
     config.assets.paths << "#{Rails}/vendor/assets/fonts"
     config.assets.paths << "#{Rails}/vendor/assets/images"
+    config.assets.paths << "#{Rails}/vendor/assets/sound"
 
     I18n.available_locales = [:mn,:en]
     config.i18n.default_locale = 'mn'

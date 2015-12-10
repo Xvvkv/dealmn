@@ -81,7 +81,31 @@
 
                         <%= image_tag('123.jpg')%>
 
-                        <a href="#"><div class="add-deal-add-pic-button"></div></a>
+                        <div class="upload-photo">
+
+                            <input type="file" name="upload"/>
+
+                        </div>
+
+                        <div class="add-photo">
+
+                            <input type="submit">
+
+                        </div>
+
+                        <div class="progress-photo">
+
+                            
+
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <div class="crop-pic">
+
+                            <%= image_tag('iphone.jpg')%>
+
+                        </div>
 
                         <div class="clearfix"></div>
 
@@ -156,8 +180,12 @@
 
                 <div class="hairly-line"></div>
 
-                <div class="col-md-12 text-center"><button type="button" class="btn btn-success">Нэмэх</button></div>
+                <div class="col-md-12 text-center"><button type="button" class="btn btn-success">Хадгалах</button></div>
 
+                <button class="botTeal" id="botSimple1">Simple 1</button>
+                <button class="botTeal" id="botSimple2">Simple 2</button>
+                <button class="botTeal" id="botSimple3">Simple 3</button>
+                
 
 
         </div>
@@ -284,21 +312,59 @@
 
     </div>
 
+    <div class="alert alert-success add-page-success" role="alert">Амжилтай хадгалагдлаа арьсан боовоо</div>
 
+    <div class="footer">
 
+        <div class="container">
 
+            <div class="links">
+                <a href="#">Нүүр</a>
+                <a href="#">Бидний тухай</a>
+                <a href="#">Үйлчилгээний нөхцөл</a>
+                <a href="#">Тусламж</a>
+                <a href="#">Сурталчилгаа байршуулах</a>
+                <a href="#">Сайтын бүтэц</a>
+                <a href="#">Холбоо барих</a>
+            </div>
+            <div class="footer-tm">
 
+                ©2015 Deal.mn. All rights reserved.
 
+            </div>
 
+        </div>
 
-
-
-
-
-
-
-
-
-
+    </div>
 
 </div>
+
+<script type="text/javascript">
+$("#botSimple1 ").click(function () {
+    $.smallBox({
+        title: "Small Information box ",
+        content: "No Picture, 4 seconds timeout, no icon and custom color.",
+        color: "#1ba1e2"
+    })
+});
+$("#botSimple2 ").click(function () {
+    $.smallBox({
+        title: "Small Information box ",
+        content: "No Picture, 4 seconds timeout, no icon and custom color.",
+        color: "#a4c400 ",
+        timeout: 4000
+    })
+});
+$("#botSimple3 ").click(function () {
+    $.smallBox({
+        title: "Small Information box ",
+        content: "No Picture, 4 seconds timeout, no icon and custom color.",
+        color: "#ff0000 ",
+        timeout: 4000
+    })
+});
+</script>
+
+
+    
+
