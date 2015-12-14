@@ -1338,7 +1338,11 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   color:white;
   cursor: pointer;
   opacity: 1;
-  degree:360;
+}
+.delete-button-img:hover span{  
+  transition:.5s;
+  transform: rotate(360deg);
+  color:#fff;
 }
 .delete-button-img:active{
   background-color:#8B0000;
