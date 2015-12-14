@@ -6,5 +6,6 @@ class CreateSpecs < ActiveRecord::Migration
       t.string :value
       t.timestamps
     end
+    add_index :specs, [:listing_id,:name], :unique => true
   end
 end

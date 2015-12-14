@@ -1,6 +1,6 @@
 class CreateListingImages < ActiveRecord::Migration
   def change
-    create_table :listing_images, :id => false   do |t|
+    create_table :listing_images, :id => false do |t|
       t.references :listing
       t.references :image
 

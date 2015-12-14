@@ -8,10 +8,10 @@ class Listing < ActiveRecord::Base
   #delegate :product_condition_id, :product_condition, :condition_description, to: :item, allow_nil: true
 
 
-  has_many :listing_images
+  has_many :listing_images, dependent: :destroy
   has_many :images, :through => :listing_images
 
-  has_many :specs
+  has_many :specs, dependent: :destroy
   
   belongs_to :category
 

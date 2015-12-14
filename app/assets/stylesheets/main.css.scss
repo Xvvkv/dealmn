@@ -1061,7 +1061,6 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     overflow: hidden !important;
   }
   .add-photo{
-    margin-left: 10px;
     cursor: pointer;
     float: left;
     height: 120px;
@@ -1076,13 +1075,15 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     opacity: 0 !important;
     overflow: hidden !important;
   }
-  .crop-pic img{
-    width: 100%;
-    height: auto;
+  .crop-pic {
     margin-top: 10px;
   }
+  .crop-pic img{
+    max-width: 750px;
+    width: auto;
+    height: auto;
+  }
   .progress-photo{
-    margin-left: 10px;
     float: left;
     height: 120px;
     width: 125px;

@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20151208025931) do
   create_table "spec_suggestions", :force => true do |t|
     t.integer  "category_id"
     t.string   "name"
+    t.string   "placeholder"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
@@ -128,6 +129,8 @@ ActiveRecord::Schema.define(:version => 20151208025931) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "specs", ["listing_id", "name"], :name => "index_specs_on_listing_id_and_name", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string   "name"

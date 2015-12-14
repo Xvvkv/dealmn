@@ -51,7 +51,7 @@
         render : function() {
             return (
                 /*jshint ignore:start */
-                React.createElement("div", {onWheel:  this.handleWheel}, React.createElement("img", {src:  this.props.src, ref: "reactCrop"}))
+                React.createElement("div", {onWheel:  this.handleWheel}, React.createElement("img", {src:  this.props.src, ref: "reactCrop", onLoad: this.props._handleImageLoad}))
                 /*jshint ignore:end */
             );
         }

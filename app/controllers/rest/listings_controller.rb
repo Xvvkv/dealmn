@@ -35,17 +35,29 @@ class Rest::ListingsController < ApplicationController
           listing.item.save
         end
       end  
-    end  
+    end
 
     images = []
     if params[:images] && (params[:images].is_a? Array)
-      puts 'aa'
       params[:images].each do |image_id|
         image = Image.find(image_id)
         images << image
       end
     end
     listing.images = images
+
+    specs = []
+    if params[:specs] && (params[:specs].is_a? Hash)
+      params[:specs].each do |name, s|
+        spec = Spec.where(listing_id: listing.id, name: name).first_or_create
+        spec.value = s[:value]
+        spec.save
+        specs << spec
+      end
+    end
+    listing.specs = specs
+
+
     listing.save
 
     respond_with listing

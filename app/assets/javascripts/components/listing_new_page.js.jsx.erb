@@ -11,14 +11,8 @@ var ListingNewPage = React.createClass({
       selectedCat: [-1,-1,-1],
       condition_id: 1,
       listing: {},
-      spec_suggestions: {
-            'Бүтээгдэхүүний загвар':{name:'Бүтээгдэхүүний загвар', placeholder:'iPhone 6 Plus'},
-            'Дэлгэцийн хэмжээ':{name:'Дэлгэцийн хэмжээ', placeholder:'5.5 inch'},
-            'Үйлдлийн систем':{name:'Үйлдлийн систем', placeholder:'IOS 5.0.0'}},
-      specs: {
-            'Бүтээгдэхүүний загвар2':{name:'Бүтээгдэхүүний загвар2', placeholder:'iPhone 6 Plus', value: 'iPhone 4s'},
-            'Дэлгэцийн хэмжээ':{name:'Дэлгэцийн хэмжээ', placeholder:'5.5 inch', value: '5 inch'},
-            'Үйлдлийн систем2':{name:'Үйлдлийн систем2', placeholder:'IOS 5.0.0', value: 'IOS v5'}}
+      spec_suggestions: {},
+      specs: {}
       
     };
   },
@@ -38,7 +32,8 @@ var ListingNewPage = React.createClass({
           wanted_description: listing.wanted_description,
           condition_id: (((listing.item || {}).product_condition || {}).id || 1),
           condition_desc: (listing.item || {}).condition_description,
-          images: listing.images
+          images: listing.images,
+          specs: listing.specs.reduce(function(specs, spec) { specs[spec.name] = spec; return specs; }, {})
         });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -60,7 +55,14 @@ var ListingNewPage = React.createClass({
   _handleImageAdd: function (image) {
     this.setState((state) => { images: state.images.unshift(image) });
   },
-  _handleImageDelete: function () {
+  _handleImageDelete: function (image) {
+    var images = this.state.images.filter(function(img){
+      return img.id !== image.id;
+    });
+
+    this.setState({
+      images: images
+    });
 
   },
   _handleErrorMessage: function (message) {
@@ -79,8 +81,7 @@ var ListingNewPage = React.createClass({
     data["condition_id"] = this.state.condition_id;
     data["condition_desc"] = this.state.condition_desc;
     data["images"] = this.state.images.map(function(image) { return image.id;});
-
-    console.log(data);
+    data["specs"] = this.state.specs
 
     $.ajax({
       url: '/rest/listings/' + this.props.listing_id,
@@ -95,6 +96,8 @@ var ListingNewPage = React.createClass({
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
+        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+
         //$(this.refs.saveButton).button('reset');
       }.bind(this),
       complete: function () {
@@ -102,10 +105,6 @@ var ListingNewPage = React.createClass({
         window.scrollTo(0,0);
       }.bind(this)
     });
-
-    
-
-    console.log('aaaa3');
   },
   _handleSubmit: function () {
     // set status to published
@@ -123,6 +122,17 @@ var ListingNewPage = React.createClass({
         selectedCat: [tmp[0],e.target.value,-1]
       });
     }else{
+      $.ajax({
+        url: '/rest/categories/' + e.target.value + '.json?include_spec_suggestions=true',
+        dataType: 'json',
+        success: function (category) {
+          this.setState({spec_suggestions: category.spec_suggestions.reduce(function(specs, spec) { specs[spec.name] = spec; return specs; }, {})});
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/categories.json', status, err.toString());
+        }
+      });
+
       var tmp = this.state.selectedCat
       this.setState({
         selectedCat: [tmp[0],tmp[1],e.target.value]
@@ -141,6 +151,13 @@ var ListingNewPage = React.createClass({
     }
     specs[spec.name] = spec;
     this.setState({ specs: specs});  
+  },
+  _handleSpecRemove: function (spec) {
+    var specs = this.state.specs;
+    var spec_suggestions = this.state.spec_suggestions;
+    delete specs[spec.name]
+    delete spec_suggestions[spec.name]
+    this.setState({ specs: specs, spec_suggestions: spec_suggestions});  
   },
   render: function() {
     return (
@@ -172,7 +189,7 @@ var ListingNewPage = React.createClass({
           <label>Барааны тайлбар <a href="#">[?]</a></label>
           <textarea name="text_description" className="form-control" rows="5" value={this.state.text_description} onChange={this._handleChange} />
         </div>
-        <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} />
+        <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} removeHandler={this._handleSpecRemove} />
         <div className="col-md-12">
           <div className="home-module-title sub-title">Холбоо барих мэдээлэл</div>
         </div>
@@ -308,8 +325,8 @@ var SpecEditor = React.createClass({
   addHandler: function(e) {
 
   },
-  removeHandler: function(e) {
-
+  removeHandler: function(spec) {
+    this.props.removeHandler(spec);
   },
   render: function() {
     var items = Object.keys(this.props.items).map(function(name,index) {
@@ -332,13 +349,13 @@ var SpecItem = React.createClass({
   changeHandler: function(e) {
     this.props.changeHandler(e);
   },
-  removeHandler: function(e){
-    this.props.removeHandler(e);
+  removeHandler: function(spec){
+    this.props.removeHandler(spec);
   },
   render: function() {
     return (
       <div className="form-group col-md-12">
-        <label>{this.props.item.name} <a href="javascript:;" onClick={this.removeHandler}>[хасах]</a></label>
+        <label>{this.props.item.name} <a href="javascript:;" onClick={this.removeHandler.bind(null,this.props.item)}>[хасах]</a></label>
         <input name={this.props.item.name} type="text" className="form-control half-width" onChange={this.changeHandler} value={this.props.item.value} placeholder={this.props.item.placeholder} />
       </div>
     );
