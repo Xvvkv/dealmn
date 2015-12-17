@@ -1,3 +1,6 @@
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+
 var ListingNewPage = React.createClass({
   getDefaultProps: function() {
     return {
@@ -12,8 +15,8 @@ var ListingNewPage = React.createClass({
       condition_id: 1,
       listing: {},
       spec_suggestions: {},
-      specs: {}
-      
+      specs: {},
+      contacts: []
     };
   },
   componentDidMount: function() {
@@ -33,7 +36,9 @@ var ListingNewPage = React.createClass({
           condition_id: (((listing.item || {}).product_condition || {}).id || 1),
           condition_desc: (listing.item || {}).condition_description,
           images: listing.images,
-          specs: listing.specs.reduce(function(specs, spec) { specs[spec.name] = spec; return specs; }, {})
+          specs: listing.specs.reduce(function(specs, spec) { specs[spec.name] = spec; return specs; }, {}),
+          email: (listing.contact || {}).email,
+          phone: (listing.contact || {}).phone
         });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -51,6 +56,18 @@ var ListingNewPage = React.createClass({
         console.error('/rest/categories.json', status, err.toString());
       }.bind(this)
     });
+
+    $.ajax({
+      url: '/rest/contacts.json',
+      dataType: 'json',
+      success: function (contacts) {
+        this.setState({contacts: contacts});
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/contacts.json', status, err.toString());
+      }.bind(this)
+    });
+
   },
   _handleImageAdd: function (image) {
     this.setState((state) => { images: state.images.unshift(image) });
@@ -74,14 +91,11 @@ var ListingNewPage = React.createClass({
     $(this.refs.saveButton).button('loading');
     
     var data = {};
-    data["title"] = this.state.title;
-    data["text_description"] = this.state.text_description;
-    data["wanted_description"] = this.state.wanted_description;
     data["category"] = this.state.selectedCat;
-    data["condition_id"] = this.state.condition_id;
-    data["condition_desc"] = this.state.condition_desc;
     data["images"] = this.state.images.map(function(image) { return image.id;});
-    data["specs"] = this.state.specs
+    ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title"].forEach(function(field) {
+      data[field] = this.state[field]
+    }.bind(this));
 
     $.ajax({
       url: '/rest/listings/' + this.props.listing_id,
@@ -152,12 +166,23 @@ var ListingNewPage = React.createClass({
     specs[spec.name] = spec;
     this.setState({ specs: specs});  
   },
+  _handleSpecAdd: function () {
+    if(this.state.addSpecName && this.state.addSpecName.trim() !== ''){
+      var specs = this.state.specs;
+      var spec = {name: this.state.addSpecName, value: this.state.addSpecValue};
+      specs[spec.name] = spec;
+      this.setState({ specs: specs, addSpecName: '', addSpecValue: ''});
+    }
+  },
   _handleSpecRemove: function (spec) {
     var specs = this.state.specs;
     var spec_suggestions = this.state.spec_suggestions;
     delete specs[spec.name]
     delete spec_suggestions[spec.name]
     this.setState({ specs: specs, spec_suggestions: spec_suggestions});  
+  },
+  _handleContactItemClick: function (contact) {
+    this.setState({phone: contact.phone, email: contact.email});
   },
   render: function() {
     return (
@@ -186,32 +211,22 @@ var ListingNewPage = React.createClass({
         </div>
         <div className="clearfix"></div>
         <div className="form-group col-md-12">
-          <label>Барааны тайлбар <a href="#">[?]</a></label>
+          <label>{I18n.page.detailed_info.description} <a href="#">[?]</a></label>
           <textarea name="text_description" className="form-control" rows="5" value={this.state.text_description} onChange={this._handleChange} />
         </div>
-        <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} removeHandler={this._handleSpecRemove} />
+        <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} addSpecChangeHandler={this._handleChange} addSpecName={this.state.addSpecName} addSpecValue={this.state.addSpecValue} removeHandler={this._handleSpecRemove} addHandler={this._handleSpecAdd} />
+        <ContactInfo changeHandler={this._handleChange} phone={this.state.phone} email={this.state.email} contacts={this.state.contacts} handleContactItemClick={this._handleContactItemClick} />
         <div className="col-md-12">
-          <div className="home-module-title sub-title">Холбоо барих мэдээлэл</div>
+          <div className="home-module-title sub-title">{I18n.page.wanted.section_title}</div>
         </div>
         <div className="form-group col-md-12">
-          <label>Холбоо барих утас <a href="#">[?]</a></label>
-          <input type="text" className="form-control half-width" placeholder="Холбоо барих утас" />
-        </div>
-        <div className="form-group col-md-12">
-          <label>Имэйл <a href="#">[?]</a></label>
-          <input type="text" className="form-control half-width" placeholder="Имэйл" />
-        </div>
-        <div className="col-md-12">
-          <div className="home-module-title sub-title">Сонирхож буй</div>
-        </div>
-        <div className="form-group col-md-12">
-          <label>Сонирхож буй бараа бүтээгдэхүүн <a href="#">[?]</a></label>
+          <label>{I18n.page.wanted.title} <a href="#">[?]</a></label>
           <textarea name="wanted_description" className="form-control" rows="5" value={this.state.wanted_description} onChange={this._handleChange} placeholder={I18n.page.wanted.placeholder} />
         </div>
         <div className="hairly-line"></div>
         <div className="col-md-12 text-center">
-          <button ref="saveButton" data-loading-text="Loading..." type="button" onClick={this._handleSave} className="btn btn-success">Хадгалах</button>&nbsp;
-          <button type="button" onClick={this._handleSubmit} className="btn btn-success">Нэмэх</button>
+          <button ref="saveButton" data-loading-text="Loading..." type="button" onClick={this._handleSave} className="btn btn-success">{I18n.page.save}</button>&nbsp;
+          <button type="button" onClick={this._handleSubmit} className="btn btn-success">{I18n.page.publish}</button>
         </div>
       </div>
     );
@@ -219,24 +234,21 @@ var ListingNewPage = React.createClass({
 });
 
 var ConditionSelector = React.createClass({
-  changeHandler: function(e) {
-    this.props.changeHandler(e);
-  },
   render: function() {
     var descriptionField;
     if(this.props.condition_id != 1){
       descriptionField = (
         <div className="form-group col-md-12">
-          <label>Төлөвийн тайлбар <a href="#">[?]</a></label>
-          <textarea name="condition_desc" className="form-control" rows="3" value={this.props.condition_desc} onChange={this.changeHandler} />
+          <label>{I18n.page.general_info.condition_desc} <a href="#">[?]</a></label>
+          <textarea name="condition_desc" className="form-control" rows="3" value={this.props.condition_desc} onChange={this.props.changeHandler} />
         </div>
       )
     }
     return (
       <div>
         <div className="form-group col-md-12">
-          <label>Барааны төлөв <a href="#">[?]</a></label>
-          <select name="condition_id" value={this.props.condition_id} className="form-control auto_width" onChange={this.changeHandler}>
+          <label>{I18n.page.general_info.condition} <a href="#">[?]</a></label>
+          <select name="condition_id" value={this.props.condition_id} className="form-control auto_width" onChange={this.props.changeHandler}>
             {this.props.p_conditions.map(function(condition,index) {
               return (
                 <option value={condition.id} key={index}>{condition.title}</option>
@@ -244,7 +256,9 @@ var ConditionSelector = React.createClass({
             })}
           </select>
         </div>
-        {descriptionField}
+        <ReactCSSTransitionGroup transitionName="fadeInOut" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
+          {descriptionField}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -288,9 +302,11 @@ var CategorySelector = React.createClass({
 
     return (
       <div className="form-group col-md-12">
-        {leftCategory} 
-        {midCategory}
-        {rightCategory}
+          {leftCategory} 
+        <ReactCSSTransitionGroup transitionName="slideleft" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
+          {midCategory}
+          {rightCategory}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }
@@ -319,26 +335,44 @@ var CategorySelectorItem = React.createClass({
 
 
 var SpecEditor = React.createClass({
-  changeHandler: function(e) {
-    this.props.changeHandler(e);
-  },
-  addHandler: function(e) {
-
-  },
-  removeHandler: function(spec) {
-    this.props.removeHandler(spec);
-  },
   render: function() {
     var items = Object.keys(this.props.items).map(function(name,index) {
         return (
-          <SpecItem key={index} item={this.props.items[name]} changeHandler={this.changeHandler} removeHandler={this.removeHandler}  />
+          <SpecItem key={index} item={this.props.items[name]} changeHandler={this.props.changeHandler} removeHandler={this.props.removeHandler}  />
         );
       }.bind(this));
     return (
       <div>
         {items}
         <div className="form-group col-md-12">
-          <a className="btn btn-primary" href="javascript:;" onClick={this.addHandler}>Үзүүлэлт нэмэх</a>
+          <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#addSpecModal">
+            {I18n.page.detailed_info.add_spec.title}
+          </button>
+          <div className="modal fade" id="addSpecModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 className="modal-title" id="myModalLabel">{I18n.page.detailed_info.add_spec.title}</h4>
+                </div>
+                <div className="modal-body">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="addSpecName" className="control-label">{I18n.page.detailed_info.add_spec.name}:</label>
+                    <input id="addSpecName" name="addSpecName" type="text" className="form-control" value={this.props.addSpecName} onChange={this.props.addSpecChangeHandler} />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="addSpecValue" className="control-label">{I18n.page.detailed_info.add_spec.value}:</label>
+                    <input id="addSpecValue" name="addSpecValue" type="text" className="form-control" value={this.props.addSpecValue} onChange={this.props.addSpecChangeHandler} />
+                  </div>
+                  <div className="clearfix"></div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-default" data-dismiss="modal">{I18n.page.detailed_info.add_spec.cancel}</button>
+                  <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.props.addHandler}>{I18n.page.detailed_info.add_spec.add}</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -346,17 +380,54 @@ var SpecEditor = React.createClass({
 });
 
 var SpecItem = React.createClass({
-  changeHandler: function(e) {
-    this.props.changeHandler(e);
-  },
-  removeHandler: function(spec){
-    this.props.removeHandler(spec);
-  },
   render: function() {
     return (
       <div className="form-group col-md-12">
-        <label>{this.props.item.name} <a href="javascript:;" onClick={this.removeHandler.bind(null,this.props.item)}>[хасах]</a></label>
-        <input name={this.props.item.name} type="text" className="form-control half-width" onChange={this.changeHandler} value={this.props.item.value} placeholder={this.props.item.placeholder} />
+        <label>{this.props.item.name} <a href="javascript:;" onClick={this.props.removeHandler.bind(null,this.props.item)}>[{I18n.page.detailed_info.remove_spec}]</a></label>
+        <input name={this.props.item.name} type="text" className="form-control half-width" onChange={this.props.changeHandler} value={this.props.item.value} placeholder={this.props.item.placeholder} />
+      </div>
+    );
+  }
+});
+
+
+var ContactInfo = React.createClass({
+  render: function() {
+    var contacts = this.props.contacts.map(function(contact,index) {
+      return (
+        <ContactItem key={index} phone={contact.phone} email={contact.email} onClick={this.props.handleContactItemClick.bind(null,contact)} />
+      );
+    }.bind(this));
+    return (
+      <div>
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">{I18n.page.contact_info.section_title}</div>
+        </div>
+        <div className="col-md-12">
+          <div className="title_information">{I18n.page.contact_info.reuse_recent_contacts}</div>
+        </div>
+        <div className="col-md-12">
+          {contacts}
+        </div>
+        <div className="form-group col-md-12">
+          <label>{I18n.page.contact_info.phone} <a href="#">[?]</a></label>
+          <input type="text" className="form-control half-width" placeholder={I18n.page.contact_info.phone_placeholder} name="phone" value={this.props.phone} onChange={this.props.changeHandler} />
+        </div>
+        <div className="form-group col-md-12">
+          <label>{I18n.page.contact_info.email} <a href="#">[?]</a></label>
+          <input type="text" className="form-control half-width" placeholder={I18n.page.contact_info.email_placeholder} name="email" value={this.props.email} onChange={this.props.changeHandler} />
+        </div>
+      </div>
+    );
+  }
+});
+
+var ContactItem = React.createClass({
+  render: function() {
+    return (
+      <div className="prev-contact-info col-md-4" onClick={this.props.onClick} >
+        {I18n.page.contact_info.phone_short}: {this.props.phone}<br/>
+        {I18n.page.contact_info.email}: {this.props.email}
       </div>
     );
   }

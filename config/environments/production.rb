@@ -67,4 +67,5 @@ Dealmn::Application.configure do
 
 
   config.react.variant = :production
+  config.react.addons = true
 end

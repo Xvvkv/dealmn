@@ -213,7 +213,6 @@ body{
   width: 248px;
 }
 .main-timeline{
-  min-height: 300px;
   width: calc(100% - 580px);
   margin: 15px;
   float: left;
@@ -392,27 +391,21 @@ body{
 
 
 
-  .hovercard{
-    position: absolute;
-    padding: 15px;
-    display: none;
-    font-size: 12px;
-  }
-  .hovercard-content{
+  .timeline-user-info-tooltip{
     position: absolute;
     background: #fff;
     width: 365px;
     height: 145px;
     padding: 10px;
-    z-index: 999999;
+    z-index: 9999;
     border: 1px solid #dbdbdb;
-    margin-top: -185px;
-    margin-left: -15px;
+    margin-top: -175px;
+    margin-left: 0px;
     -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.1);
   -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.1);
   box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.1);
   }
-  .hovercard-content:after {
+  .timeline-user-info-tooltip:after {
     top: 100%;
     left: 10%;
     border: solid transparent;
@@ -1392,3 +1385,34 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     width: 60px;
     border: 1px solid #dbdbdb;
   }
+
+  .modal-dialog{
+    margin-top: 80px;
+  }
+
+.fadeInOut-enter {
+  opacity: 0.01;
+}
+
+.fadeInOut-enter.fadeInOut-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fadeInOut-leave {
+  opacity: 1;
+}
+
+.fadeInOut-leave.fadeInOut-leave-active {
+  opacity: 0.01;
+  transition: opacity 200ms ease-in;
+}
+
+.slideleft-enter {
+  margin-left: -5px;
+}
+
+.slideleft-enter.slideleft-enter-active {
+  margin-left: 0px;
+  transition: all 300ms ease-out;
+}

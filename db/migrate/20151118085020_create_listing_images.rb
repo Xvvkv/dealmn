@@ -1,8 +1,8 @@
 class CreateListingImages < ActiveRecord::Migration
   def change
     create_table :listing_images, :id => false do |t|
-      t.references :listing
-      t.references :image
+      t.references :listing, :null => false
+      t.references :image, :null => false
 
       t.timestamps
     end

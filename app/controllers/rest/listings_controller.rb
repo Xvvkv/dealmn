@@ -2,7 +2,7 @@ class Rest::ListingsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with Listing.all
+    respond_with Listing.published
   end
 
   def show
@@ -50,12 +50,22 @@ class Rest::ListingsController < ApplicationController
     if params[:specs] && (params[:specs].is_a? Hash)
       params[:specs].each do |name, s|
         spec = Spec.where(listing_id: listing.id, name: name).first_or_create
-        spec.value = s[:value]
-        spec.save
-        specs << spec
+        if s[:value].present?
+          spec.value = s[:value]
+          spec.save
+          specs << spec
+        else
+          spec.delete
+        end
       end
     end
     listing.specs = specs
+
+    if(params[:phone].present? || params[:email].present?)
+      #TODO check user id
+      contact = Contact.where(phone: params[:phone], email: params[:email]).first_or_create
+      listing.contact = contact
+    end
 
 
     listing.save

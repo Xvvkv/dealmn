@@ -7,6 +7,8 @@ Dealmn::Application.routes.draw do
     resources :categories
     resources :listings
     resources :images
+    resources :contacts
+    resources :users
   end
 
   resources :listings

@@ -1,4 +1,7 @@
 // = require ./mixins/react_menu_aim
+
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
 var CategoryMenu = React.createClass({
   mixins: [ReactMenuAim],
   getDefaultProps: function() {
@@ -90,7 +93,9 @@ var CategoryMenu = React.createClass({
             })}
           </ul>
         </div>
-        {sub}
+        <ReactCSSTransitionGroup transitionName="slideleft" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
+          {sub}
+        </ReactCSSTransitionGroup>
       </div>
     );
   }

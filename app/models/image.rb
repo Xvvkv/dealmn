@@ -2,10 +2,8 @@ class Image < ActiveRecord::Base
   attr_accessor :crop_x, :crop_y, :crop_w, :crop_h
 
   attr_accessible :image, :status
-  has_attached_file :image, :styles => { :large => "600x600>", :medium => "300x300>", :thumb => "100x100>" }, :processors => [:cropper], :convert_options => {all: "-strip -quality 85%"}
+  has_attached_file :image, :styles => { :large => "600x600>", :thumb => "125x125>" }, :processors => [:cropper], :convert_options => {all: "-strip -quality 85%"}
   validates_attachment_content_type :image, :content_type => /\Aimage\/.*\Z/
-
-  DEFAULT_AVATAR_ID = 0
 
   STATUS = {not_processed: 0, processed: 1}
 

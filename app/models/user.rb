@@ -29,26 +29,31 @@ class User < ActiveRecord::Base
   before_validation :setup_names
   before_destroy :destroy_dependents
 
+  after_create :create_dependents
+
+  belongs_to :avatar, :class_name => 'Image', :foreign_key => :avatar_id
+
   has_one :user_stat
+
+  has_many :contacts
+
+  has_one :primary_contact, :class_name => "Contact", :conditions => { :is_primary => true } 
 
   delegate :rating, :rating_count, to: :user_stat
 
   def display_name
-    #TODO improve
-    self.full_name || self.first_name
+    return "#{self.last_name[0...1].upcase}.#{self.first_name.camelcase}" if self.last_name.present? && self.first_name.present?
+    return self.first_name if self.first_name.present?
+    return self.email
   end
 
   def full_name
-    #TODO improve
-    self.first_name + ' ' + self.last_name
+    return "#{self.last_name} #{self.first_name}" if self.last_name.present? && self.first_name.present?
+    return self.email
   end
 
-  def avatar type
-    if self.avatar
-      self.avatar.image.url(type)
-    else
-      Image.find(Image::DEFAULT_AVATAR_ID).image.url(type)
-    end
+  def prof_pic type=:thumb
+    self.avatar.image.url(type) if self.avatar
   end
 
   private
@@ -60,6 +65,11 @@ class User < ActiveRecord::Base
 
   def destroy_dependents
     #TODO
+  end
+
+  def create_dependents
+    UserStat.create(user_id: self.id)
+    UserSetting.create(user_id: self.id)
   end
 
 end

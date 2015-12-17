@@ -14,6 +14,36 @@ class DataGenerator
     u.first_name = 'Энхболд'
     u.last_name = 'Цагаач'
     u.save!
+
+    u = User.new
+    u.email = 'tsolmon23@gmail.com'
+    u.password = '12345678'
+    u.first_name = 'Цолмон'
+    u.last_name = 'Ц'
+    u.save!
+
+    u = User.new
+    u.email = 'uundaa@gmail.com'
+    u.password = '12345678'
+    u.first_name = 'Undral'
+    u.last_name = 'Amarsaikhan'
+    u.save!
+
+    u = User.new
+    u.email = 'dashka0417@gmail.com'
+    u.password = '12345678'
+    u.first_name = 'Dashnyam'
+    u.last_name = 'J'
+    u.save!
+
+    u = User.new
+    u.email = 'kenji.batka@gmail.com'
+    u.password = '12345678'
+    u.first_name = 'Xvvkv'
+    u.last_name = 'Batka'
+    u.save!
+
+
   end
 
   def self.generate_categories

@@ -6,7 +6,7 @@ class Listing < ActiveRecord::Base
   belongs_to :item, :polymorphic => true
 
   #delegate :product_condition_id, :product_condition, :condition_description, to: :item, allow_nil: true
-
+  belongs_to :user
 
   has_many :listing_images, dependent: :destroy
   has_many :images, :through => :listing_images
@@ -14,8 +14,9 @@ class Listing < ActiveRecord::Base
   has_many :specs, dependent: :destroy
   
   belongs_to :category
+  belongs_to :contact
 
-  STATUS = {draft: 0, published: 1}
+  STATUS = {draft: 0, published: 1, closed: 2}
 
   # only bidder can create multiple_item listing.
   # listing will be created when bidder selects multiple listings
@@ -23,6 +24,9 @@ class Listing < ActiveRecord::Base
 
   scope :draft, where(status: STATUS[:draft])
   scope :published, where(status: STATUS[:published])
+  scope :closed, where(status: STATUS[:closed])
+
+  scope :free_item, where(is_free: true)
 
   #TODO user id
   def self.get_draft
