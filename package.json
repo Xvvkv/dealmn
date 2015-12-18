@@ -1,0 +1,17 @@
+{
+  "name": "dealmn",
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "browserify-incremental": "^3.0.1",
+    "reactify": "^1.1.1",
+    "react": "^0.13.3"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "dependencies": {
+    "react-star-rating": "^1.4.2"
+  }
+}

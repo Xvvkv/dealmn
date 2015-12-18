@@ -1,6 +1,6 @@
 class Listing < ActiveRecord::Base
 
-  attr_accessible :status, :item
+  attr_accessible :status, :item, :user_id
   
   has_many :bids, :as => :biddable
   belongs_to :item, :polymorphic => true
@@ -37,7 +37,7 @@ class Listing < ActiveRecord::Base
   #TODO user id
   def self.create_draft
     return unless Listing.draft.blank?
-    Listing.create(status: Listing::STATUS[:draft], item: Product.new)  
+    Listing.create(user_id: 1, status: Listing::STATUS[:draft], item: Product.new)  
   end
 
   

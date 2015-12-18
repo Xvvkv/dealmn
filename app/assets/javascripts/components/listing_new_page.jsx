@@ -1,5 +1,6 @@
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
+var ImageUpload = require('./image_upload.jsx');
 
 var ListingNewPage = React.createClass({
   getDefaultProps: function() {
@@ -433,3 +434,5 @@ var ContactItem = React.createClass({
   }
 });
 
+
+module.exports = ListingNewPage;

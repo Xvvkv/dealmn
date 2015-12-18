@@ -1,3 +1,5 @@
+var StarRating = require('react-star-rating');
+
 var ListingItem = React.createClass({
   render: function() {
     return (
@@ -8,7 +10,7 @@ var ListingItem = React.createClass({
           <div className="timeline-arrow"></div>
           <div className="timeline-deal-item-container">
             <div className="timeline-deal-item-detail">
-              <div className="timeline-deal-item-img"><%= image_tag('123.jpg')%></div>
+              <div className="timeline-deal-item-img"><img src='/images/123.jpg' /></div>
               <div className="timeline-deal-item-title">Iphone 6S 128gb factory unlocked</div>
               <div className="timeline-deal-item-info">
                 It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
@@ -48,16 +50,16 @@ var ListingItem = React.createClass({
             <div className="well timeline-deal-item-bids-items">
               <div className="timeline-deal-item-bids-left-arrow"></div>
               <div className="timeline-deal-item-bids-item">
-                <a href="#"><%= image_tag('123.jpg')%></a>
+                <a href="#"><img src='/images/123.jpg' /></a>
               </div>
               <div className="timeline-deal-item-bids-item">
-                <a href="#"><%= image_tag('123.jpg')%></a>
+                <a href="#"><img src='/images/123.jpg' /></a>
               </div>
               <div className="timeline-deal-item-bids-item">
-                <a href="#"><%= image_tag('123.jpg')%></a>
+                <a href="#"><img src='/images/123.jpg' /></a>
               </div>
               <div className="timeline-deal-item-bids-item">
-                <a href="#"><%= image_tag('123.jpg')%></a>
+                <a href="#"><img src='/images/123.jpg' /></a>
               </div>
               <div className="timeline-deal-item-bids-right-arrow"></div>
               <div className="clearfix"></div>
@@ -74,9 +76,9 @@ var ListingItemUserInfo = React.createClass({
   render: function() {
     return (
       <div className="timeline-dealer-info hover">
-        <div className="timeline-dealer-img">{this.props.user.prof_pic ? <img src={this.props.user.prof_pic} /> : <%= image_tag('profile_sample.png')%>}</div>
+        <div className="timeline-dealer-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/profile_sample.png'} /></div>
         <div className="timeline-dealer-name">{this.props.user.display_name}</div>
-        <div className="timeline-dealer-rank-star"><%= image_tag('rank-2-5.png')%></div>
+        <div className="timeline-dealer-rank-star"></div>
         <div className="timeline-dealer-rank-vote">Үнэлсэн: 15</div>
         <ListingItemUserInfoTooltip user={this.props.user} />
       </div>
@@ -88,14 +90,14 @@ var ListingItemUserInfoTooltip = React.createClass({
   render: function() {
     return (
       <div className="tooltip timeline-user-info-tooltip">
-        <div className="timeline-dealer-info-img">{this.props.user.prof_pic ? <img src={this.props.user.prof_pic} /> : <%= image_tag('profile_sample.png')%>}</div>
+        <div className="timeline-dealer-info-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/profile_sample.png'} /></div>
         <div className="timeline-dealer-info-other">
           <div className="timeline-dealer-info-name"><a href="#">{this.props.user.display_name}</a></div>
           <div className="timeline-dealer-info-rank">
             <table width="100%">
               <tbody>
                 <tr>
-                  <td><span>Үнэлгээ</span> <br/> <%= image_tag('rank-big.png')%> </td>
+                  <td><span>Үнэлгээ</span> <br/> <img src='/images/rank-big.png' /> </td>
                   <td align="right">
                     <span>Нийт үнэлсэн</span> <br/> 
                     <div className="count-rank-people">15</div>
@@ -119,3 +121,5 @@ var ListingItemUserInfoTooltip = React.createClass({
     );
   }
 });
+
+module.exports = ListingItem;

@@ -49,7 +49,7 @@ class Rest::ListingsController < ApplicationController
     specs = []
     if params[:specs] && (params[:specs].is_a? Hash)
       params[:specs].each do |name, s|
-        spec = Spec.where(listing_id: listing.id, name: name).first_or_create
+        spec = Spec.where(listing_id: listing.id, name: name).first_or_initialize
         if s[:value].present?
           spec.value = s[:value]
           spec.save
@@ -63,7 +63,7 @@ class Rest::ListingsController < ApplicationController
 
     if(params[:phone].present? || params[:email].present?)
       #TODO check user id
-      contact = Contact.where(phone: params[:phone], email: params[:email]).first_or_create
+      contact = Contact.where(user_id:1 ,phone: params[:phone], email: params[:email]).first_or_create
       listing.contact = contact
     end
 

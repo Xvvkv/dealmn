@@ -28,6 +28,8 @@ gem "paperclip", "~> 4.2"
 
 gem 'rinku', :require => 'rails_rinku'
 
+gem 'browserify-rails', '~> 0.9.1'
+
 
 # Gems used only for assets and not required
 # in production environments by default.

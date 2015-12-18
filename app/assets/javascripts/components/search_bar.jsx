@@ -70,4 +70,4 @@ var SearchBarInput = React.createClass({
 });
 
 
-
+module.exports = SearchBar;

@@ -6,7 +6,7 @@
  * https://github.com/kamens/jQuery-menu-aim
 */
 
-//var ReactDOM = require('react-dom');
+var ReactDOM = require('react-dom');
 var MOUSE_LOCS_TRACKED = 3;   // number of past mouse locations to trackv
 var DELAY = 300;              // ms delay when user appears to be entering submenu
 var TOLERANCE = 75;           // bigger = more forgivey when entering submenu
@@ -237,7 +237,7 @@ function possiblyActivate(rowIdentifier, handler, config) {
 /**
  * @export
  */
-var ReactMenuAim = {
+module.exports = exports = {
   initMenuAim: function(options) {
     this.__reactMenuAimConfig = options;
   },

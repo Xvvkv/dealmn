@@ -1,6 +1,6 @@
-// = require ./mixins/react_menu_aim
+ReactMenuAim = require ('./mixins/react_menu_aim.js')
 
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var CategoryMenu = React.createClass({
   mixins: [ReactMenuAim],
@@ -132,3 +132,4 @@ var SubMenuColumn = React.createClass({
   }
 });
 
+module.exports = CategoryMenu;

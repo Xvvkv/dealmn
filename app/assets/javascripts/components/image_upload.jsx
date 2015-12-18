@@ -120,7 +120,7 @@ var ImageUpload = React.createClass({
     reader.readAsDataURL(file);
   },
   render: function() {
-    var {imagePreviewUrl} = this.state;
+    var imagePreviewUrl = this.state.imagePreviewUrl;
     var imagePreview = null;
     var addImage = null;
 
@@ -177,3 +177,5 @@ var ImageUpload = React.createClass({
     );
   }
 });
+
+module.exports = ImageUpload;

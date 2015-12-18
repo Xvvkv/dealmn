@@ -1,3 +1,5 @@
+var ListingItem = require('./listing_item.jsx')
+
 var Timeline = React.createClass({
   getInitialState: function() {
     return {
@@ -39,3 +41,5 @@ var Timeline = React.createClass({
     );
   }
 });
+
+module.exports = Timeline;

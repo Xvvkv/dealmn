@@ -16,8 +16,5 @@
 //= require bootstrap.min
 //= require jquery.Jcrop.min
 //= require growl
-//= require react
 //= require react_ujs
 //= require components
-//= require react-jcrop
-//= require_tree .
