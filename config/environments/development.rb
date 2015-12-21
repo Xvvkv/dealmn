@@ -36,7 +36,6 @@ Dealmn::Application.configure do
   config.assets.debug = true
 
   config.react.variant = :development
-  config.react.addons = true
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
 

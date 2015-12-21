@@ -2,7 +2,20 @@ class Rest::ListingsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with Listing.published
+
+    if params[:pd]
+          puts '////////'
+    puts params[:pd]
+    puts '////////'
+
+      respond_with Listing.published.where('published_date < ?', params[:pd].to_time).order('published_date desc').limit(10)
+    else
+          puts '////////'
+    puts 'hellooo'
+    puts '////////'
+
+      respond_with Listing.published.order('published_date desc').limit(20) 
+    end
   end
 
   def show

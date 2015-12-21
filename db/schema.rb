@@ -120,7 +120,10 @@ ActiveRecord::Schema.define(:version => 20151217102141) do
     t.boolean  "is_free",            :default => false, :null => false
     t.integer  "price_range_min"
     t.integer  "price_range_max"
+    t.datetime "published_date"
   end
+
+  add_index "listings", ["published_date"], :name => "index_listings_on_published_date"
 
   create_table "overall_averages", :force => true do |t|
     t.integer  "rateable_id"

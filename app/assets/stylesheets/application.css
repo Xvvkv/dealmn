@@ -12,5 +12,6 @@
  *= require bootstrap.min
  *= require jquery.Jcrop.min
  *= require growl
+ *= require react-rater
  *= require_tree .
  */
