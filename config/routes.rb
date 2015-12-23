@@ -5,14 +5,19 @@ Dealmn::Application.routes.draw do
 
   namespace :rest do
     resources :categories
-    resources :listings
+    resources :listings do
+      resources :bids
+    end
     resources :images
     resources :contacts
     resources :users
+    resources :bids
   end
 
-  resources :listings
-
+  resources :listings do
+    resources :bids
+  end
+  
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get
   match 'test3' => 'home#page3', via: :get

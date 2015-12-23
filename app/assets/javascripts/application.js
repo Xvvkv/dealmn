@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.sticky.js
+//= require jquery-ui/effect-highlight
 //= require bootstrap.min
 //= require jquery.Jcrop.min
 //= require growl

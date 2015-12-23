@@ -12,7 +12,7 @@ var ListingItem = React.createClass({
           <div className="timeline-deal-item-container">
             <div className="timeline-deal-item-detail">
               <div className="timeline-deal-item-img">{this.props.listing.images && this.props.listing.images.length > 0 ? <img src={this.props.listing.images[0].url}/> : <img src='/images/123.jpg' />}</div>
-              <div className="timeline-deal-item-title">{this.props.listing.title} - {this.props.c}</div>
+              <div className="timeline-deal-item-title">{this.props.listing.title} - {this.props.listing.id}</div>
               <div className="timeline-deal-item-info">{this.props.listing.text_description}</div>
               <div className="timeline-deal-item-want">
                 <span>Тохиролцоно:</span> {this.props.listing.wanted_description}
@@ -34,7 +34,7 @@ var ListingItem = React.createClass({
               </div>
               <div className="timeline-deal-item-bottom-bid">
                 <div className="btn btn-primary">
-                  Санал илгээх
+                  <a href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
                 </div>
               </div>
               <div className="timeline-deal-item-bottom-chat">

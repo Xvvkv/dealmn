@@ -37,6 +37,9 @@ class User < ActiveRecord::Base
 
   has_many :contacts
 
+  has_many :bids
+  has_many :listings
+
   has_one :primary_contact, :class_name => "Contact", :conditions => { :is_primary => true } 
 
   delegate :rating, :rating_count, to: :user_stat

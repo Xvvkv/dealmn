@@ -526,7 +526,7 @@ body{
     float: right;
     margin-top: 15px;
   }
-  .home-free-items{
+  .item-list-items{
     width: 100%;
     min-width: 150px;
     background: #fff;
@@ -544,20 +544,20 @@ body{
     font-weight: bold;
     margin-top:5px; 
   }
-  .home-free-item{
+  .item-list-item{
     width: 100%;
     border-bottom: 1px dotted #dbdbdb;
     padding-bottom: 10px;
     margin-bottom: 10px;
   }
-  .home-free-item-img{
+  .item-list-item-img{
     height: 60px;
     width: 60px;
     position: relative;
     float: left;
     margin-right: 10px;
   }
-  .home-free-item-img .home-free-item-badget{
+  .item-list-item-img .item-list-item-badget{
     position: absolute;
     height: 45px;
     width: 45px;
@@ -565,7 +565,7 @@ body{
     right: -3px;
     top: -3px;
   }
-  .home-free-item-img img{
+  .item-list-item-img img{
     height: 60px;
     width: 60px;
     border: 1px solid #dbdbdb;

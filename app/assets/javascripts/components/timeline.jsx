@@ -7,7 +7,7 @@ var Timeline = React.createClass({
       special_listings: [],
       listings: [],
       hasMore: true,
-      earliestPublishedDate: null
+      min_publishment_id: -1
     };
   },
   componentDidMount: function() {
@@ -18,22 +18,15 @@ var Timeline = React.createClass({
   },
   loadListings: function(page) {
     $.ajax({
-      url: '/rest/listings.json' + (this.state.earliestPublishedDate != null ? ('?pd=' + this.state.earliestPublishedDate) : ''),
+      url: '/rest/listings.json?pid=' + this.state.min_publishment_id,
       dataType: 'json',
       success: function (listings) {
-        if(listings.length > 0){
-    
-    console.log(page);
-          console.log('aaaaa');
-          console.log(this.state.listings);
-          console.log(listings);
-          
+        if(listings.length > 0){          
           var l = this.state.listings.concat(listings);
-          console.log(l);
-
+          
           this.setState({
             listings: l,
-            earliestPublishedDate: listings[listings.length - 1].published_date
+            min_publishment_id: listings[listings.length - 1].publishment_id
           });
         }else {
           this.setState({hasMore: false});

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151217102141) do
+ActiveRecord::Schema.define(:version => 20151223063415) do
 
   create_table "average_caches", :force => true do |t|
     t.integer  "rater_id"
@@ -43,11 +43,26 @@ ActiveRecord::Schema.define(:version => 20151217102141) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "bid_images", :id => false, :force => true do |t|
+    t.integer  "bid_id",     :null => false
+    t.integer  "image_id",   :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "bid_images", ["bid_id", "image_id"], :name => "index_bid_images_on_bid_id_and_image_id", :unique => true
+
   create_table "bids", :force => true do |t|
-    t.integer  "biddable_id",   :null => false
-    t.string   "biddable_type", :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.integer  "biddable_id",                  :null => false
+    t.string   "biddable_type",                :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.string   "title",                        :null => false
+    t.text     "description"
+    t.integer  "user_id"
+    t.integer  "status",        :default => 0, :null => false
+    t.integer  "contact_id"
+    t.datetime "accepted_date"
   end
 
   create_table "categories", :force => true do |t|
@@ -69,7 +84,7 @@ ActiveRecord::Schema.define(:version => 20151217102141) do
     t.datetime "updated_at",                    :null => false
   end
 
-  add_index "contacts", ["email", "phone"], :name => "index_contacts_on_email_and_phone", :unique => true
+  add_index "contacts", ["user_id", "email", "phone"], :name => "index_contacts_on_user_id_and_email_and_phone", :unique => true
 
   create_table "images", :force => true do |t|
     t.string   "image_file_name"
@@ -121,9 +136,11 @@ ActiveRecord::Schema.define(:version => 20151217102141) do
     t.integer  "price_range_min"
     t.integer  "price_range_max"
     t.datetime "published_date"
+    t.integer  "publishment_id"
   end
 
   add_index "listings", ["published_date"], :name => "index_listings_on_published_date"
+  add_index "listings", ["publishment_id"], :name => "index_listings_on_publishment_id", :unique => true
 
   create_table "overall_averages", :force => true do |t|
     t.integer  "rateable_id"

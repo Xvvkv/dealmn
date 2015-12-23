@@ -7,6 +7,6 @@ class CreateContacts < ActiveRecord::Migration
       t.boolean :is_primary, :null => false, :default => false
       t.timestamps
     end
-    add_index :contacts, [:email,:phone], :unique => true
+    add_index :contacts, [:user_id,:email,:phone], :unique => true
   end
 end

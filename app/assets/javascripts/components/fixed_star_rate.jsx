@@ -8,7 +8,7 @@ var FixedStarRate = React.createClass({
   render: function() {
     nodes = Array(this.props.total).join(',').split(',').map(function (_, i) {
       return (
-        React.createElement("span", {className: (i >= this.props.total - this.props.rating) ? 'is-active': ''}, "★")
+        React.createElement("span", {className: (i >= this.props.total - this.props.rating) ? 'is-active': '',key: i}, "★")
       )
     }.bind(this));
 

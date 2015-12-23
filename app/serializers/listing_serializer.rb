@@ -1,5 +1,5 @@
 class ListingSerializer < ActiveModel::Serializer
-  attributes :category, :title, :text_description, :wanted_description, :is_free, :id, :published_date
+  attributes :category, :title, :text_description, :wanted_description, :is_free, :id, :published_date, :publishment_id
   has_many :images
   has_many :specs
   has_one :user

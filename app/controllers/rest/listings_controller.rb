@@ -1,20 +1,18 @@
 class Rest::ListingsController < ApplicationController
   respond_to :json
 
+  before_filter :authenticate_user!
+  skip_before_filter :authenticate_user!, :only => [:show, :index]
+
   def index
-
-    if params[:pd]
-          puts '////////'
-    puts params[:pd]
-    puts '////////'
-
-      respond_with Listing.published.where('published_date < ?', params[:pd].to_time).order('published_date desc').limit(10)
+    if params[:pid] #timeline
+      if params[:pid].to_i == -1
+        respond_with Listing.published.order('publishment_id desc').limit(20) 
+      else
+        respond_with Listing.published.where('publishment_id < ?', params[:pid].to_i).order('publishment_id desc').limit(10)
+      end
     else
-          puts '////////'
-    puts 'hellooo'
-    puts '////////'
-
-      respond_with Listing.published.order('published_date desc').limit(20) 
+      respond_with current_user.listings.published.order('publishment_id desc').limit(5)
     end
   end
 
@@ -75,8 +73,7 @@ class Rest::ListingsController < ApplicationController
     listing.specs = specs
 
     if(params[:phone].present? || params[:email].present?)
-      #TODO check user id
-      contact = Contact.where(user_id:1 ,phone: params[:phone], email: params[:email]).first_or_create
+      contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_create
       listing.contact = contact
     end
 
@@ -84,10 +81,6 @@ class Rest::ListingsController < ApplicationController
     listing.save
 
     respond_with listing
-  end
-
-  def create
-    #respond_with :rest, City.create(name: params[:name], description: params[:description])
   end
 
 end

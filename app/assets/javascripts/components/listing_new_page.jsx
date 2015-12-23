@@ -1,8 +1,53 @@
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 var ImageUpload = require('./image_upload.jsx');
+var ContactInfo = require('./contact_info.jsx');
+var FreeItemList = require('./free_item_list.jsx');
+var ItemSelector = require('./item_selector.jsx');
 
 var ListingNewPage = React.createClass({
+  getInitialState: function() {
+    return {
+      bids: []
+    };
+  },
+  componentDidMount: function() {
+    this.loadDataFromServer();
+  },
+  loadDataFromServer: function () {
+
+    $.ajax({
+      url: '/rest/bids.json',
+      dataType: 'json',
+      success: function (bids) {
+        this.setState({
+          bids: bids
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/bids.json', status, err.toString());
+      }.bind(this)
+    });
+  },
+  _handleSelectItem: function(item) {
+    this.refs.addListing._handleSelectBidItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddListing component
+  },
+  render: function() {
+    return (
+      <div className="main">
+        <div className="container">
+          <AddListing ref="addListing" {...this.props} />
+          <div className="main-right">
+            <ItemSelector items={this.state.bids} onSelectItem={this._handleSelectItem} title="Саналууд" hint="Бусдад санал болгосон бараа, үйлчилгээний мэдээллээ тохиролцоонд ашиглах" />
+            <FreeItemList />
+          </div>
+        </div>
+      </div>
+    );
+  }
+});
+
+var AddListing = React.createClass({
   getDefaultProps: function() {
     return {
       //listingId: null,
@@ -185,6 +230,35 @@ var ListingNewPage = React.createClass({
   _handleContactItemClick: function (contact) {
     this.setState({phone: contact.phone, email: contact.email});
   },
+  _handleSelectBidItem: function (item) {
+    var flags = [], uniq_images = [], images = this.state.images.concat(item.images), l = images.length, i;
+    for( i=0; i<l; i++) {
+      if(flags[images[i].id]) continue;
+      flags[images[i].id] = true;
+      uniq_images.push(images[i]);
+    }
+
+    var changed_inputs = [];
+    if(this.state.title != item.title){
+      changed_inputs.push($(this.refs.title_input));
+    }
+
+    var new_description = item.description + '\n\nhttp://localhost:3000/bids/' + item.id;
+    if(this.state.text_description != new_description){
+      changed_inputs.push($(this.refs.desc_input));
+    }
+
+    if(this.state.images.length < uniq_images.length){
+      changed_inputs.push($(this.refs.imageUpload.refs.mainDiv));
+    }
+
+    changed_inputs.forEach(function(i) {
+      i.effect("highlight", {}, 3000);
+    });
+    
+
+    this.setState({title: item.title, text_description: new_description, images: uniq_images.slice(0,5)});
+  },
   render: function() {
     return (
       <div className="add-deal-page">
@@ -194,7 +268,7 @@ var ListingNewPage = React.createClass({
         </div>
         <div className="form-group col-md-12">
           <label>{I18n.page.general_info.title}</label>
-          <input name="title" type="text" className="form-control" onChange={this._handleChange} value={this.state.title} />
+          <input name="title" ref="title_input" type="text" className="form-control" onChange={this._handleChange} value={this.state.title} />
         </div>
         <CategorySelector selectedCat={this.state.selectedCat} onSelectCategory={this._handleSelectCategory} categories={this.state.categories}/>
         {this.props.service_cat != this.state.selectedCat[0]
@@ -205,7 +279,7 @@ var ListingNewPage = React.createClass({
         </div>
         <div className="col-md-12">
           <label>{I18n.page.detailed_info.image} <a href="#">[?]</a></label>
-          <ImageUpload url="/rest/images" images={this.state.images}
+          <ImageUpload ref="imageUpload" url="/rest/images" images={this.state.images}
                 onImageAdd={this._handleImageAdd}
                 onImageDelete={this._handleImageDelete}
                 onErrorMessage={this._handleErrorMessage} />
@@ -213,7 +287,7 @@ var ListingNewPage = React.createClass({
         <div className="clearfix"></div>
         <div className="form-group col-md-12">
           <label>{I18n.page.detailed_info.description} <a href="#">[?]</a></label>
-          <textarea name="text_description" className="form-control" rows="5" value={this.state.text_description} onChange={this._handleChange} />
+          <textarea ref="desc_input" name="text_description" className="form-control" rows="5" value={this.state.text_description} onChange={this._handleChange} />
         </div>
         <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} addSpecChangeHandler={this._handleChange} addSpecName={this.state.addSpecName} addSpecValue={this.state.addSpecValue} removeHandler={this._handleSpecRemove} addHandler={this._handleSpecAdd} />
         <ContactInfo changeHandler={this._handleChange} phone={this.state.phone} email={this.state.email} contacts={this.state.contacts} handleContactItemClick={this._handleContactItemClick} />
@@ -386,49 +460,6 @@ var SpecItem = React.createClass({
       <div className="form-group col-md-12">
         <label>{this.props.item.name} <a href="javascript:;" onClick={this.props.removeHandler.bind(null,this.props.item)}>[{I18n.page.detailed_info.remove_spec}]</a></label>
         <input name={this.props.item.name} type="text" className="form-control half-width" onChange={this.props.changeHandler} value={this.props.item.value} placeholder={this.props.item.placeholder} />
-      </div>
-    );
-  }
-});
-
-
-var ContactInfo = React.createClass({
-  render: function() {
-    var contacts = this.props.contacts.map(function(contact,index) {
-      return (
-        <ContactItem key={index} phone={contact.phone} email={contact.email} onClick={this.props.handleContactItemClick.bind(null,contact)} />
-      );
-    }.bind(this));
-    return (
-      <div>
-        <div className="col-md-12">
-          <div className="home-module-title sub-title">{I18n.page.contact_info.section_title}</div>
-        </div>
-        <div className="col-md-12">
-          <div className="title_information">{I18n.page.contact_info.reuse_recent_contacts}</div>
-        </div>
-        <div className="col-md-12">
-          {contacts}
-        </div>
-        <div className="form-group col-md-12">
-          <label>{I18n.page.contact_info.phone} <a href="#">[?]</a></label>
-          <input type="text" className="form-control half-width" placeholder={I18n.page.contact_info.phone_placeholder} name="phone" value={this.props.phone} onChange={this.props.changeHandler} />
-        </div>
-        <div className="form-group col-md-12">
-          <label>{I18n.page.contact_info.email} <a href="#">[?]</a></label>
-          <input type="text" className="form-control half-width" placeholder={I18n.page.contact_info.email_placeholder} name="email" value={this.props.email} onChange={this.props.changeHandler} />
-        </div>
-      </div>
-    );
-  }
-});
-
-var ContactItem = React.createClass({
-  render: function() {
-    return (
-      <div className="prev-contact-info col-md-4" onClick={this.props.onClick} >
-        {I18n.page.contact_info.phone_short}: {this.props.phone}<br/>
-        {I18n.page.contact_info.email}: {this.props.email}
       </div>
     );
   }

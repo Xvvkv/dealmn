@@ -1,3 +1,5 @@
+var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+
 var ImageUpload = React.createClass({
   getDefaultProps: function() {
     return {
@@ -158,15 +160,17 @@ var ImageUpload = React.createClass({
     
 
     return (
-      <div className="add-deal-add-pictures">
-        {this.props.images.map(function(image, index){
-          return (
-            <div key={index} className="added-picture" >
-              <div onClick={this._handleImageDelete.bind(null,image)} className="delete-button-img"><span className="glyphicon glyphicon-remove"></span></div>
-              <img src={image.thumb} />
-            </div>
-          );
-        }.bind(this))}
+      <div ref="mainDiv" className="add-deal-add-pictures">
+        <ReactCSSTransitionGroup transitionName="fadeInOut" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
+          {this.props.images.map(function(image, index){
+            return (
+              <div key={index} className="added-picture" >
+                <div onClick={this._handleImageDelete.bind(null,image)} className="delete-button-img"><span className="glyphicon glyphicon-remove"></span></div>
+                <img src={image.thumb} />
+              </div>
+            );
+          }.bind(this))}
+        </ReactCSSTransitionGroup>
         {addImage}
         <div className="clearfix"></div>
         <div className="crop-pic">

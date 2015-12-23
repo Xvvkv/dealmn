@@ -40,6 +40,21 @@ class Listing < ActiveRecord::Base
     Listing.create(user_id: 1, status: Listing::STATUS[:draft], item: Product.new)  
   end
 
-  
+  def publish
+    return unless self.status == STATUS[:draft]
 
+    self.status = STATUS[:published]
+    self.publishment_id = next_publishment_seq
+    self.published_date = Time.now
+    self.save
+
+    #TODO catch uniq publishment_id constraint exception & generate id again
+  end
+
+  
+  private
+    def next_publishment_seq
+      result = Listing.connection.execute("SELECT nextval('publishment_seq')")
+      result[0]['nextval']
+    end 
 end
