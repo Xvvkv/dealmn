@@ -7,14 +7,24 @@ var Timeline = React.createClass({
       special_listings: [],
       listings: [],
       hasMore: true,
-      min_publishment_id: -1
+      min_publishment_id: -1,
+      wish_list: []
     };
   },
   componentDidMount: function() {
     this.loadDataFromServer();
   },
   loadDataFromServer: function () {
-    //this.loadListings();
+    $.ajax({
+      url: '/rest/wish_lists.json',
+      dataType: 'json',
+      success: function (wish_list) {
+        this.setState({wish_list: wish_list});
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/wish_lists.json', status, err.toString());
+      }.bind(this)
+    });
   },
   loadListings: function(page) {
     $.ajax({
@@ -37,12 +47,33 @@ var Timeline = React.createClass({
       }.bind(this)
     });
   },
+  _handleWishListClick: function(id){
+    $.ajax({
+      url: '/rest/wish_lists',
+      type: "post",
+      dataType: 'json',
+      data: {listing_id: id},
+      success: function (wl) {
+        $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
+        var wish_list = this.state.wish_list
+        wish_list.push(id);
+        this.setState({wish_list: wish_list});
+
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/listings', status, err.toString());
+        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+
+        //$(this.refs.saveButton).button('reset');
+      }.bind(this)
+    });
+  },
   render: function() {
     var items = this.state.listings.map(function(listing,index) {
       return (
-        <ListingItem key={index} c={index} listing={listing} />
+        <ListingItem key={index} c={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} />
       );
-    })
+    }.bind(this))
     return (
       <div className="main-timeline">
         <div className="add-deal-button-container">

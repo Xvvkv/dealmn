@@ -10,7 +10,7 @@ Dealmn::Application.routes.draw do
     end
     resources :images
     resources :contacts
-    resources :users
+    resources :wish_lists
     resources :bids
   end
 

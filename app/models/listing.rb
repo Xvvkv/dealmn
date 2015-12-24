@@ -18,10 +18,6 @@ class Listing < ActiveRecord::Base
 
   STATUS = {draft: 0, published: 1, closed: 2}
 
-  # only bidder can create multiple_item listing.
-  # listing will be created when bidder selects multiple listings
-  TYPE = {regular: 0, multiple_item: 1}
-
   scope :draft, where(status: STATUS[:draft])
   scope :published, where(status: STATUS[:published])
   scope :closed, where(status: STATUS[:closed])
@@ -37,7 +33,7 @@ class Listing < ActiveRecord::Base
   #TODO user id
   def self.create_draft
     return unless Listing.draft.blank?
-    Listing.create(user_id: 1, status: Listing::STATUS[:draft], item: Product.new)  
+    Listing.create(user_id: 1, status: STATUS[:draft], item: Product.new)  
   end
 
   def publish

@@ -2,6 +2,16 @@ var Rating = require('./fixed_star_rate.jsx');
 
 var ListingItem = React.createClass({
   render: function() {
+    var wish_list_button;
+    if(!this.props.wish_listed){
+      wish_list_button = (
+        <div className="checkbox btn btn-default">
+          <label>
+            <input onClick={this.props.handleWishListClick.bind(null,this.props.listing.id)} type="checkbox" /> Дугуйлах
+          </label>
+        </div>
+      );
+    }
     return (
       <div className="timeline-content">
         <ListingItemUserInfo user={this.props.listing.user} />
@@ -21,11 +31,7 @@ var ListingItem = React.createClass({
             </div>
             <div className="timeline-deal-item-bottom">
               <div className="timeline-deal-item-bottom-check">
-                <div className="checkbox btn btn-default">
-                  <label>
-                  <input type="checkbox" /> Дугуйлах
-                  </label>
-                </div>
+                {wish_list_button}
               </div>
               <div className="timeline-deal-item-bottom-bids">
                 <div className="btn btn-default"  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">

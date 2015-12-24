@@ -70,7 +70,9 @@ var AddBid = React.createClass({
 
   },
   _handleImageAdd: function (image) {
-    this.setState((state) => { images: state.images.unshift(image) });
+    var images = this.state.images
+    images.push(image);
+    this.setState({images: images});
   },
   _handleImageDelete: function (image) {
     var images = this.state.images.filter(function(img){

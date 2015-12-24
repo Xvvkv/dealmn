@@ -116,7 +116,10 @@ var AddListing = React.createClass({
 
   },
   _handleImageAdd: function (image) {
-    this.setState((state) => { images: state.images.unshift(image) });
+    var images = this.state.images
+    images.push(image);
+    this.setState({images: images});
+    //this.setState((state) => { images: state.images.unshift(image) });
   },
   _handleImageDelete: function (image) {
     var images = this.state.images.filter(function(img){

@@ -39,6 +39,8 @@ class User < ActiveRecord::Base
 
   has_many :bids
   has_many :listings
+  has_many :wish_lists
+  has_many :wished_listings, :through => :wish_lists, :source => :listing
 
   has_one :primary_contact, :class_name => "Contact", :conditions => { :is_primary => true } 
 
