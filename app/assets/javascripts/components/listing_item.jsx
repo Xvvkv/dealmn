@@ -130,31 +130,33 @@ var BidPreview = React.createClass({
   render: function() {
     return (
       <div className="collapse als-container" id={this.props.id} ref="als">
-        <span className="als-prev">prev</span>
+        <div className="well timeline-deal-item-bids-items">
+        <span className="als-prev"><div className="timeline-deal-item-bids-left-arrow"></div></span>
         <div className="als-viewport">
           <ul className="als-wrapper">
-            <li className="als-item">
+            <li className="als-item timeline-deal-item-bids-item">
               <a href="#"><img src='/images/123.jpg' /></a>
             </li>
-            <li className="als-item">
+            <li className="als-item timeline-deal-item-bids-item">
               <a href="#"><img src='/images/123.jpg' /></a>
             </li>
-            <li className="als-item">
+            <li className="als-item timeline-deal-item-bids-item">
               <a href="#"><img src='/images/123.jpg' /></a>
             </li>
-            <li className="als-item">
+            <li className="als-item timeline-deal-item-bids-item">
               <a href="#"><img src='/images/123.jpg' /></a>
             </li>
-            <li className="als-item">
+            <li className="als-item timeline-deal-item-bids-item">
               <a href="#"><img src='/images/123.jpg' /></a>
             </li>
-            <li className="als-item">
+            <li className="als-item timeline-deal-item-bids-item">
               <a href="#"><img src='/images/123.jpg' /></a>
             </li>
             
           </ul>
         </div>
-        <span className="als-next">next</span>
+        <span className="als-next"><div className="timeline-deal-item-bids-right-arrow"></div></span>
+        </div>
       </div>
     );
   }

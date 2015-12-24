@@ -15,7 +15,7 @@ class ListingSerializer < ActiveModel::Serializer
   end
 
   def published_date
-    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N')
+    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date
   end
 
 end
