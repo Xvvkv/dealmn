@@ -1,17 +1,39 @@
-<h2>Sign in</h2>
+<div class="main">
 
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
+	<div class="container">
 
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
+		<div class="login-page">
 
-  <% if devise_mapping.rememberable? -%>
-    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
-  <% end -%>
+			<div class="login-page-title">Нэвтрэх</div>
 
-  <div><%= f.submit "Sign in" %></div>
-<% end %>
+			<div class="login-page-other-acc-use">
 
-<%= render "devise/shared/links" %>
+				<a href="#" style="margin-right:5px;"><%= image_tag('login-with-fb.jpg')%></a><a href="#" style="margin-right:5px;"><%= image_tag('login-with-tw.jpg')%></a><a href="#"><%= image_tag('login-with-gp.jpg')%></a>
+
+			</div>
+
+			<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+			  <div class="login-page-input">
+			  	<%= f.email_field :email, :autofocus => true, :placeholder => "Имэйл хаяг" %>
+			  </div>
+
+			  <div  class="login-page-input">
+			 	<%= f.password_field :password, :placeholder => "Нууц үг" %>
+			  </div>
+
+
+			  <% if devise_mapping.rememberable? -%>
+			    <div class="login-page-remind-me"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+			  <% end -%>
+
+			  <div class="login-page-button"><%= f.submit "Нэвтрэх" %></div>
+			<% end %>
+
+			<div class="login-page-links"><%= render "devise/shared/links" %></div>
+
+		</div>
+
+	</div>
+
+</div>
+
