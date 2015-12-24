@@ -14,4 +14,3 @@
 /log/*.log
 /tmp
 /public/images/images
-node_modules/
