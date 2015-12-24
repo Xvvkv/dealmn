@@ -13,15 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20151223081413) do
 
-  create_table "average_caches", :force => true do |t|
-    t.integer  "rater_id"
-    t.integer  "rateable_id"
-    t.string   "rateable_type"
-    t.float    "avg",           :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
     t.string   "file_file_name"
@@ -53,8 +44,8 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   add_index "bid_images", ["bid_id", "image_id"], :name => "index_bid_images_on_bid_id_and_image_id", :unique => true
 
   create_table "bids", :force => true do |t|
-    t.integer  "biddable_id",                  :null => false
-    t.string   "biddable_type",                :null => false
+    t.integer  "biddable_id"
+    t.string   "biddable_type"
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
     t.string   "title",                        :null => false
@@ -66,13 +57,13 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   end
 
   create_table "categories", :force => true do |t|
-    t.string   "name",         :default => "",   :null => false
-    t.boolean  "is_active",    :default => true, :null => false
+    t.string   "name"
+    t.boolean  "is_active"
     t.integer  "column_num"
     t.integer  "column_order"
     t.integer  "parent_id"
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "contacts", :force => true do |t|
@@ -96,8 +87,8 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   end
 
   create_table "listing_images", :id => false, :force => true do |t|
-    t.integer  "listing_id", :null => false
-    t.integer  "image_id",   :null => false
+    t.integer  "listing_id"
+    t.integer  "image_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -105,9 +96,6 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   add_index "listing_images", ["listing_id", "image_id"], :name => "index_listing_images_on_listing_id_and_image_id", :unique => true
 
   create_table "listing_ratings", :force => true do |t|
-    t.integer  "listing_id", :null => false
-    t.integer  "rater_id",   :null => false
-    t.integer  "rating",     :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -121,8 +109,8 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   end
 
   create_table "listings", :force => true do |t|
-    t.integer  "user_id",                               :null => false
-    t.string   "title",              :default => "",    :null => false
+    t.integer  "user_id"
+    t.string   "title"
     t.text     "text_description"
     t.string   "wanted_description"
     t.integer  "item_id"
@@ -142,14 +130,6 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   add_index "listings", ["published_date"], :name => "index_listings_on_published_date"
   add_index "listings", ["publishment_id"], :name => "index_listings_on_publishment_id", :unique => true
 
-  create_table "overall_averages", :force => true do |t|
-    t.integer  "rateable_id"
-    t.string   "rateable_type"
-    t.float    "overall_avg",   :null => false
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
   create_table "product_conditions", :force => true do |t|
     t.string   "title"
     t.string   "description"
@@ -164,53 +144,25 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
     t.string   "condition_description"
   end
 
-  create_table "rates", :force => true do |t|
-    t.integer  "rater_id"
-    t.integer  "rateable_id"
-    t.string   "rateable_type"
-    t.float    "stars",         :null => false
-    t.string   "dimension"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-  end
-
-  add_index "rates", ["rateable_id", "rateable_type"], :name => "index_rates_on_rateable_id_and_rateable_type"
-  add_index "rates", ["rater_id"], :name => "index_rates_on_rater_id"
-
-  create_table "rating_caches", :force => true do |t|
-    t.integer  "cacheable_id"
-    t.string   "cacheable_type"
-    t.float    "avg",            :null => false
-    t.integer  "qty",            :null => false
-    t.string   "dimension"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
-  end
-
-  add_index "rating_caches", ["cacheable_id", "cacheable_type"], :name => "index_rating_caches_on_cacheable_id_and_cacheable_type"
-
   create_table "services", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "spec_suggestions", :force => true do |t|
-    t.integer  "category_id", :null => false
-    t.string   "name",        :null => false
-    t.string   "placeholder"
+    t.integer  "category_id"
+    t.string   "name"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
 
   create_table "specs", :force => true do |t|
-    t.integer  "listing_id", :null => false
-    t.string   "name",       :null => false
-    t.string   "value",      :null => false
+    t.integer  "listing_id"
+    t.string   "name"
+    t.string   "value"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
-
-  add_index "specs", ["listing_id", "name"], :name => "index_specs_on_listing_id_and_name", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string   "name"
@@ -220,34 +172,28 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   end
 
   create_table "user_permissions", :force => true do |t|
-    t.integer  "user_id",    :null => false
-    t.integer  "permission", :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "user_ratings", :force => true do |t|
-    t.integer  "user_id",    :null => false
-    t.integer  "rater_id",   :null => false
-    t.integer  "rating",     :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "user_settings", :force => true do |t|
-    t.integer  "user_id",    :null => false
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "user_stats", :force => true do |t|
-    t.integer  "user_id",                           :null => false
-    t.integer  "rating_sum",         :default => 0, :null => false
-    t.integer  "rating_count",       :default => 0, :null => false
-    t.integer  "total_listing",      :default => 0, :null => false
-    t.integer  "total_accepted_bid", :default => 0, :null => false
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.integer  "user_id"
+    t.integer  "rating_sum"
+    t.integer  "rating_count"
+    t.integer  "total_listing"
+    t.integer  "total_accepted_bid"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -267,8 +213,8 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
     t.string   "unconfirmed_email"
     t.datetime "created_at",                             :null => false
     t.datetime "updated_at",                             :null => false
-    t.string   "first_name",             :default => "", :null => false
-    t.string   "last_name",              :default => "", :null => false
+    t.string   "first_name"
+    t.string   "last_name"
     t.string   "uid"
     t.string   "provider"
     t.integer  "avatar_id"
