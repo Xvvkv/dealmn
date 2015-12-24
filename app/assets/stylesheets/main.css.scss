@@ -387,13 +387,18 @@ body{
 .special .timeline-arrow{
   background: image-url('special_arrow.png') no-repeat center center;
 }
-.special-badget{
+.timeline-badget{
   height: 77px;
   width: 77px;
   position: absolute;
-  background: image-url('special_badget.png') no-repeat center center;
   right: -6px;
-  top:-6px;
+  top:-6px;  
+}
+.special-badget{
+  background: image-url('special_badget.png') no-repeat center center;
+}
+.free-badget{
+  background: image-url('free-badget-mini.png') no-repeat center center;
 }
 .timeline-deal-item-bids-items{
   box-shadow: none;
@@ -1074,7 +1079,6 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     overflow: hidden !important;
   }
   .add-photo{
-    margin-left: 10px;
     cursor: pointer;
     float: left;
     height: 120px;
@@ -1089,13 +1093,15 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     opacity: 0 !important;
     overflow: hidden !important;
   }
-  .crop-pic img{
-    width: 100%;
-    height: auto;
+  .crop-pic {
     margin-top: 10px;
   }
+  .crop-pic img{
+    max-width: 750px;
+    width: auto;
+    height: auto;
+  }
   .progress-photo{
-    margin-left: 10px;
     float: left;
     height: 120px;
     width: 125px;
@@ -1423,6 +1429,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     opacity: 0 !important;
     overflow: hidden !important;
   }
+  
 .no-item-here{
   background: #fff;
   border-radius: 5px;
@@ -1663,4 +1670,44 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .message-send-input .btn{
   margin-top: 10px;
+
+.fadeInOut-enter {
+  opacity: 0.01;
+}
+
+.fadeInOut-enter.fadeInOut-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fadeInOut-leave {
+  opacity: 1;
+}
+
+.fadeInOut-leave.fadeInOut-leave-active {
+  opacity: 0.01;
+  transition: opacity 200ms ease-in;
+}
+
+.slideleft-enter {
+  margin-left: -5px;
+}
+
+.slideleft-enter.slideleft-enter-active {
+  margin-left: 0px;
+  transition: all 300ms ease-out;
+}
+
+
+.static-rating {
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  text-align: left;
+  display: inline-block; 
+}
+.static-rating span {
+  color: #ccc; 
+}
+.static-rating span.is-active {
+  color: #FFC300 !important; 
 }

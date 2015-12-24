@@ -13,10 +13,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.sticky.js
+//= require jquery-ui/effect-highlight
 //= require bootstrap.min
 //= require jquery.Jcrop.min
-//= require react
+//= require jquery.als-1.7.min
+//= require growl
 //= require react_ujs
 //= require components
-//= require react-jcrop
-//= require_tree .

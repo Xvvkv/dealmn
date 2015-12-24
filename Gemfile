@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
 
 gem 'rails', '3.2.18'
 
@@ -19,11 +20,15 @@ gem 'sticky-rails'
 
 gem 'simple_form'
 
+gem 'rails-assets-growl'
+
 #gem 'rails-i18n', '~> 3.0.0'
 
 gem "paperclip", "~> 4.2"
 
 gem 'rinku', :require => 'rails_rinku'
+
+gem 'browserify-rails', '~> 0.9.1'
 
 
 # Gems used only for assets and not required
@@ -39,6 +44,8 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+gem 'jquery-ui-rails'
 
 group :development, :test do
   gem "rspec-rails"

@@ -11,6 +11,8 @@
  *= require_self
  *= require bootstrap.min
  *= require jquery.Jcrop.min
- *= require MetroNotificationStyle
+ *= require growl
+ *= require react-rater
+ *= require als_style
  *= require_tree .
  */

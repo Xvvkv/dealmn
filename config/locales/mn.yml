@@ -22,9 +22,20 @@ mn:
       search_bar:
         all_category: Бүгд
         search: Хайх
+      contact_info:
+        section_title: Холбоо барих мэдээлэл
+        reuse_recent_contacts: Сүүлд хэрэглэсэн холбоо барих мэдээллийг дахин ашиглах
+        phone: Холбоо барих утас
+        phone_short: Утас
+        phone_placeholder: '99999999, 88888888'
+        email: Имэйл
+        email_placeholder: 'example@gmail.com, example@yahoo.com'
+    home:
+      index:
+        add_spec: Тохиролцоо оруулах
     listings:
       new:
-        title: Тохиролцоо нэмэх
+        title: Тохиролцоо оруулах
         general_info:
           section_title: Ерөнхий мэдээлэл
           title: Гарчиг
@@ -36,14 +47,25 @@ mn:
           section_title: Дэлгэрэнгүй мэдээлэл
           image: Зураг
           description: Барааны тайлбар
-          add_spec: Өөр үзүүлэлт нэмэх
-          remove_spec: Хасах
-        contact_info:
-          section_title: Холбоо барих мэдээлэл
-          phone: Утас
-          email: Имэйл
+          add_spec:
+            title: Мэдээлэл нэмэх
+            name: Нэр
+            value: Утга
+            cancel: Буцах
+            add: Нэмэх
+          remove_spec: хасах
         wanted:
           section_title: Сонирхож буй
           title: Сонирхож буй бараа бүтээгдэхүүн
           tooltip: test_tooltip
           placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
+        save: Хадгалах
+        publish: Нэмэх
+    bids:
+      new:
+        title: Санал илгээх
+        general_info:
+          title: Гарчиг
+          image: Зураг
+          description: Барааны тайлбар
+        bid:  Санал илгээх

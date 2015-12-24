@@ -2,6 +2,8 @@ class Category < ActiveRecord::Base
   attr_accessible :name, :is_active, :column_num, :column_order, :parent_id
   
   has_many :listings
+
+  has_many :spec_suggestions
   
   belongs_to :parent, :class_name => 'Category', :foreign_key => :parent_id
   has_many :children, :class_name => 'Category', :foreign_key => :parent_id

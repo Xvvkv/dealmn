@@ -6,7 +6,7 @@ class Rest::CategoriesController < ApplicationController
   end
 
   def show
-    respond_with Category.find(params[:id])
+    respond_with Category.find(params[:id]), include_spec_suggestions: params[:include_spec_suggestions]
   end
 
   def create

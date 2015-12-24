@@ -34,7 +34,7 @@
 
     <div class="header_mid">
       <div class="container">
-        <a href="#"><div class="logo"></div></a>
+        <a href="/"><div class="logo"></div></a>
         <div class="logo-right-category"> 
           <% unless (controller.controller_name == "home" && controller.action_name == "index") %>
           <div class='hover'>
@@ -78,6 +78,29 @@
     <div class="clearfix"></div>
 
     <%= yield %>
+
+    <div class="footer">
+
+        <div class="container">
+
+            <div class="links">
+                <a href="#">Нүүр</a>
+                <a href="#">Бидний тухай</a>
+                <a href="#">Үйлчилгээний нөхцөл</a>
+                <a href="#">Тусламж</a>
+                <a href="#">Сурталчилгаа байршуулах</a>
+                <a href="#">Сайтын бүтэц</a>
+                <a href="#">Холбоо барих</a>
+            </div>
+            <div class="footer-tm">
+
+                ©2015 Deal.mn. All rights reserved.
+
+            </div>
+
+        </div>
+
+    </div>
 
     <script>
 

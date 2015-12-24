@@ -1,8 +1,19 @@
 class Rest::ListingsController < ApplicationController
   respond_to :json
 
+  before_filter :authenticate_user!
+  skip_before_filter :authenticate_user!, :only => [:show, :index]
+
   def index
-    respond_with Listing.all
+    if params[:pid] #timeline
+      if params[:pid].to_i == -1
+        respond_with Listing.published.order('publishment_id desc').limit(20) 
+      else
+        respond_with Listing.published.where('publishment_id < ?', params[:pid].to_i).order('publishment_id desc').limit(10)
+      end
+    else
+      respond_with current_user.listings.published.order('publishment_id desc').limit(5)
+    end
   end
 
   def show
@@ -35,24 +46,41 @@ class Rest::ListingsController < ApplicationController
           listing.item.save
         end
       end  
-    end  
+    end
 
     images = []
     if params[:images] && (params[:images].is_a? Array)
-      puts 'aa'
       params[:images].each do |image_id|
         image = Image.find(image_id)
         images << image
       end
     end
     listing.images = images
+
+    specs = []
+    if params[:specs] && (params[:specs].is_a? Hash)
+      params[:specs].each do |name, s|
+        spec = Spec.where(listing_id: listing.id, name: name).first_or_initialize
+        if s[:value].present?
+          spec.value = s[:value]
+          spec.save
+          specs << spec
+        else
+          spec.delete
+        end
+      end
+    end
+    listing.specs = specs
+
+    if(params[:phone].present? || params[:email].present?)
+      contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_create
+      listing.contact = contact
+    end
+
+
     listing.save
 
     respond_with listing
-  end
-
-  def create
-    #respond_with :rest, City.create(name: params[:name], description: params[:description])
   end
 
 end
