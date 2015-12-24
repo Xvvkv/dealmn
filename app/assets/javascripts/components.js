@@ -1,5 +1,5 @@
 React = require('react');
-Crop = require('react-jcrop')
+
 
 SearchBar = require('./components/search_bar.jsx')
 CategoryMenu = require('./components/category_menu.jsx')

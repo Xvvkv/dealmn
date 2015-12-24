@@ -1,4 +1,5 @@
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+var Crop = require('./react_crop.js')
 
 var ImageUpload = React.createClass({
   getDefaultProps: function() {
