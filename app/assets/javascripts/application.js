@@ -16,6 +16,7 @@
 //= require jquery-ui/effect-highlight
 //= require bootstrap.min
 //= require jquery.Jcrop.min
+//= require jquery.als-1.7.min
 //= require growl
 //= require react_ujs
 //= require components

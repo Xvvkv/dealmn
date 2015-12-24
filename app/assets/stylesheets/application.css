@@ -13,5 +13,6 @@
  *= require jquery.Jcrop.min
  *= require growl
  *= require react-rater
+ *= require als_style
  *= require_tree .
  */

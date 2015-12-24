@@ -1,6 +1,9 @@
 var Rating = require('./fixed_star_rate.jsx');
 
 var ListingItem = React.createClass({
+  initAls: function() {
+    this.refs.bid_preview.initAls();
+  },
   render: function() {
     var wish_list_button;
     if(!this.props.wish_listed){
@@ -34,7 +37,7 @@ var ListingItem = React.createClass({
                 {wish_list_button}
               </div>
               <div className="timeline-deal-item-bottom-bids">
-                <div className="btn btn-default"  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">
+                <div className="btn btn-default" onClick={this.initAls}  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">
                   Ирсэн санал: 5
                 </div>
               </div>
@@ -51,7 +54,7 @@ var ListingItem = React.createClass({
               <div className="clearfix"></div>
             </div>
           </div>
-          <BidPreview id={'bid_prev_' + this.props.listing.id}/>
+          <BidPreview ref="bid_preview" id={'bid_prev_' + this.props.listing.id}/>
         </div>
         <div className="clearfix"></div>
       </div>
@@ -110,26 +113,48 @@ var ListingItemUserInfoTooltip = React.createClass({
 });
 
 var BidPreview = React.createClass({
+  getInitialState: function() {
+    return {
+      als_initiated: false
+    };
+  },
+  initAls: function() {
+    if(this.state.als_initiated){
+      return;
+    }
+    $(this.refs.als).als();
+    this.setState({
+      als_initiated: true
+    });
+  },
   render: function() {
     return (
-      <div className="collapse" id={this.props.id}>
-        <div className="well timeline-deal-item-bids-items">
-          <div className="timeline-deal-item-bids-left-arrow"></div>
-          <div className="timeline-deal-item-bids-item">
-            <a href="#"><img src='/images/123.jpg' /></a>
-          </div>
-          <div className="timeline-deal-item-bids-item">
-            <a href="#"><img src='/images/123.jpg' /></a>
-          </div>
-          <div className="timeline-deal-item-bids-item">
-            <a href="#"><img src='/images/123.jpg' /></a>
-          </div>
-          <div className="timeline-deal-item-bids-item">
-            <a href="#"><img src='/images/123.jpg' /></a>
-          </div>
-          <div className="timeline-deal-item-bids-right-arrow"></div>
-          <div className="clearfix"></div>
+      <div className="collapse als-container" id={this.props.id} ref="als">
+        <span className="als-prev">prev</span>
+        <div className="als-viewport">
+          <ul className="als-wrapper">
+            <li className="als-item">
+              <a href="#"><img src='/images/123.jpg' /></a>
+            </li>
+            <li className="als-item">
+              <a href="#"><img src='/images/123.jpg' /></a>
+            </li>
+            <li className="als-item">
+              <a href="#"><img src='/images/123.jpg' /></a>
+            </li>
+            <li className="als-item">
+              <a href="#"><img src='/images/123.jpg' /></a>
+            </li>
+            <li className="als-item">
+              <a href="#"><img src='/images/123.jpg' /></a>
+            </li>
+            <li className="als-item">
+              <a href="#"><img src='/images/123.jpg' /></a>
+            </li>
+            
+          </ul>
         </div>
+        <span className="als-next">next</span>
       </div>
     );
   }
