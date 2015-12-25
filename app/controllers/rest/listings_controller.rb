@@ -76,10 +76,13 @@ class Rest::ListingsController < ApplicationController
       contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_create
       listing.contact = contact
     end
-
-
-    listing.save
-
+    
+    if(params[:is_publishing] && params[:is_publishing].to_i == 1)
+      listing.publish
+    else
+      listing.save
+    end
+    
     respond_with listing
   end
 

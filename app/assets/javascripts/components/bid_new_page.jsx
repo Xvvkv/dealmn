@@ -31,12 +31,18 @@ var BidNewPage = React.createClass({
     this.refs.addBid._handleSelectListingItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddBid component
   },
   render: function() {
+    var listing_selector;
+    if(this.state.listings.length > 0){
+      listing_selector = (
+        <ItemSelector items={this.state.listings} onSelectItem={this._handleSelectItem} title="Тохиролцоонууд" hint="Сүүлд оруулсан тохиролцооны мэдээллээ санал илгээхэд ашиглах" />
+      );
+    }
     return (
       <div className="main">
         <div className="container">
           <AddBid ref="addBid" {...this.props} />
           <div className="main-right">
-            <ItemSelector items={this.state.listings} onSelectItem={this._handleSelectItem} title="Тохиролцоонууд" hint="Сүүлд оруулсан тохиролцооны мэдээллээ санал илгээхэд ашиглах" />
+            {listing_selector}
             <FreeItemList />
           </div>
         </div>

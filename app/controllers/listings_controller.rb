@@ -8,7 +8,7 @@ class ListingsController < ApplicationController
 
   def new
     #TODO current_user
-    @listing = Listing.get_draft
+    @listing = Listing.get_draft(current_user)
     @product_conditions = ProductCondition.conditions
   end
 

@@ -24,20 +24,18 @@ class Listing < ActiveRecord::Base
 
   scope :free_item, where(is_free: true)
 
-  #TODO user id
-  def self.get_draft
-    Listing.create_draft if Listing.draft.blank?
-    Listing.includes(:images, :specs, :item).draft.first
+  def self.get_draft user
+    Listing.create_draft(user) if user.listings.draft.blank?
+    user.listings.draft.first
   end
 
-  #TODO user id
-  def self.create_draft
-    return unless Listing.draft.blank?
-    Listing.create(user_id: 1, status: STATUS[:draft], item: Product.new)  
+  def self.create_draft user
+    return unless user.listings.draft.blank?
+    Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new)  
   end
 
   def publish
-    return unless self.status == STATUS[:draft]
+    raise 'Validation Failed' unless (self.status == STATUS[:draft] && self.title.present? && self.category.is_bottom_level)
 
     self.status = STATUS[:published]
     self.publishment_id = next_publishment_seq
