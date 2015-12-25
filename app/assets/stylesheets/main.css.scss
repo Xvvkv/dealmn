@@ -1716,9 +1716,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   top:10px;
   right:10px;
 }
-.als-viewport{
-  width: 370px !important;
-}
+
 .als-viewport ul{
   padding: 0 !important;
 }
@@ -1728,4 +1726,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 .btn-primary a:hover{
  color:#fff;
  text-decoration: none;
+}
+.als-wrapper {
+  width:480px;
+  overflow:hidden;
+  height:60px;
 }

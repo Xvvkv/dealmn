@@ -15,6 +15,22 @@ var ListingItem = React.createClass({
         </div>
       );
     }
+
+    var bid_prev, bid_prev_button;
+    if(this.props.listing.bids && this.props.listing.bids.length > 0){
+      bid_prev_button = (
+        <div className="btn btn-default" onClick={this.initAls}  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">
+          Ирсэн санал: {this.props.listing.bids.length}
+        </div>
+      );
+      bid_prev = <BidPreview ref="bid_preview" id={'bid_prev_' + this.props.listing.id} bids={this.props.listing.bids} />
+    }else{
+      bid_prev_button = (
+        <div className="btn btn-default">
+          Ирсэн санал: 0
+        </div>
+      );
+    }
     return (
       <div className="timeline-content">
         <ListingItemUserInfo user={this.props.listing.user} />
@@ -37,9 +53,7 @@ var ListingItem = React.createClass({
                 {wish_list_button}
               </div>
               <div className="timeline-deal-item-bottom-bids">
-                <div className="btn btn-default" onClick={this.initAls}  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">
-                  Ирсэн санал: 5
-                </div>
+                {bid_prev_button}
               </div>
               <div className="timeline-deal-item-bottom-bid">
                 <div className="btn btn-primary">
@@ -54,7 +68,7 @@ var ListingItem = React.createClass({
               <div className="clearfix"></div>
             </div>
           </div>
-          <BidPreview ref="bid_preview" id={'bid_prev_' + this.props.listing.id}/>
+          {bid_prev}
         </div>
         <div className="clearfix"></div>
       </div>
@@ -122,7 +136,12 @@ var BidPreview = React.createClass({
     if(this.state.als_initiated){
       return;
     }
-    $(this.refs.als).als();
+
+    $(this.refs.als).als({
+      visible_items: Math.min(this.props.bids.length,5),
+      speed: 200
+    });
+
     this.setState({
       als_initiated: true
     });
@@ -134,24 +153,15 @@ var BidPreview = React.createClass({
         <span className="als-prev"><div className="timeline-deal-item-bids-left-arrow"></div></span>
         <div className="als-viewport">
           <ul className="als-wrapper">
-            <li className="als-item timeline-deal-item-bids-item">
-              <a href="#"><img src='/images/123.jpg' /></a>
-            </li>
-            <li className="als-item timeline-deal-item-bids-item">
-              <a href="#"><img src='/images/123.jpg' /></a>
-            </li>
-            <li className="als-item timeline-deal-item-bids-item">
-              <a href="#"><img src='/images/123.jpg' /></a>
-            </li>
-            <li className="als-item timeline-deal-item-bids-item">
-              <a href="#"><img src='/images/123.jpg' /></a>
-            </li>
-            <li className="als-item timeline-deal-item-bids-item">
-              <a href="#"><img src='/images/123.jpg' /></a>
-            </li>
-            <li className="als-item timeline-deal-item-bids-item">
-              <a href="#"><img src='/images/123.jpg' /></a>
-            </li>
+            {this.props.bids.map(function(bid,index) {
+              return (
+                <li key={index} className="als-item timeline-deal-item-bids-item">
+                  <a href="#">
+                    {bid.images && bid.images.length > 0 ? <img src={bid.images[0].url}/> : <img src='/images/123.jpg' />}
+                  </a>
+                </li>
+              );
+            })}
             
           </ul>
         </div>

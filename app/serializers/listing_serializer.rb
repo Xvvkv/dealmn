@@ -5,6 +5,7 @@ class ListingSerializer < ActiveModel::Serializer
   has_one :user
   has_one :item
   has_one :contact
+  has_many :bids
 
   def category
     if object.category
