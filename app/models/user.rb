@@ -42,6 +42,9 @@ class User < ActiveRecord::Base
   has_many :wish_lists
   has_many :wished_listings, :through => :wish_lists, :source => :listing
 
+  has_many :ratings, :class_name => 'UserRating', :foreign_key => :user_id
+  has_many :rates, :class_name => 'UserRating', :foreign_key => :rater_id
+
   has_one :primary_contact, :class_name => "Contact", :conditions => { :is_primary => true } 
 
   delegate :rating, :rating_count, to: :user_stat
@@ -61,6 +64,20 @@ class User < ActiveRecord::Base
     self.avatar.image.url(type) if self.avatar
   end
 
+  def registered_date
+    self.created_at.in_time_zone("Asia/Ulaanbaatar").strftime("%Y.%m.%d")
+  end
+
+  def rate rater, rating
+    ur = UserRating.create(user_id: self.id, rater_id: rater.id, rating: rating)
+    
+    self.user_stat.rating_sum += rating
+    self.user_stat.rating_count += 1
+    self.user_stat.save
+    
+    ur
+  end
+
   private
 
   def setup_names
@@ -75,6 +92,7 @@ class User < ActiveRecord::Base
   def create_dependents
     UserStat.create(user_id: self.id)
     UserSetting.create(user_id: self.id)
+    Contact.create(user_id: self.id, is_primary: true, email: self.email)
   end
 
 end

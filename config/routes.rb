@@ -9,11 +9,12 @@ Dealmn::Application.routes.draw do
     resources :categories
     resources :listings do
       resources :bids
+      resources :listing_ratings
     end
     resources :images
     resources :contacts
     resources :wish_lists
-    resources :bids
+    resources :user_ratings
   end
 
   resources :listings do

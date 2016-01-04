@@ -3,7 +3,7 @@ class ListingsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => [:show]
 
   def show
-    #respond_with Category.find(params[:id])
+    @listing = Listing.find(params[:id])
   end
 
   def new

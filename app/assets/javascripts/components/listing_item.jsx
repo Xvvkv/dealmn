@@ -41,7 +41,7 @@ var ListingItem = React.createClass({
           <div className="timeline-deal-item-container">
             <div className="timeline-deal-item-detail">
               <div className="timeline-deal-item-img">{this.props.listing.images && this.props.listing.images.length > 0 ? <img src={this.props.listing.images[0].url}/> : <img src='/images/123.jpg' />}</div>
-              <div className="timeline-deal-item-title">{this.props.listing.title} - {this.props.listing.id}</div>
+              <div className="timeline-deal-item-title"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
               <div className="timeline-deal-item-info">{this.props.listing.text_description}</div>
               <div className="timeline-deal-item-want">
                 <span>Тохиролцоно:</span> {this.props.listing.wanted_description}
@@ -80,7 +80,7 @@ var ListingItemUserInfo = React.createClass({
   render: function() {
     return (
       <div className="timeline-dealer-info hover">
-        <div className="timeline-dealer-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/profile_sample.png'} /></div>
+        <div className="timeline-dealer-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/no_avatar.png'} /></div>
         <div className="timeline-dealer-name">{this.props.user.display_name}</div>
         <div className="timeline-dealer-rank-star"><Rating rating={Math.round(this.props.user.user_stat.rating)}/></div>
         <div className="timeline-dealer-rank-vote">Үнэлсэн: {this.props.user.user_stat.rating_count}</div>
@@ -94,7 +94,7 @@ var ListingItemUserInfoTooltip = React.createClass({
   render: function() {
     return (
       <div className="tooltip timeline-user-info-tooltip">
-        <div className="timeline-dealer-info-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/profile_sample.png'} /></div>
+        <div className="timeline-dealer-info-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/no_avatar.png'} /></div>
         <div className="timeline-dealer-info-other">
           <div className="timeline-dealer-info-name"><a href="#">{this.props.user.display_name}</a></div>
           <div className="timeline-dealer-info-rank">

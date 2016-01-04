@@ -12,6 +12,8 @@ class Listing < ActiveRecord::Base
   has_many :images, :through => :listing_images
 
   has_many :specs, dependent: :destroy
+
+  has_many :listing_ratings
   
   belongs_to :category
   belongs_to :contact
@@ -45,10 +47,14 @@ class Listing < ActiveRecord::Base
     #TODO catch uniq publishment_id constraint exception & generate id again
   end
 
+  def rate rater, rating
+    ListingRating.create(listing_id: self.id, rater_id: rater.id, rating: rating)
+  end
   
   private
     def next_publishment_seq
       result = Listing.connection.execute("SELECT nextval('publishment_seq')")
       result[0]['nextval']
-    end 
+    end
+
 end

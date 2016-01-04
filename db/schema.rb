@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151223081413) do
+ActiveRecord::Schema.define(:version => 20160104060111) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -70,9 +70,9 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
     t.integer  "user_id",                       :null => false
     t.string   "email"
     t.string   "phone"
-    t.boolean  "is_primary", :default => false, :null => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.boolean  "is_primary", :default => false, :null => false
   end
 
   add_index "contacts", ["user_id", "email", "phone"], :name => "index_contacts_on_user_id_and_email_and_phone", :unique => true
@@ -199,13 +199,14 @@ ActiveRecord::Schema.define(:version => 20151223081413) do
   end
 
   create_table "user_stats", :force => true do |t|
-    t.integer  "user_id",                           :null => false
-    t.integer  "rating_sum",         :default => 0, :null => false
-    t.integer  "rating_count",       :default => 0, :null => false
-    t.integer  "total_listing",      :default => 0, :null => false
-    t.integer  "total_accepted_bid", :default => 0, :null => false
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.integer  "user_id",                             :null => false
+    t.integer  "rating_sum",           :default => 0, :null => false
+    t.integer  "rating_count",         :default => 0, :null => false
+    t.integer  "total_listing",        :default => 0, :null => false
+    t.integer  "total_accepted_bid",   :default => 0, :null => false
+    t.datetime "created_at",                          :null => false
+    t.datetime "updated_at",                          :null => false
+    t.integer  "total_active_listing", :default => 0, :null => false
   end
 
   create_table "users", :force => true do |t|

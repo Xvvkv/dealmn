@@ -74,11 +74,15 @@ var Timeline = React.createClass({
         <ListingItem key={index} c={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} />
       );
     }.bind(this))
-    return (
-      <div className="main-timeline">
-        <div className="add-deal-button-container">
-          <a href="/listings/new" className="btn btn-default">{I18n.page.add_spec}</a>
+    var timeline;
+    if(!this.state.hasMore && items.length == 0){
+      timeline = (
+        <div className="no-item-here">
+          Тохиролцоо олдсонгүй.
         </div>
+      );
+    }else{
+      timeline = (
         <InfiniteScroll
             pageStart={0}
             loadMore={this.loadListings}
@@ -86,6 +90,14 @@ var Timeline = React.createClass({
             loader={<div className="loader">Loading ...</div>}>
           {items}
         </InfiniteScroll>
+      );
+    }
+    return (
+      <div className="main-timeline">
+        <div className="add-deal-button-container">
+          <a href="/listings/new" className="btn btn-default">{I18n.page.add_spec}</a>
+        </div>
+        {timeline}
       </div>
     );
   }

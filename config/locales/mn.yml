@@ -70,6 +70,17 @@ mn:
           placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
         save: Хадгалах
         publish: Нэмэх
+      show:
+        owner_info:
+          title: Тохиролцоо оруулсан
+          rated_by: Үнэлсэн
+          registered: Бүртгүүлсэн
+          total_listing: Нийт оруулсан тохиролцоо
+          total_active_listing: Идэвхитэй тохиролцоо
+          total_accepted_bid: Тохиролцсон
+          phone: Утас
+          email: И-Мэйл
+          send_pm: Холбогдох
     bids:
       new:
         title: Санал илгээх
