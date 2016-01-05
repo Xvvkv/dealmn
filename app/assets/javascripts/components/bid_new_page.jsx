@@ -110,18 +110,11 @@ var AddBid = React.createClass({
       dataType: 'json',
       data: data,
       success: function (bid) {
-        $.growl.notice({ title: '', message: "Cанал илгээгдлээ" , location: "br", delayOnHover: true});
-        // TODO redirect to listing page
-        console.log('UPDATED');
-        //$(this.refs.saveButton).button('reset');
+        window.location = '/bids/' + bid.id;
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
         $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-
-        //$(this.refs.saveButton).button('reset');
-      }.bind(this),
-      complete: function () {
         $(this.refs.postButton).button('reset');
         window.scrollTo(0,0);
       }.bind(this)

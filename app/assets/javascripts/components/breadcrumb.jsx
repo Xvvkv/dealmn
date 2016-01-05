@@ -1,15 +1,23 @@
 var Breadcrumb = React.createClass({
   render: function() {
+    var items;
+    if(this.props.listing.breadcrumb){
+      items = (
+        <ol className="breadcrumb">
+          <li><a href="/">Нүүр</a></li>
+          {this.props.listing.breadcrumb.map(function(item,index) {
+            return (
+              <li key={index}><a href="/">{item.name}</a></li>
+            );
+          })}         
+          <li className="active">{this.props.listing.title}</li>
+        </ol>
+      );
+    }
     return (
       <div className="breadcrumb-container">
         <div className="container">
-          <ol className="breadcrumb">
-            <li><a href="/">Нүүр</a></li>
-            <li><a href="/">Бараа бүтээгдэхүүн</a></li>
-            <li><a href="/">Цахилгаан бараа</a></li>
-            <li><a href="/">Гар утас</a></li>
-            <li className="active">Apple iPhone 5S GSM Factory Unlocked 16GB</li>
-          </ol>
+          {items}
         </div>
       </div>
     );

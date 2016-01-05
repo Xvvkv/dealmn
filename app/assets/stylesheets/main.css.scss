@@ -323,6 +323,7 @@ body{
   line-height: 18px;
   max-height: 35px;
   overflow: hidden;
+  text-overflow:ellipsis;
 }
 .timeline-deal-item-want{
   overflow: hidden;
@@ -353,7 +354,7 @@ body{
 .timeline-deal-item-bottom-bid{
   float: right;
 }
-.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-chat div, .timeline-deal-item-bottom-bid div{
+.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-chat div, .timeline-deal-item-bottom-bid a{
   font-size: 11px !important;
 }
 .timeline-deal-item-bottom-check .checkbox input{

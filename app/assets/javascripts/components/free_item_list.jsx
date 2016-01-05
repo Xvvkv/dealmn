@@ -7,7 +7,7 @@ var FreeItemList = React.createClass({
   render: function() {
     return (
       <div className="item-list-items">
-        <div className="home-module-title">Үнэгүй бараа</div>
+        <div className="home-module-title">Үнэгүй бараа (NOT IMPLEMENTED YET!!!)</div>
         {this.props.items.map(function(item,index) {
           return (
             <FreeItem item={item} key={index} />

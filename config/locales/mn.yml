@@ -51,7 +51,7 @@ mn:
           category: Ангилал
           choose_category: Сонго
           condition: Барааны төлөв
-          condition_desc: Төлөвийн тайлбар
+          condition_desc: Барааны төлөв /Нэмэлт тайлбар/
         detailed_info:
           section_title: Дэлгэрэнгүй мэдээлэл
           image: Зураг
@@ -89,3 +89,14 @@ mn:
           image: Зураг
           description: Барааны тайлбар
         bid:  Санал илгээх
+      show:
+        owner_info:
+          title: Cанал оруулсан
+          rated_by: Үнэлсэн
+          registered: Бүртгүүлсэн
+          total_listing: Нийт оруулсан тохиролцоо
+          total_active_listing: Идэвхитэй тохиролцоо
+          total_accepted_bid: Тохиролцсон
+          phone: Утас
+          email: И-Мэйл
+          send_pm: Холбогдох

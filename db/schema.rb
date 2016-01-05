@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160104060111) do
+ActiveRecord::Schema.define(:version => 20160105032550) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -239,7 +239,6 @@ ActiveRecord::Schema.define(:version => 20160104060111) do
   create_table "wish_lists", :force => true do |t|
     t.integer  "listing_id", :null => false
     t.integer  "user_id",    :null => false
-    t.integer  "status"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

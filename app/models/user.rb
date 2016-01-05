@@ -29,6 +29,7 @@ class User < ActiveRecord::Base
   before_validation :setup_names
   before_destroy :destroy_dependents
 
+  before_create :randomize_id
   after_create :create_dependents
 
   belongs_to :avatar, :class_name => 'Image', :foreign_key => :avatar_id
@@ -93,6 +94,12 @@ class User < ActiveRecord::Base
     UserStat.create(user_id: self.id)
     UserSetting.create(user_id: self.id)
     Contact.create(user_id: self.id, is_primary: true, email: self.email)
+  end
+
+  def randomize_id
+    begin
+      self.id = SecureRandom.random_number(100_000_000)
+    end while User.where(id: self.id).exists?
   end
 
 end

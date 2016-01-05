@@ -1,7 +1,7 @@
 var Rater = require('react-rater');
 var Rating = require('./fixed_star_rate.jsx');
 
-var ListingOwnerInfo = React.createClass({
+var OwnerInfo = React.createClass({
   render: function() {
     var rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
     return (
@@ -35,4 +35,4 @@ var ListingOwnerInfo = React.createClass({
   }
 });
 
-module.exports = ListingOwnerInfo;
+module.exports = OwnerInfo;

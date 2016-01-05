@@ -4,10 +4,10 @@ class ListingsController < ApplicationController
 
   def show
     @listing = Listing.find(params[:id])
+    redirect_to root_path if @listing.is_draft?
   end
 
   def new
-    #TODO current_user
     @listing = Listing.get_draft(current_user)
     @product_conditions = ProductCondition.conditions
   end

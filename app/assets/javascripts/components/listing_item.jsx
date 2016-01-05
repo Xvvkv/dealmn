@@ -1,4 +1,5 @@
 var Rating = require('./fixed_star_rate.jsx');
+var BidPreview = require('./bid_preview.jsx');
 
 var ListingItem = React.createClass({
   initAls: function() {
@@ -23,7 +24,8 @@ var ListingItem = React.createClass({
           Ирсэн санал: {this.props.listing.bids.length}
         </div>
       );
-      bid_prev = <BidPreview ref="bid_preview" id={'bid_prev_' + this.props.listing.id} bids={this.props.listing.bids} />
+
+      bid_prev = <BidPreview ref="bid_preview" id={'bid_prev_' + this.props.listing.id} additionalClass="collapse" bids={this.props.listing.bids} />
     }else{
       bid_prev_button = (
         <div className="btn btn-default">
@@ -56,9 +58,7 @@ var ListingItem = React.createClass({
                 {bid_prev_button}
               </div>
               <div className="timeline-deal-item-bottom-bid">
-                <div className="btn btn-primary">
-                  <a href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
-                </div>
+                <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
               </div>
               <div className="timeline-deal-item-bottom-chat">
                 <div className="btn btn-success">
@@ -120,52 +120,6 @@ var ListingItemUserInfoTooltip = React.createClass({
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-    );
-  }
-});
-
-var BidPreview = React.createClass({
-  getInitialState: function() {
-    return {
-      als_initiated: false
-    };
-  },
-  initAls: function() {
-    if(this.state.als_initiated){
-      return;
-    }
-
-    $(this.refs.als).als({
-      visible_items: Math.min(this.props.bids.length,5),
-      speed: 200
-    });
-
-    this.setState({
-      als_initiated: true
-    });
-  },
-  render: function() {
-    return (
-      <div className="collapse als-container" id={this.props.id} ref="als">
-        <div className="well timeline-deal-item-bids-items">
-        <span className="als-prev"><div className="timeline-deal-item-bids-left-arrow"></div></span>
-        <div className="als-viewport">
-          <ul className="als-wrapper">
-            {this.props.bids.map(function(bid,index) {
-              return (
-                <li key={index} className="als-item timeline-deal-item-bids-item">
-                  <a href="#">
-                    {bid.images && bid.images.length > 0 ? <img src={bid.images[0].url}/> : <img src='/images/123.jpg' />}
-                  </a>
-                </li>
-              );
-            })}
-            
-          </ul>
-        </div>
-        <span className="als-next"><div className="timeline-deal-item-bids-right-arrow"></div></span>
         </div>
       </div>
     );

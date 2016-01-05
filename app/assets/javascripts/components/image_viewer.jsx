@@ -1,9 +1,4 @@
 var ImageViewer = React.createClass({
-  getDefaultProps: function() {
-    return {
-      images: []
-    };
-  },
   getInitialState: function() {
     return {
       selectedImage: 0
@@ -15,18 +10,29 @@ var ImageViewer = React.createClass({
     });
   },
   render: function() {
+    console.log(this.props.images);
+    var thumbs;
+    if(this.props.images){
+      thumbs = (
+        this.props.images.map(function(image, index){
+          return (
+            <img src={image.thumb} key={index} className={index == this.state.selectedImage ? 'active' : ''} 
+              onMouseEnter={this._handleMouseEnter.bind(null,index)} />
+          );
+        }.bind(this))
+      );
+    }
+    var image = <div className="full-detail-image-loader" />;
+    if(this.props.images){
+      image = <img src={this.props.images[this.state.selectedImage] ? this.props.images[this.state.selectedImage].url : '/images/1234.jpg'} />
+    }
     return (
       <div className="full-detail-images">
         <div className="full-detail-image-slide">
-          <img src={this.props.images[this.state.selectedImage] ? this.props.images[this.state.selectedImage].url : '/images/1234.jpg'} />
+          {image}
         </div>
         <div className="full-detail-image-thumb">
-          {this.props.images.map(function(image, index){
-            return (
-              <img src={image.thumb} key={index} className={index == this.state.selectedImage ? 'active' : ''} 
-                onMouseEnter={this._handleMouseEnter.bind(null,index)} />
-            );
-          }.bind(this))}
+          {thumbs}
         </div>
       </div>
     );

@@ -1,6 +1,8 @@
 class Listing < ActiveRecord::Base
 
   attr_accessible :status, :item, :user_id
+
+  before_create :randomize_id
   
   has_many :bids, :as => :biddable
   belongs_to :item, :polymorphic => true
@@ -36,6 +38,14 @@ class Listing < ActiveRecord::Base
     Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new)  
   end
 
+  def is_product
+    self.item.is_a? Product
+  end
+
+  def is_draft?
+    self.status == STATUS[:draft]
+  end
+
   def publish
     raise 'Validation Failed' unless (self.status == STATUS[:draft] && self.title.present? && self.category.is_bottom_level)
 
@@ -52,9 +62,16 @@ class Listing < ActiveRecord::Base
   end
   
   private
-    def next_publishment_seq
-      result = Listing.connection.execute("SELECT nextval('publishment_seq')")
-      result[0]['nextval']
-    end
+  
+  def next_publishment_seq
+    result = Listing.connection.execute("SELECT nextval('publishment_seq')")
+    result[0]['nextval']
+  end
+
+  def randomize_id
+    begin
+      self.id = SecureRandom.random_number(100_000_000)
+    end while Listing.where(id: self.id).exists?
+  end
 
 end

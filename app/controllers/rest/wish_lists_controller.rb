@@ -3,7 +3,7 @@ class Rest::WishListsController < ActionController::Base
 
   def create
     if current_user
-      respond_with :rest, WishList.create(user_id: current_user.id, listing_id: params[:listing_id], status: WishList::STATUS[:regular])
+      respond_with :rest, WishList.create(user_id: current_user.id, listing_id: params[:listing_id])
     else
       begin
         wish_list = JSON.parse(cookies[:wish_list]) if cookies[:wish_list]
@@ -21,7 +21,7 @@ class Rest::WishListsController < ActionController::Base
 
   def index
     if current_user
-      respond_with current_user.wish_lists.regular.map(&:listing_id)
+      respond_with current_user.wish_lists.map(&:listing_id)
     else
       begin
         wish_list = JSON.parse(cookies[:wish_list]) if cookies[:wish_list]

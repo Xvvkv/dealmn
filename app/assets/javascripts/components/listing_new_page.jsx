@@ -81,7 +81,7 @@ var AddListing = React.createClass({
       dataType: 'json',
       success: function (listing) {
         this.setState({
-          selectedCat: listing.category,
+          selectedCat: (listing.breadcrumb ? listing.breadcrumb.reduce(function(selectedCat, cat){ selectedCat.push(cat.id); return selectedCat; }, []) : [-1,-1,-1]),
           title: listing.title,
           text_description: listing.text_description,
           wanted_description: listing.wanted_description,
@@ -146,7 +146,7 @@ var AddListing = React.createClass({
     $(this.refs.saveButton).button('loading');
     
     var data = {};
-    data["category"] = this.state.selectedCat;
+    data["category"] = this.state.selectedCat[2];
     data["is_publishing"] = (is_publishing ? 1 : 0)
     data["images"] = this.state.images.map(function(image) { return image.id;});
     ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title"].forEach(function(field) {
@@ -191,7 +191,6 @@ var AddListing = React.createClass({
       $.growl.error({ title: '', message: "Ангилал сонгоно уу" , location: "br", delayOnHover: true});
       window.scrollTo(0,0);
     }else{
-      console.log(this.state.selectedCat);
       this.updateListing(true);  
     }
   },

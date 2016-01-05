@@ -8,9 +8,10 @@ Dealmn::Application.routes.draw do
   namespace :rest do
     resources :categories
     resources :listings do
-      resources :bids
+      resources :bids, only: [:index, :create]
       resources :listing_ratings
     end
+    resources :bids, only: [:index, :show]
     resources :images
     resources :contacts
     resources :wish_lists
@@ -18,8 +19,9 @@ Dealmn::Application.routes.draw do
   end
 
   resources :listings do
-    resources :bids
+    resources :bids, only: [:new]
   end
+  resources :bids, only: [:show]
   
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get
