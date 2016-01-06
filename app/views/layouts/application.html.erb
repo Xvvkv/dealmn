@@ -16,6 +16,18 @@
         </div>
         <div class="header_top_menu">
           <ul class="nav navbar-nav navbar-right">
+            <% if user_signed_in? %>
+            <li>
+            <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
+            </li>
+            <li>
+            <%= link_to('Edit Password', edit_user_registration_path, :method => :get) %>        
+            </li>
+          <% else %>
+            <li>
+            <%= link_to('Login', new_user_session_path)  %>  
+            </li>
+          <% end %>
             <li>
               <%= link_to t('view.header.about_us'), '#' %>
             </li>
@@ -49,6 +61,8 @@
         <%= react_component("SearchBar", url: "/rest/categories.json?exclude_children=true") %>
         
         <div class="header-profile">
+
+          <% if false %> 
           <div class="header-profile-img"><%= image_tag('profile_sample.png')%></div>
           <div class="header-profile-info">
             <div class="header-profile-name">        
@@ -71,6 +85,20 @@
               <div class="header-profile-all-deals"><%= image_tag('check.png')%> 5</div>
             </div>
           </div>
+        
+        <% end %>
+
+        <div class="header-login">
+          <div class="header-login-social-media">
+            <a href="#"><%= image_tag('fb-login.png')%></a>
+            <a href="#"><%= image_tag('tw-login.png')%></a>
+            <a href="#"><%= image_tag('gp-login.png')%></a>
+          </div>
+          <div class="header-profile-info">   
+                <a href="/users/sign_in"><div class="btn btn-default">Нэвтрэх</div></a>
+          </div>
+        </div>
+
         </div>
       </div>    
     </div>

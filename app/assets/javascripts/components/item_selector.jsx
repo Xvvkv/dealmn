@@ -9,8 +9,9 @@ var ItemSelector = React.createClass({
       <div className="item-list-items">
         <div className="home-module-title">{this.props.title}</div>
         <div className="title_information">
-          <div><span className="glyphicon glyphicon-info-sign"></span></div>
-          <div>{this.props.hint}</div>
+          <div className="title_2_symbol"><span className="glyphicon glyphicon-info-sign"></span></div>
+          <div  className="title_2_text">{this.props.hint}</div>
+          <div className="clearfix"></div>
         </div>
         {this.props.items.map(function(item,index) {
           return (
