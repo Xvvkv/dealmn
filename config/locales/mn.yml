@@ -15,6 +15,15 @@ mn:
       top_stat: 'Нийт: <strong>%{listing_total}</strong> тохиролцоо. Өнөөдөр: <strong>%{listing_today}</strong> тохиролцоо орсон байна.'
       about_us: Бидний тухай
       terms_of_use: Үйлчилгээний нөхцөл
+    login:
+      email_placeholder: И-Мэйл хаяг
+      password_placeholder: Нууц үг
+      login: Нэвтрэх
+      remember_me: cануулах
+      forgot_your_password: Нууц үгээ мартсан
+    registration:
+      register: Бүртгүүлэх
+
   js_view:
     general:
       category:
@@ -42,7 +51,7 @@ mn:
           category: Ангилал
           choose_category: Сонго
           condition: Барааны төлөв
-          condition_desc: Төлөвийн тайлбар
+          condition_desc: Барааны төлөв /Нэмэлт тайлбар/
         detailed_info:
           section_title: Дэлгэрэнгүй мэдээлэл
           image: Зураг
@@ -61,6 +70,17 @@ mn:
           placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
         save: Хадгалах
         publish: Нэмэх
+      show:
+        owner_info:
+          title: Тохиролцоо оруулсан
+          rated_by: Үнэлсэн
+          registered: Бүртгүүлсэн
+          total_listing: Нийт оруулсан тохиролцоо
+          total_active_listing: Идэвхитэй тохиролцоо
+          total_accepted_bid: Тохиролцсон
+          phone: Утас
+          email: И-Мэйл
+          send_pm: Холбогдох
     bids:
       new:
         title: Санал илгээх
@@ -69,3 +89,14 @@ mn:
           image: Зураг
           description: Барааны тайлбар
         bid:  Санал илгээх
+      show:
+        owner_info:
+          title: Cанал оруулсан
+          rated_by: Үнэлсэн
+          registered: Бүртгүүлсэн
+          total_listing: Нийт оруулсан тохиролцоо
+          total_active_listing: Идэвхитэй тохиролцоо
+          total_accepted_bid: Тохиролцсон
+          phone: Утас
+          email: И-Мэйл
+          send_pm: Холбогдох

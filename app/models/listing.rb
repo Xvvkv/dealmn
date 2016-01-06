@@ -1,6 +1,8 @@
 class Listing < ActiveRecord::Base
 
   attr_accessible :status, :item, :user_id
+
+  before_create :randomize_id
   
   has_many :bids, :as => :biddable
   belongs_to :item, :polymorphic => true
@@ -12,6 +14,8 @@ class Listing < ActiveRecord::Base
   has_many :images, :through => :listing_images
 
   has_many :specs, dependent: :destroy
+
+  has_many :listing_ratings
   
   belongs_to :category
   belongs_to :contact
@@ -24,20 +28,34 @@ class Listing < ActiveRecord::Base
 
   scope :free_item, where(is_free: true)
 
-  #TODO user id
-  def self.get_draft
-    Listing.create_draft if Listing.draft.blank?
-    Listing.includes(:images, :specs, :item).draft.first
+  def self.get_draft user
+    Listing.create_draft(user) if user.listings.draft.blank?
+    user.listings.draft.first
   end
 
-  #TODO user id
-  def self.create_draft
-    return unless Listing.draft.blank?
-    Listing.create(user_id: 1, status: STATUS[:draft], item: Product.new)  
+  def self.create_draft user
+    return unless user.listings.draft.blank?
+    Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new)  
+  end
+
+  def is_product
+    self.item.is_a? Product
+  end
+
+  def is_draft?
+    self.status == STATUS[:draft]
+  end
+
+  def is_closed?
+    self.status == STATUS[:closed]
+  end
+
+  def is_active?
+    [STATUS[:published]].include? self.status
   end
 
   def publish
-    return unless self.status == STATUS[:draft]
+    raise 'Validation Failed' unless (self.status == STATUS[:draft] && self.title.present? && self.category.is_bottom_level)
 
     self.status = STATUS[:published]
     self.publishment_id = next_publishment_seq
@@ -47,10 +65,21 @@ class Listing < ActiveRecord::Base
     #TODO catch uniq publishment_id constraint exception & generate id again
   end
 
+  def rate rater, rating
+    ListingRating.create(listing_id: self.id, rater_id: rater.id, rating: rating)
+  end
   
   private
-    def next_publishment_seq
-      result = Listing.connection.execute("SELECT nextval('publishment_seq')")
-      result[0]['nextval']
-    end 
+  
+  def next_publishment_seq
+    result = Listing.connection.execute("SELECT nextval('publishment_seq')")
+    result[0]['nextval']
+  end
+
+  def randomize_id
+    begin
+      self.id = SecureRandom.random_number(100_000_000)
+    end while Listing.where(id: self.id).exists?
+  end
+
 end

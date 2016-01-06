@@ -6,7 +6,7 @@
         <%= image_tag('banner1.png')%>
       </div>
     </div>
-    <%= react_component("Timeline") %>
+    <%= react_component("Timeline", current_user_id: current_user.try(:id)) %>
 
 
 

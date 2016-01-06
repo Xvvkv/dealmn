@@ -31,12 +31,18 @@ var BidNewPage = React.createClass({
     this.refs.addBid._handleSelectListingItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddBid component
   },
   render: function() {
+    var listing_selector;
+    if(this.state.listings.length > 0){
+      listing_selector = (
+        <ItemSelector items={this.state.listings} onSelectItem={this._handleSelectItem} title="Тохиролцоонууд" hint="Сүүлд оруулсан тохиролцооны мэдээллээ санал илгээхэд ашиглах" />
+      );
+    }
     return (
       <div className="main">
         <div className="container">
           <AddBid ref="addBid" {...this.props} />
           <div className="main-right">
-            <ItemSelector items={this.state.listings} onSelectItem={this._handleSelectItem} title="Тохиролцоонууд" hint="Сүүлд оруулсан тохиролцооны мэдээллээ санал илгээхэд ашиглах" />
+            {listing_selector}
             <FreeItemList />
           </div>
         </div>
@@ -104,18 +110,11 @@ var AddBid = React.createClass({
       dataType: 'json',
       data: data,
       success: function (bid) {
-        $.growl.notice({ title: '', message: "Cанал илгээгдлээ" , location: "br", delayOnHover: true});
-        // TODO redirect to listing page
-        console.log('UPDATED');
-        //$(this.refs.saveButton).button('reset');
+        window.location = '/bids/' + bid.id;
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
         $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-
-        //$(this.refs.saveButton).button('reset');
-      }.bind(this),
-      complete: function () {
         $(this.refs.postButton).button('reset');
         window.scrollTo(0,0);
       }.bind(this)

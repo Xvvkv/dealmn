@@ -17,7 +17,7 @@ class Rest::ListingsController < ApplicationController
   end
 
   def show
-    respond_with Listing.find(params[:id])
+    respond_with Listing.find(params[:id]), include_wish_listed: true
   end
 
   def update
@@ -26,16 +26,17 @@ class Rest::ListingsController < ApplicationController
     listing.text_description = params[:text_description]
     listing.wanted_description = params[:wanted_description]
 
-    if params[:category] && (params[:category].is_a? Array)
-      listing.category_id = params[:category][2]
-      if params[:category][0].to_i > 0
-        if params[:category][0].to_i == Service::SERVICE_CATEGORY_ID
+    if params[:category] && params[:category].to_i > 0
+      category = Category.find(params[:category].to_i)
+      if(category.is_bottom_level)
+        listing.category_id = category.id
+        if(category.breadcrumb.first[:id] == Service::SERVICE_CATEGORY_ID) #Service
           if listing.item && !(listing.item.is_a? Service)
             listing.item.delete
             listing.item = nil
           end
           listing.item = listing.item || Service.create
-        else
+        else #Product
           if listing.item && !(listing.item.is_a? Product)
             listing.item.delete 
             listing.item = nil
@@ -76,10 +77,13 @@ class Rest::ListingsController < ApplicationController
       contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_create
       listing.contact = contact
     end
-
-
-    listing.save
-
+    
+    if(params[:is_publishing] && params[:is_publishing].to_i == 1)
+      listing.publish
+    else
+      listing.save
+    end
+    
     respond_with listing
   end
 

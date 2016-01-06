@@ -1,22 +1,27 @@
 Dealmn::Application.routes.draw do
-  devise_for :users
+  devise_for :users, :path => '',
+        :path_names => {:sign_in => 'login', :sign_up => 'signup', :sign_out => 'logout'},
+        :controllers => { :omniauth_callbacks => "users/omniauth_callbacks"}
 
   root :to => 'home#index'
 
   namespace :rest do
     resources :categories
     resources :listings do
-      resources :bids
+      resources :bids, only: [:index, :create]
+      resources :listing_ratings
     end
+    resources :bids, only: [:index, :show]
     resources :images
     resources :contacts
     resources :wish_lists
-    resources :bids
+    resources :user_ratings
   end
 
   resources :listings do
-    resources :bids
+    resources :bids, only: [:new]
   end
+  resources :bids, only: [:show]
   
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get

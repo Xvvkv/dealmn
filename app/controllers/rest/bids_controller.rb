@@ -18,15 +18,10 @@ class Rest::BidsController < ApplicationController
   end
 
   def show
-    respond_with Bid.find(params[:id])
-  end
-
-  def update
-    
+    respond_with Bid.find(params[:id]), include_user: true, include_biddable: true
   end
 
   def create
-    bid = nil
     if params[:listing_id]
       listing = Listing.find(params[:listing_id])
 
@@ -53,11 +48,13 @@ class Rest::BidsController < ApplicationController
 
         bid.save
       end
-    else
+
+      respond_with :rest, bid
+    elsif params[:listing_group_id]
       #listing group TODO
+    else
+      raise "invalid request"
     end
-    
-    respond_with :rest, bid
   end
 
 end

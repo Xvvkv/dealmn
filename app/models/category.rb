@@ -13,16 +13,18 @@ class Category < ActiveRecord::Base
 
   scope :top_level, where(parent_id:nil)
 
-  def id_list
+  def breadcrumb
     if parent
-      return parent.id_list.concat [id]  
+      return parent.breadcrumb.concat [{id: id, name: name}]  
     else
-      return [id]
+      return [{id: id, name: name}]
     end
   end
 
+
+
   def is_bottom_level
-    id_list.size == 3
+    breadcrumb.size == 3
   end
 
 end

@@ -33,12 +33,18 @@ var ListingNewPage = React.createClass({
     this.refs.addListing._handleSelectBidItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddListing component
   },
   render: function() {
+    var bid_selector;
+    if(this.state.bids.length > 0){
+      bid_selector = (
+        <ItemSelector items={this.state.bids} onSelectItem={this._handleSelectItem} title="Саналууд" hint="Бусдад санал болгосон бараа, үйлчилгээний мэдээллээ тохиролцоонд ашиглах" />
+      );
+    }
     return (
       <div className="main">
         <div className="container">
           <AddListing ref="addListing" {...this.props} />
           <div className="main-right">
-            <ItemSelector items={this.state.bids} onSelectItem={this._handleSelectItem} title="Саналууд" hint="Бусдад санал болгосон бараа, үйлчилгээний мэдээллээ тохиролцоонд ашиглах" />
+            {bid_selector}
             <FreeItemList />
           </div>
         </div>
@@ -75,7 +81,7 @@ var AddListing = React.createClass({
       dataType: 'json',
       success: function (listing) {
         this.setState({
-          selectedCat: listing.category,
+          selectedCat: (listing.breadcrumb ? listing.breadcrumb.reduce(function(selectedCat, cat){ selectedCat.push(cat.id); return selectedCat; }, []) : [-1,-1,-1]),
           title: listing.title,
           text_description: listing.text_description,
           wanted_description: listing.wanted_description,
@@ -135,12 +141,13 @@ var AddListing = React.createClass({
     // TODO change this
     console.log(message);
   },
-  _handleSave: function () {
+  updateListing: function (is_publishing) {
 
     $(this.refs.saveButton).button('loading');
     
     var data = {};
-    data["category"] = this.state.selectedCat;
+    data["category"] = this.state.selectedCat[2];
+    data["is_publishing"] = (is_publishing ? 1 : 0)
     data["images"] = this.state.images.map(function(image) { return image.id;});
     ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title"].forEach(function(field) {
       data[field] = this.state[field]
@@ -152,6 +159,9 @@ var AddListing = React.createClass({
       dataType: 'json',
       data: data,
       success: function (listing) {
+        if (is_publishing){
+          window.location = '/listings/' + this.props.listing_id;
+        }
         $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});
   
         console.log('UPDATED');
@@ -169,10 +179,20 @@ var AddListing = React.createClass({
       }.bind(this)
     });
   },
+  _handleSave: function () {
+    this.updateListing(false);
+  },
   _handleSubmit: function () {
-    // set status to published
-    this._handleSave();
-    // redirect to show listing page
+    // TODO validate data
+    if(this.state.title == null || this.state.title.trim() == ''){
+      $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
+      window.scrollTo(0,0);
+    }else if(this.state.selectedCat[2] <= 0){
+      $.growl.error({ title: '', message: "Ангилал сонгоно уу" , location: "br", delayOnHover: true});
+      window.scrollTo(0,0);
+    }else{
+      this.updateListing(true);  
+    }
   },
   _handleSelectCategory: function (level, e) {
     if(level == 1){
@@ -256,7 +276,7 @@ var AddListing = React.createClass({
     }
 
     changed_inputs.forEach(function(i) {
-      i.effect("highlight", {}, 3000);
+      i.effect("highlight", {color: '#e6f6ff'}, 3000);
     });
     
 

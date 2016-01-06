@@ -352,14 +352,15 @@ body{
   float: left;
   margin-left:10px;
 }
-.timeline-deal-item-bottom-chat{
+.timeline-deal-item-bottom-button{
   float: right;
   margin-right: 10px;
 }
-.timeline-deal-item-bottom-bid{
-  float: right;
+.timeline-deal-item-bottom-button.rightmost{
+  margin-right: 0px;
 }
-.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-chat div, .timeline-deal-item-bottom-bid div{
+
+.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-button a{
   font-size: 11px !important;
 }
 .timeline-deal-item-bottom-check .checkbox input{
@@ -822,7 +823,7 @@ body{
     border: 1px solid #dbdbdb;
     float: left;
   }
-  .full-detail-deal-buttons .btn-primary, .full-detail-deal-buttons .btn-success{
+  .full-detail-deal-buttons a.btn{
     float: right;
     margin-left: 10px;
     margin-top: 10px;
@@ -831,8 +832,9 @@ body{
     float: left;
     width: 17%;
     margin: 10px 10px 10px 0;
+    cursor: pointer;
   }
-  .full-detail-image-thumb .active img{
+  .full-detail-image-thumb img.active{
     border: 1px solid #1c8fff;
   }
   .full-detail-full{
@@ -1719,7 +1721,8 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   direction: rtl;
   unicode-bidi: bidi-override;
   text-align: left;
-  display: inline-block; 
+  display: inline-block;
+  cursor: default;
 }
 .static-rating span {
   color: #ccc; 
@@ -1731,6 +1734,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   top:10px;
   right:10px;
 }
+
 .als-viewport ul{
   padding: 0 !important;
 }
@@ -1792,4 +1796,16 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .timeline-deal-item-title a{
   color:#000;
+}
+
+.als-wrapper {
+  width:480px;
+  overflow:hidden;
+  height:60px;
+}
+a.anchor {
+  display: block;
+  position: relative;
+  top: -83px;
+  visibility: hidden;
 }

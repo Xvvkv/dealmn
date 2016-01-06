@@ -3,12 +3,12 @@ class ListingsController < ApplicationController
   skip_before_filter :authenticate_user!, :only => [:show]
 
   def show
-    #respond_with Category.find(params[:id])
+    @listing = Listing.find(params[:id])
+    redirect_to root_path and return if @listing.is_draft?
   end
 
   def new
-    #TODO current_user
-    @listing = Listing.get_draft
+    @listing = Listing.get_draft(current_user)
     @product_conditions = ProductCondition.conditions
   end
 
