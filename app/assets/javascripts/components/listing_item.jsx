@@ -7,12 +7,14 @@ var ListingItem = React.createClass({
   },
   render: function() {
     var wish_list_button;
-    if(!this.props.wish_listed){
+    if(!this.props.wish_listed && this.props.current_user_id != this.props.listing.user.id){
       wish_list_button = (
-        <div className="checkbox btn btn-default">
-          <label>
-            <input onClick={this.props.handleWishListClick.bind(null,this.props.listing.id)} type="checkbox" /> Дугуйлах
-          </label>
+        <div className="timeline-deal-item-bottom-check">
+          <div onClick={this.props.handleWishListClick.bind(null,this.props.listing.id)} className="checkbox btn btn-default">
+            <label>
+              <input type="checkbox" /> Дугуйлах
+            </label>
+          </div>
         </div>
       );
     }
@@ -20,16 +22,45 @@ var ListingItem = React.createClass({
     var bid_prev, bid_prev_button;
     if(this.props.listing.bids && this.props.listing.bids.length > 0){
       bid_prev_button = (
-        <div className="btn btn-default" onClick={this.initAls}  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">
-          Ирсэн санал: {this.props.listing.bids.length}
+        <div className="timeline-deal-item-bottom-bids">
+          <div className="btn btn-default" onClick={this.initAls}  data-toggle="collapse" data-target={'#bid_prev_' + this.props.listing.id} aria-expanded="false" aria-controls="collapseExample12">
+            Ирсэн санал: {this.props.listing.bids.length}
+          </div>
         </div>
       );
 
       bid_prev = <BidPreview ref="bid_preview" id={'bid_prev_' + this.props.listing.id} additionalClass="collapse" bids={this.props.listing.bids} />
     }else{
       bid_prev_button = (
-        <div className="btn btn-default">
-          Ирсэн санал: 0
+        <div className="timeline-deal-item-bottom-bids">
+          <div className="btn btn-default">
+            Ирсэн санал: 0
+          </div>
+        </div>
+      );
+    }
+
+    var bid_button, pm_button, edit_button, delete_button;
+    if(this.props.current_user_id != this.props.listing.user.id){
+      bid_button = (
+        <div className="timeline-deal-item-bottom-button rightmost">
+          <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
+        </div>
+      );
+      pm_button = (
+        <div className="timeline-deal-item-bottom-button">
+          <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
+        </div>
+      );
+    }else{
+      delete_button = (
+        <div className="timeline-deal-item-bottom-button rightmost">
+          <a className="btn btn-danger" href={'/listings/' + this.props.listing.id + '/bids/new'}>Устгах</a>
+        </div>
+      );
+      edit_button = (
+        <div className="timeline-deal-item-bottom-button">
+          <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/bids/new'}>Засах</a>
         </div>
       );
     }
@@ -51,20 +82,12 @@ var ListingItem = React.createClass({
               <div className="clearfix"></div>
             </div>
             <div className="timeline-deal-item-bottom">
-              <div className="timeline-deal-item-bottom-check">
-                {wish_list_button}
-              </div>
-              <div className="timeline-deal-item-bottom-bids">
-                {bid_prev_button}
-              </div>
-              <div className="timeline-deal-item-bottom-bid">
-                <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
-              </div>
-              <div className="timeline-deal-item-bottom-chat">
-                <div className="btn btn-success">
-                  Чатлах
-                </div>
-              </div>
+              {wish_list_button}
+              {bid_prev_button}
+              {bid_button}
+              {pm_button}
+              {delete_button}
+              {edit_button}
               <div className="clearfix"></div>
             </div>
           </div>

@@ -347,14 +347,15 @@ body{
   float: left;
   margin-left:10px;
 }
-.timeline-deal-item-bottom-chat{
+.timeline-deal-item-bottom-button{
   float: right;
   margin-right: 10px;
 }
-.timeline-deal-item-bottom-bid{
-  float: right;
+.timeline-deal-item-bottom-button.rightmost{
+  margin-right: 0px;
 }
-.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-chat div, .timeline-deal-item-bottom-bid a{
+
+.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-button a{
   font-size: 11px !important;
 }
 .timeline-deal-item-bottom-check .checkbox input{
@@ -817,7 +818,7 @@ body{
     border: 1px solid #dbdbdb;
     float: left;
   }
-  .full-detail-deal-buttons .btn-primary, .full-detail-deal-buttons .btn-success{
+  .full-detail-deal-buttons a.btn{
     float: right;
     margin-left: 10px;
     margin-top: 10px;

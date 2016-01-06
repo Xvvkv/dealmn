@@ -46,6 +46,14 @@ class Listing < ActiveRecord::Base
     self.status == STATUS[:draft]
   end
 
+  def is_closed?
+    self.status == STATUS[:closed]
+  end
+
+  def is_active?
+    [STATUS[:published]].include? self.status
+  end
+
   def publish
     raise 'Validation Failed' unless (self.status == STATUS[:draft] && self.title.present? && self.category.is_bottom_level)
 

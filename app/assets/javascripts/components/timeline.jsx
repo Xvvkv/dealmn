@@ -47,7 +47,11 @@ var Timeline = React.createClass({
       }.bind(this)
     });
   },
-  _handleWishListClick: function(id){
+  _handleWishListClick: function(id,e){
+    if(e.target.tagName == 'SPAN'){
+      return;
+    }
+    
     $.ajax({
       url: '/rest/wish_lists',
       type: "post",
@@ -71,7 +75,7 @@ var Timeline = React.createClass({
   render: function() {
     var items = this.state.listings.map(function(listing,index) {
       return (
-        <ListingItem key={index} c={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} />
+        <ListingItem key={index} c={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} current_user_id={this.props.current_user_id} />
       );
     }.bind(this))
     var timeline;

@@ -10,7 +10,6 @@ var ImageViewer = React.createClass({
     });
   },
   render: function() {
-    console.log(this.props.images);
     var thumbs;
     if(this.props.images){
       thumbs = (

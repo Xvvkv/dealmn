@@ -26,7 +26,7 @@ class ListingSerializer < ActiveModel::Serializer
 
     stat = {}
     stat[:rating_count] = rating_count
-    stat[:current_user_rating] = object.listing_ratings.where(rater_id: scope.id).try(:first).try(:rating)
+    stat[:current_user_rating] = object.listing_ratings.where(rater_id: scope.id).try(:first).try(:rating) if scope
     stat[:rating] = (rating_sum.to_f / rating_count.to_f).round(1) if rating_count > 0
     stat[:rating_sum] = rating_sum
 

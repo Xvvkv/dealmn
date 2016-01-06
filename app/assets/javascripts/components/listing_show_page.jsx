@@ -73,13 +73,38 @@ var ListingShowPage = React.createClass({
       }.bind(this)
     });
   },
+  _handleWishListClick: function(e){
+    
+    if(e.target.tagName == 'SPAN'){
+      return;
+    }
+    
+    $.ajax({
+      url: '/rest/wish_lists',
+      type: "post",
+      dataType: 'json',
+      data: {listing_id: this.props.listing_id},
+      success: function (wl) {
+        $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
+        l_updated = this.state.listing
+        l_updated.wish_listed = true
+        this.setState({
+          listing: l_updated
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/listings', status, err.toString());
+        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+      }.bind(this)
+    });
+  },
   render: function() {
     return (
       <div className="main">
         <Breadcrumb listing={this.state.listing} />
         <div className="container">
           <div className="deal-full-detail-page-container">
-            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing}/>
+            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishListClick={this._handleWishListClick}/>
             <RelatedItems />
           </div>
           <div className="main-right">
@@ -128,18 +153,28 @@ var ListingDetail = React.createClass({
       );
     }
     
-        
-
     var wish_list_button;
     if(!this.props.listing.wish_listed){
       wish_list_button = (
-        <div className="checkbox btn btn-default">
+        <div onClick={this.props.handleWishListClick} className="checkbox btn btn-default">
           <label>
-            <input onClick={this.props.handleWishListClick} type="checkbox" /> Дугуйлах
+            <input type="checkbox" /> Дугуйлах
           </label>
         </div>
       );
     }
+
+    var bid_button, pm_button, edit_button, delete_button;
+    if(this.props.listing.user){
+      if(this.props.current_user_id != this.props.listing.user.id){
+        bid_button = <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
+        pm_button = <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
+      }else{
+        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/bids/new'}>Засах</a>
+        delete_button = <a className="btn btn-danger" href={'/listings/' + this.props.listing.id + '/bids/new'}>Устгах</a>
+      }
+    }
+
     var spec_table;
     if(this.props.listing.specs && this.props.listing.specs.length > 0){
       spec_table = (
@@ -189,8 +224,10 @@ var ListingDetail = React.createClass({
             <div className="hairly-line" />
             <div className="full-detail-deal-buttons">
               {wish_list_button}
-              <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
-              <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
+              {bid_button}
+              {pm_button}
+              {delete_button}
+              {edit_button}
             </div>
           </div>
           <div className="clearfix" />

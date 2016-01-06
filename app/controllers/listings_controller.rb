@@ -4,7 +4,7 @@ class ListingsController < ApplicationController
 
   def show
     @listing = Listing.find(params[:id])
-    redirect_to root_path if @listing.is_draft?
+    redirect_to root_path and return if @listing.is_draft?
   end
 
   def new
