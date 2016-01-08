@@ -360,7 +360,7 @@ body{
   margin-right: 0px;
 }
 
-.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-button a{
+.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-button a, .timeline-deal-item-bottom-button button{
   font-size: 11px !important;
 }
 .timeline-deal-item-bottom-check .checkbox input{
@@ -823,7 +823,7 @@ body{
     border: 1px solid #dbdbdb;
     float: left;
   }
-  .full-detail-deal-buttons a.btn{
+  .full-detail-deal-buttons a.btn, .full-detail-deal-buttons button.btn{
     float: right;
     margin-left: 10px;
     margin-top: 10px;
@@ -1787,6 +1787,10 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   background-image: none;
   border-radius: 4px;
   cursor: default;
+}
+.full-detail-deal-buttons .timeline-deal-checked{
+  font-size: 14px !important;
+  margin-top: 10px;
 }
 .full-detail-image-loader{
   background: image-url('loader.gif') #fff no-repeat center center;

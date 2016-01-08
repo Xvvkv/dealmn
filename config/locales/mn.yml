@@ -70,6 +70,32 @@ mn:
           placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
         save: Хадгалах
         publish: Нэмэх
+      edit:
+        title: Тохиролцоо засах
+        general_info:
+          section_title: Ерөнхий мэдээлэл
+          title: Гарчиг
+          category: Ангилал
+          choose_category: Сонго
+          condition: Барааны төлөв
+          condition_desc: Барааны төлөв /Нэмэлт тайлбар/
+        detailed_info:
+          section_title: Дэлгэрэнгүй мэдээлэл
+          image: Зураг
+          description: Барааны тайлбар
+          add_spec:
+            title: Мэдээлэл нэмэх
+            name: Нэр
+            value: Утга
+            cancel: Буцах
+            add: Нэмэх
+          remove_spec: хасах
+        wanted:
+          section_title: Сонирхож буй
+          title: Сонирхож буй бараа бүтээгдэхүүн
+          tooltip: test_tooltip
+          placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
+        save: Хадгалах
       show:
         owner_info:
           title: Тохиролцоо оруулсан
@@ -89,6 +115,13 @@ mn:
           image: Зураг
           description: Барааны тайлбар
         bid:  Санал илгээх
+      edit:
+        title: Санал засах
+        general_info:
+          title: Гарчиг
+          image: Зураг
+          description: Барааны тайлбар
+        save: Хадгалах
       show:
         owner_info:
           title: Cанал оруулсан

@@ -9,7 +9,9 @@ var BidPreviewLarge = require('./bid_preview_large.jsx');
 var ListingShowPage = React.createClass({
   getInitialState: function() {
     return {
-      listing: {}
+      listing: {},
+      loaded: false,
+      is_closed: false
     };
   },
   componentDidMount: function() {
@@ -22,8 +24,10 @@ var ListingShowPage = React.createClass({
       success: function (listing) {
         this.setState({
           listing: listing,
+          is_closed: listing.is_closed,
           user_rating: listing.user.user_stat.current_user_rating,
-          listing_rating: listing.listing_stat.current_user_rating
+          listing_rating: listing.listing_stat.current_user_rating,
+          loaded: true
         });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -32,52 +36,62 @@ var ListingShowPage = React.createClass({
     });
   },
   _handleUserRate: function(rating, last_rating) {
-    $.ajax({
-      url: '/rest/user_ratings',
-      type: "post",
-      dataType: 'json',
-      data: {rating: rating, user_email: this.state.listing.user.email},
-      success: function (rating) {
-        l_updated = this.state.listing
-        l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
-        l_updated.user.user_stat.rating_count += 1
-        this.setState({
-          user_rating: rating.rating,
-          listing: l_updated
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/user_ratings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-      }.bind(this)
-    });
+    if(this.state.loaded && this.state.listing.user.id != this.props.current_user_id){
+      $.ajax({
+        url: '/rest/user_ratings',
+        type: "post",
+        dataType: 'json',
+        data: {rating: rating, user_email: this.state.listing.user.email},
+        success: function (rating) {
+          l_updated = this.state.listing
+          l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
+          l_updated.user.user_stat.rating_count += 1
+          this.setState({
+            user_rating: rating.rating,
+            listing: l_updated
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/user_ratings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this)
+      });
+    }
   },
   _handleListingRate: function(rating, last_rating) {
-    $.ajax({
-      url: '/rest/listings/' + this.state.listing.id + '/listing_ratings',
-      type: "post",
-      dataType: 'json',
-      data: {rating: rating},
-      success: function (rating) {
-        l_updated = this.state.listing
-        l_updated.listing_stat.rating = +((l_updated.listing_stat.rating_sum + rating.rating) / (l_updated.listing_stat.rating_count + 1)).toFixed(1)
-        l_updated.listing_stat.rating_count += 1
-        this.setState({
-          listing_rating: rating.rating,
-          listing: l_updated
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/listing_ratings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-      }.bind(this)
-    });
+    if(this.state.loaded && this.state.listing.user.id != this.props.current_user_id){
+      $.ajax({
+        url: '/rest/listings/' + this.state.listing.id + '/listing_ratings',
+        type: "post",
+        dataType: 'json',
+        data: {rating: rating},
+        success: function (rating) {
+          l_updated = this.state.listing
+          l_updated.listing_stat.rating = +((l_updated.listing_stat.rating_sum + rating.rating) / (l_updated.listing_stat.rating_count + 1)).toFixed(1)
+          l_updated.listing_stat.rating_count += 1
+          this.setState({
+            listing_rating: rating.rating,
+            listing: l_updated
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/listing_ratings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this)
+      });
+    }
   },
   _handleWishListClick: function(e){
     
     if(e.target.tagName == 'SPAN'){
       return;
     }
+
+    l_updated = this.state.listing
+    l_updated.wish_listed = true
+    this.setState({
+      listing: l_updated
+    });
     
     $.ajax({
       url: '/rest/wish_lists',
@@ -86,17 +100,41 @@ var ListingShowPage = React.createClass({
       data: {listing_id: this.props.listing_id},
       success: function (wl) {
         $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
-        l_updated = this.state.listing
-        l_updated.wish_listed = true
-        this.setState({
-          listing: l_updated
-        });
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
         $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        l_updated = this.state.listing
+        l_updated.wish_listed = false
+        this.setState({
+          listing: l_updated
+        });
       }.bind(this)
     });
+  },
+  _handleCloseListing: function(e) {
+    if (confirm('Тохиролцоог хааснаар санал хүлээж авах боломжгүй болно. Үргэлжлүүлэх үү?')) {
+      $(e.target).button('loading');
+      $.ajax({
+        url: '/rest/listings/' + this.props.listing_id + '.json',
+        type: "delete",
+        dataType: 'json',
+        success: function () {
+          $.growl.notice({ title: '', message: "Тохиролцоо хаагдлаа" , location: "br", delayOnHover: true});
+          this.setState({is_closed: true});
+        }.bind(this),
+        error: function (xhr, status, err) {
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+          console.error('/rest/listings.json', status, err.toString());
+        }.bind(this),
+        complete: function () {
+          $(e.target).button('reset');
+        }.bind(this)
+      });
+      
+    } else {
+      return false;
+    }
   },
   render: function() {
     return (
@@ -104,11 +142,11 @@ var ListingShowPage = React.createClass({
         <Breadcrumb listing={this.state.listing} />
         <div className="container">
           <div className="deal-full-detail-page-container">
-            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishListClick={this._handleWishListClick}/>
+            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishListClick={this._handleWishListClick} handleCloseListing={this._handleCloseListing} loaded={this.state.loaded} is_closed={this.state.is_closed} />
             <RelatedItems />
           </div>
           <div className="main-right">
-            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} user={this.state.listing.user || {}} />
+            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} />
             <FreeItemList />
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>
@@ -124,6 +162,15 @@ var ListingShowPage = React.createClass({
 var ListingDetail = React.createClass({
   render: function() {
     var rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
+    var rater
+    if(this.props.loaded){
+      if(this.props.listing.user.id != this.props.current_user_id){
+        rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
+      }else{
+        rater = <Rating rating={Math.round(this.props.listing.listing_stat.rating)} />
+      }
+    }
+
     var p_condition;
     if(this.props.listing.is_product){
       p_condition = (
@@ -154,24 +201,32 @@ var ListingDetail = React.createClass({
     }
     
     var wish_list_button;
-    if(!this.props.listing.wish_listed){
-      wish_list_button = (
-        <div onClick={this.props.handleWishListClick} className="checkbox btn btn-default">
-          <label>
-            <input type="checkbox" /> Дугуйлах
-          </label>
-        </div>
-      );
+    if(this.props.listing.user){
+      if(this.props.current_user_id != this.props.listing.user.id){
+        if(!this.props.listing.wish_listed){
+          wish_list_button = (
+            <div onClick={this.props.handleWishListClick} className="checkbox btn btn-default">
+              <label>
+                <input type="checkbox" /> Дугуйлах
+              </label>
+            </div>
+          );
+        }else{
+          wish_list_button = (
+            <div className="timeline-deal-checked">Дугуйлагдсан</div>
+          ); 
+        }
+      }
     }
 
-    var bid_button, pm_button, edit_button, delete_button;
+    var bid_button, pm_button, edit_button, close_button;
     if(this.props.listing.user){
       if(this.props.current_user_id != this.props.listing.user.id){
         bid_button = <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
         pm_button = <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
       }else{
-        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/bids/new'}>Засах</a>
-        delete_button = <a className="btn btn-danger" href={'/listings/' + this.props.listing.id + '/bids/new'}>Устгах</a>
+        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/edit'}>Засах</a>
+        close_button = <button className="btn btn-danger" onClick={this.props.handleCloseListing}>Хаах</button>
       }
     }
 
@@ -200,7 +255,7 @@ var ListingDetail = React.createClass({
       <div className="deal-full-detail-page">
         <ImageViewer images={this.props.listing.images}/>
         <div className="full-detail-short-info">
-          <div className="full-detail-title">{this.props.listing.title}</div>
+          <div className="full-detail-title">{this.props.listing.title} {this.props.is_closed ? '(Тохиролцоо хаагдсан)' : ''}</div>
           <div className="full-detail-watchers">
             <span>Үзсэн: N/A</span>
             <div className="full-detail-rate">
@@ -223,11 +278,11 @@ var ListingDetail = React.createClass({
             {bid_prev}
             <div className="hairly-line" />
             <div className="full-detail-deal-buttons">
-              {wish_list_button}
-              {bid_button}
+              {!this.props.is_closed && wish_list_button}
+              {!this.props.is_closed && bid_button}
               {pm_button}
-              {delete_button}
-              {edit_button}
+              {!this.props.is_closed && close_button}
+              {!this.props.is_closed && edit_button}
             </div>
           </div>
           <div className="clearfix" />

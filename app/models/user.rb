@@ -70,6 +70,8 @@ class User < ActiveRecord::Base
   end
 
   def rate rater, rating
+    raise "Invalid Request" if self.id == rater.id
+
     ur = UserRating.create(user_id: self.id, rater_id: rater.id, rating: rating)
     
     self.user_stat.rating_sum += rating

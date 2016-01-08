@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160105032550) do
+ActiveRecord::Schema.define(:version => 20160106094023) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "listing_ratings", ["listing_id", "rater_id"], :name => "index_listing_ratings_on_listing_id_and_rater_id", :unique => true
+
   create_table "listing_tags", :force => true do |t|
     t.integer  "listing_id"
     t.integer  "tag_id"
@@ -191,6 +193,8 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "user_ratings", ["user_id", "rater_id"], :name => "index_user_ratings_on_user_id_and_rater_id", :unique => true
 
   create_table "user_settings", :force => true do |t|
     t.integer  "user_id",    :null => false

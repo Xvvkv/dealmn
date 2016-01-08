@@ -3,7 +3,14 @@ var Rating = require('./fixed_star_rate.jsx');
 
 var OwnerInfo = React.createClass({
   render: function() {
-    var rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
+    var rater
+    if(this.props.loaded){
+      if(this.props.user.id != this.props.current_user_id){
+        rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
+      }else{
+        rater = <Rating rating={Math.round(this.props.user.user_stat.rating)} />
+      }
+    }
     return (
       <div className="full-detail-user-information">
         <div className="home-module-title">{I18n.page.owner_info.title}</div>

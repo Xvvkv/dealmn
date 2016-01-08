@@ -2,6 +2,7 @@ class BidSerializer < ActiveModel::Serializer
   attributes :title, :description, :id, :bidder_name, :biddable
   has_many :images
   has_one :user
+  has_one :contact
 
   def include_bidder_name?
     !@options[:include_user]

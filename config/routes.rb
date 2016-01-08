@@ -11,7 +11,7 @@ Dealmn::Application.routes.draw do
       resources :bids, only: [:index, :create]
       resources :listing_ratings
     end
-    resources :bids, only: [:index, :show]
+    resources :bids, only: [:index, :show, :update]
     resources :images
     resources :contacts
     resources :wish_lists
@@ -21,7 +21,7 @@ Dealmn::Application.routes.draw do
   resources :listings do
     resources :bids, only: [:new]
   end
-  resources :bids, only: [:show]
+  resources :bids, only: [:show, :edit]
   
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get

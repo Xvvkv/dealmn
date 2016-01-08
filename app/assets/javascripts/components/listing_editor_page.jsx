@@ -5,7 +5,7 @@ var ContactInfo = require('./contact_info.jsx');
 var FreeItemList = require('./free_item_list.jsx');
 var ItemSelector = require('./item_selector.jsx');
 
-var ListingNewPage = React.createClass({
+var ListingEditorPage = React.createClass({
   getInitialState: function() {
     return {
       bids: []
@@ -30,7 +30,7 @@ var ListingNewPage = React.createClass({
     });
   },
   _handleSelectItem: function(item) {
-    this.refs.addListing._handleSelectBidItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddListing component
+    this.refs.editor._handleSelectBidItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddListing component
   },
   render: function() {
     var bid_selector;
@@ -42,7 +42,7 @@ var ListingNewPage = React.createClass({
     return (
       <div className="main">
         <div className="container">
-          <AddListing ref="addListing" {...this.props} />
+          <ListingEditor ref="editor" {...this.props} />
           <div className="main-right">
             {bid_selector}
             <FreeItemList />
@@ -53,7 +53,7 @@ var ListingNewPage = React.createClass({
   }
 });
 
-var AddListing = React.createClass({
+var ListingEditor = React.createClass({
   getDefaultProps: function() {
     return {
       //listingId: null,
@@ -68,7 +68,8 @@ var AddListing = React.createClass({
       listing: {},
       spec_suggestions: {},
       specs: {},
-      contacts: []
+      contacts: [],
+      updating: false
     };
   },
   componentDidMount: function() {
@@ -141,13 +142,18 @@ var AddListing = React.createClass({
     // TODO change this
     console.log(message);
   },
-  updateListing: function (is_publishing) {
+  updateListing: function (mode) {
 
-    $(this.refs.saveButton).button('loading');
+    if(this.state.updating){
+      console.log('not finished yet!!!')
+      return;
+    }
+    this.setState({updating: true})
+    //$(this.refs.saveButton).button('loading');
     
     var data = {};
     data["category"] = this.state.selectedCat[2];
-    data["is_publishing"] = (is_publishing ? 1 : 0)
+    data["mode"] = mode
     data["images"] = this.state.images.map(function(image) { return image.id;});
     ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title"].forEach(function(field) {
       data[field] = this.state[field]
@@ -159,31 +165,37 @@ var AddListing = React.createClass({
       dataType: 'json',
       data: data,
       success: function (listing) {
-        if (is_publishing){
+        if (mode == 1){
           window.location = '/listings/' + this.props.listing_id;
+        }else{
+          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});  
         }
-        $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});
-  
-        console.log('UPDATED');
-        //$(this.refs.saveButton).button('reset');
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
         $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-
-        //$(this.refs.saveButton).button('reset');
       }.bind(this),
       complete: function () {
-        $(this.refs.saveButton).button('reset');
+        //$(this.refs.saveButton).button('reset');
+        this.setState({updating: false});
         window.scrollTo(0,0);
       }.bind(this)
     });
   },
-  _handleSave: function () {
-    this.updateListing(false);
+  _handleSaveDraft: function () {
+    this.updateListing(0);
   },
   _handleSubmit: function () {
-    // TODO validate data
+    if(this.validate()){
+      this.updateListing(1);
+    }
+  },
+  _handleUpdate: function () {
+    if(this.validate()){
+      this.updateListing(2);
+    }
+  },
+  validate: function() {
     if(this.state.title == null || this.state.title.trim() == ''){
       $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
       window.scrollTo(0,0);
@@ -191,8 +203,9 @@ var AddListing = React.createClass({
       $.growl.error({ title: '', message: "Ангилал сонгоно уу" , location: "br", delayOnHover: true});
       window.scrollTo(0,0);
     }else{
-      this.updateListing(true);  
+      return true;
     }
+    return false;
   },
   _handleSelectCategory: function (level, e) {
     if(level == 1){
@@ -266,7 +279,7 @@ var AddListing = React.createClass({
       changed_inputs.push($(this.refs.title_input));
     }
 
-    var new_description = item.description + '\n\nhttp://localhost:3000/bids/' + item.id;
+    var new_description = item.description + '\n\nhttp://www.deal.mn/bids/' + item.id;
     if(this.state.text_description != new_description){
       changed_inputs.push($(this.refs.desc_input));
     }
@@ -323,8 +336,9 @@ var AddListing = React.createClass({
         </div>
         <div className="hairly-line"></div>
         <div className="col-md-12 text-center">
-          <button ref="saveButton" data-loading-text="Loading..." type="button" onClick={this._handleSave} className="btn btn-success">{I18n.page.save}</button>&nbsp;
-          <button type="button" onClick={this._handleSubmit} className="btn btn-success">{I18n.page.publish}</button>
+          {!this.props.edit_mode && <button onClick={this._handleSaveDraft} className="btn btn-success">{I18n.page.save}</button>}
+          {!this.props.edit_mode && <button onClick={this._handleSubmit} className="btn btn-success">{I18n.page.publish}</button>}
+          {this.props.edit_mode && <button onClick={this._handleUpdate} className="btn btn-success">{I18n.page.save}</button>}
         </div>
       </div>
     );
@@ -489,4 +503,4 @@ var SpecItem = React.createClass({
 });
 
 
-module.exports = ListingNewPage;
+module.exports = ListingEditorPage;

@@ -51,31 +51,35 @@ var Timeline = React.createClass({
     if(e.target.tagName == 'SPAN'){
       return;
     }
-    
+
+    var wish_list = this.state.wish_list
+    wish_list.push(id);
+    this.setState({wish_list: wish_list});
+
     $.ajax({
       url: '/rest/wish_lists',
       type: "post",
       dataType: 'json',
       data: {listing_id: id},
       success: function (wl) {
-        $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
-        var wish_list = this.state.wish_list
-        wish_list.push(id);
-        this.setState({wish_list: wish_list});
-
+        $.growl.notice({ title: '', message: "Тохиролцоо амжилттай дугуйлагдлаа" , location: "br", delayOnHover: true});
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
         $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-
-        //$(this.refs.saveButton).button('reset');
+        var wish_list = this.state.wish_list
+        var index = wish_list.indexOf(id);
+        if (index > -1) {
+          wish_list.splice(index, 1);
+        }
+        this.setState({wish_list: wish_list});
       }.bind(this)
     });
   },
   render: function() {
     var items = this.state.listings.map(function(listing,index) {
       return (
-        <ListingItem key={index} c={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} current_user_id={this.props.current_user_id} />
+        <ListingItem key={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} current_user_id={this.props.current_user_id} handleCloseListing={this._handleCloseListing} />
       );
     }.bind(this))
     var timeline;

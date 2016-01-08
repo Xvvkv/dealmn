@@ -16,12 +16,23 @@ class Rest::ListingsController < ApplicationController
     end
   end
 
+  # won't delete. just mark it closed.
+  def destroy
+    listing = Listing.find(params[:id])
+    raise "invalid request" unless listing.user_id == current_user.id
+    listing.update_attribute(:status, Listing::STATUS[:closed])
+    respond_with :rest, listing
+  end
+
   def show
     respond_with Listing.find(params[:id]), include_wish_listed: true
   end
 
   def update
     listing = Listing.find(params[:id])
+
+    raise "invalid request" unless listing.user_id == current_user.id
+
     listing.title = params[:title]
     listing.text_description = params[:text_description]
     listing.wanted_description = params[:wanted_description]
@@ -78,10 +89,15 @@ class Rest::ListingsController < ApplicationController
       listing.contact = contact
     end
     
-    if(params[:is_publishing] && params[:is_publishing].to_i == 1)
-      listing.publish
-    else
+    params[:mode] ||= 0
+    if params[:mode].to_i == 0
       listing.save
+    elsif params[:mode].to_i == 1
+      listing.publish
+    elsif params[:mode].to_i == 2
+      listing.update_data
+    else
+      raise "invalid request"
     end
     
     respond_with listing

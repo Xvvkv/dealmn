@@ -2,21 +2,61 @@ var Rating = require('./fixed_star_rate.jsx');
 var BidPreview = require('./bid_preview.jsx');
 
 var ListingItem = React.createClass({
+  getInitialState: function() {
+    return {
+      is_closed: false // removing listing from array of listings based on id was little bit risky when user clicks multiple close button, so instead of removing it'll just mark it as closed & render emtpy div
+    };
+  },
   initAls: function() {
     this.refs.bid_preview.initAls();
   },
+  handleCloseListing: function() {
+    if (confirm('Тохиролцоог хааснаар санал хүлээж авах боломжгүй болно. Үргэлжлүүлэх үү?')) {
+      $(this.refs.closeButton).button('loading');
+
+      $.ajax({
+        url: '/rest/listings/' + this.props.listing.id + '.json',
+        type: "delete",
+        dataType: 'json',
+        success: function () {
+          $.growl.notice({ title: '', message: "Тохиролцоо хаагдлаа" , location: "br", delayOnHover: true});
+          this.setState({is_closed: true});
+        }.bind(this),
+        error: function (xhr, status, err) {
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+          console.error('/rest/listings.json', status, err.toString());
+        }.bind(this),
+        complete: function () {
+          $(this.refs.closeButton).button('reset');
+        }.bind(this)
+      });
+    } else {
+      return false;
+    }
+  },
   render: function() {
+    if (this.state.is_closed){
+      return <div style={{display: 'none'}} />;
+    }
     var wish_list_button;
-    if(!this.props.wish_listed && this.props.current_user_id != this.props.listing.user.id){
-      wish_list_button = (
-        <div className="timeline-deal-item-bottom-check">
-          <div onClick={this.props.handleWishListClick.bind(null,this.props.listing.id)} className="checkbox btn btn-default">
-            <label>
-              <input type="checkbox" /> Дугуйлах
-            </label>
+    if(this.props.current_user_id != this.props.listing.user.id){
+      if(!this.props.wish_listed){
+        wish_list_button = (
+          <div className="timeline-deal-item-bottom-check">
+            <div onClick={this.props.handleWishListClick.bind(null,this.props.listing.id)} className="checkbox btn btn-default">
+              <label>
+                <input type="checkbox" /> Дугуйлах
+              </label>
+            </div>
           </div>
-        </div>
-      );
+        );
+      }else{
+        wish_list_button = (
+          <div className="timeline-deal-item-bottom-check">
+            <div className="timeline-deal-checked">Дугуйлагдсан</div>
+          </div>
+        ); 
+      }
     }
 
     var bid_prev, bid_prev_button;
@@ -40,7 +80,7 @@ var ListingItem = React.createClass({
       );
     }
 
-    var bid_button, pm_button, edit_button, delete_button;
+    var bid_button, pm_button, edit_button, close_button;
     if(this.props.current_user_id != this.props.listing.user.id){
       bid_button = (
         <div className="timeline-deal-item-bottom-button rightmost">
@@ -53,14 +93,14 @@ var ListingItem = React.createClass({
         </div>
       );
     }else{
-      delete_button = (
+      close_button = (
         <div className="timeline-deal-item-bottom-button rightmost">
-          <a className="btn btn-danger" href={'/listings/' + this.props.listing.id + '/bids/new'}>Устгах</a>
+          <button ref="closeButton" onClick={this.handleCloseListing} className="btn btn-danger">Хаах</button>
         </div>
       );
       edit_button = (
         <div className="timeline-deal-item-bottom-button">
-          <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/bids/new'}>Засах</a>
+          <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/edit'}>Засах</a>
         </div>
       );
     }
@@ -86,7 +126,7 @@ var ListingItem = React.createClass({
               {bid_prev_button}
               {bid_button}
               {pm_button}
-              {delete_button}
+              {close_button}
               {edit_button}
               <div className="clearfix"></div>
             </div>
