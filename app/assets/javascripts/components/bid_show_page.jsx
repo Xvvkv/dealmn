@@ -35,7 +35,7 @@ var BidShowPage = React.createClass({
         url: '/rest/user_ratings',
         type: "post",
         dataType: 'json',
-        data: {rating: rating, user_email: this.state.bid.user.email},
+        data: {rating: rating, id: this.state.bid.user.id},
         success: function (rating) {
           b_updated = this.state.bid
           b_updated.user.user_stat.rating = +((b_updated.user.user_stat.rating_sum + rating.rating) / (b_updated.user.user_stat.rating_count + 1)).toFixed(1)

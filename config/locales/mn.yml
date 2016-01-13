@@ -99,7 +99,7 @@ mn:
       show:
         owner_info:
           title: Тохиролцоо оруулсан
-          rated_by: Үнэлсэн
+          rating_count: Үнэлсэн
           registered: Бүртгүүлсэн
           total_listing: Нийт оруулсан тохиролцоо
           total_active_listing: Идэвхитэй тохиролцоо
@@ -125,7 +125,7 @@ mn:
       show:
         owner_info:
           title: Cанал оруулсан
-          rated_by: Үнэлсэн
+          rating_count: Үнэлсэн
           registered: Бүртгүүлсэн
           total_listing: Нийт оруулсан тохиролцоо
           total_active_listing: Идэвхитэй тохиролцоо
@@ -133,3 +133,14 @@ mn:
           phone: Утас
           email: И-Мэйл
           send_pm: Холбогдох
+    users:
+      show:
+        user_info:
+          rating_count: Үнэлсэн
+          registered: Бүртгүүлсэн
+          total_listing: Нийт оруулсан тохиролцоо
+          total_active_listing: Идэвхитэй тохиролцоо
+          total_accepted_bid: Тохиролцсон
+          phone: Утас
+          email: И-Мэйл
+          edit: Засах

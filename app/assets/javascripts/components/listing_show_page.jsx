@@ -5,6 +5,8 @@ var Rater = require('react-rater');
 var Rating = require('./fixed_star_rate.jsx');
 var BidPreview = require('./bid_preview.jsx');
 var BidPreviewLarge = require('./bid_preview_large.jsx');
+var WishListButton = require('./wish_list_button.jsx');
+var ListingItemButtons = require('./listing_item_buttons.jsx');
 
 var ListingShowPage = React.createClass({
   getInitialState: function() {
@@ -41,7 +43,7 @@ var ListingShowPage = React.createClass({
         url: '/rest/user_ratings',
         type: "post",
         dataType: 'json',
-        data: {rating: rating, user_email: this.state.listing.user.email},
+        data: {rating: rating, id: this.state.listing.user.id},
         success: function (rating) {
           l_updated = this.state.listing
           l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
@@ -81,60 +83,18 @@ var ListingShowPage = React.createClass({
       });
     }
   },
-  _handleWishListClick: function(e){
-    
-    if(e.target.tagName == 'SPAN'){
-      return;
-    }
-
+  _handleWishList: function(id){
     l_updated = this.state.listing
     l_updated.wish_listed = true
-    this.setState({
-      listing: l_updated
-    });
-    
-    $.ajax({
-      url: '/rest/wish_lists',
-      type: "post",
-      dataType: 'json',
-      data: {listing_id: this.props.listing_id},
-      success: function (wl) {
-        $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/listings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-        l_updated = this.state.listing
-        l_updated.wish_listed = false
-        this.setState({
-          listing: l_updated
-        });
-      }.bind(this)
-    });
+    this.setState({listing: l_updated});
+  },
+  _handleRevertWishList: function(id){
+    l_updated = this.state.listing
+    l_updated.wish_listed = false
+    this.setState({listing: l_updated});
   },
   _handleCloseListing: function(e) {
-    if (confirm('Тохиролцоог хааснаар санал хүлээж авах боломжгүй болно. Үргэлжлүүлэх үү?')) {
-      $(e.target).button('loading');
-      $.ajax({
-        url: '/rest/listings/' + this.props.listing_id + '.json',
-        type: "delete",
-        dataType: 'json',
-        success: function () {
-          $.growl.notice({ title: '', message: "Тохиролцоо хаагдлаа" , location: "br", delayOnHover: true});
-          this.setState({is_closed: true});
-        }.bind(this),
-        error: function (xhr, status, err) {
-          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-          console.error('/rest/listings.json', status, err.toString());
-        }.bind(this),
-        complete: function () {
-          $(e.target).button('reset');
-        }.bind(this)
-      });
-      
-    } else {
-      return false;
-    }
+    this.setState({is_closed: true});
   },
   render: function() {
     return (
@@ -142,7 +102,7 @@ var ListingShowPage = React.createClass({
         <Breadcrumb listing={this.state.listing} />
         <div className="container">
           <div className="deal-full-detail-page-container">
-            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishListClick={this._handleWishListClick} handleCloseListing={this._handleCloseListing} loaded={this.state.loaded} is_closed={this.state.is_closed} />
+            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} handleCloseListing={this._handleCloseListing} loaded={this.state.loaded} is_closed={this.state.is_closed} />
             <RelatedItems />
           </div>
           <div className="main-right">
@@ -161,7 +121,6 @@ var ListingShowPage = React.createClass({
 
 var ListingDetail = React.createClass({
   render: function() {
-    var rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
     var rater
     if(this.props.loaded){
       if(this.props.listing.user.id != this.props.current_user_id){
@@ -201,33 +160,13 @@ var ListingDetail = React.createClass({
     }
     
     var wish_list_button;
-    if(this.props.listing.user){
-      if(this.props.current_user_id != this.props.listing.user.id){
-        if(!this.props.listing.wish_listed){
-          wish_list_button = (
-            <div onClick={this.props.handleWishListClick} className="checkbox btn btn-default">
-              <label>
-                <input type="checkbox" /> Дугуйлах
-              </label>
-            </div>
-          );
-        }else{
-          wish_list_button = (
-            <div className="timeline-deal-checked">Дугуйлагдсан</div>
-          ); 
-        }
-      }
+    if(this.props.loaded){
+      wish_list_button = <WishListButton current_user_id={this.props.current_user_id} listing={this.props.listing} handleWishList={this.props.handleWishList} handleRevertWishList={this.props.handleRevertWishList} wish_listed={this.props.listing.wish_listed} is_closed={this.props.is_closed} />;
     }
-
-    var bid_button, pm_button, edit_button, close_button;
-    if(this.props.listing.user){
-      if(this.props.current_user_id != this.props.listing.user.id){
-        bid_button = <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
-        pm_button = <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
-      }else{
-        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/edit'}>Засах</a>
-        close_button = <button className="btn btn-danger" onClick={this.props.handleCloseListing}>Хаах</button>
-      }
+    
+    var listing_item_buttons;
+    if(this.props.loaded){
+      listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.props.handleCloseListing} is_closed={this.props.is_closed} />
     }
 
     var spec_table;
@@ -278,11 +217,12 @@ var ListingDetail = React.createClass({
             {bid_prev}
             <div className="hairly-line" />
             <div className="full-detail-deal-buttons">
-              {!this.props.is_closed && wish_list_button}
-              {!this.props.is_closed && bid_button}
-              {pm_button}
-              {!this.props.is_closed && close_button}
-              {!this.props.is_closed && edit_button}
+              <div style={{float: 'left'}}>
+                {wish_list_button}
+              </div>
+              <div>
+                {listing_item_buttons}
+              </div>
             </div>
           </div>
           <div className="clearfix" />

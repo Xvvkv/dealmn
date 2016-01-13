@@ -16,15 +16,6 @@
         </div>
         <div class="header_top_menu">
           <ul class="nav navbar-nav navbar-right">
-            <% if user_signed_in? %>
-              <li>
-              <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>        
-              </li>
-            <% else %>
-              <li>
-              <%= link_to('Login', new_user_session_path)  %>  
-              </li>
-            <% end %>
             <li>
               <%= link_to t('view.header.about_us'), '#' %>
             </li>
@@ -57,46 +48,7 @@
         
         <%= react_component("SearchBar", url: "/rest/categories.json?exclude_children=true") %>
         
-        <div class="header-profile">
-
-          <% if false %> 
-          <div class="header-profile-img"><%= image_tag('profile_sample.png')%></div>
-          <div class="header-profile-info">
-            <div class="header-profile-name">        
-              <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                  Батбаатар Болдбаатар <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#">Separated link</a></li>
-                </ul>
-              </div>
-            </div>
-            <div class="header-profile-notification">
-              <div class="header-profile-chat"><%= image_tag('header-chat-icon.png')%> 1</div>
-              <div class="header-profile-all-deals"><%= image_tag('deals-icon.png')%> 5</div>
-              <div class="header-profile-all-deals"><%= image_tag('check.png')%> 5</div>
-            </div>
-          </div>
-        
-        <% end %>
-
-        <div class="header-login">
-          <div class="header-login-social-media">
-            <a href="#"><%= image_tag('fb-login.png')%></a>
-            <a href="#"><%= image_tag('tw-login.png')%></a>
-            <a href="#"><%= image_tag('gp-login.png')%></a>
-          </div>
-          <div class="header-profile-info">   
-                <a href="/users/sign_in"><div class="btn btn-default">Нэвтрэх</div></a>
-          </div>
-        </div>
-
-        </div>
+        <%= react_component("HeaderProfile", current_user_id: current_user.try(:id)) %>
       </div>    
     </div>
 

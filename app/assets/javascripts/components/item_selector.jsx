@@ -28,7 +28,7 @@ var ItemSelectorItem = React.createClass({
     return (
       <div onClick={this.props.onSelectItem.bind(null,this.props.item)} className="right-deal-item">
         <div className="right-deal-item-img">
-          {this.props.item.images && this.props.item.images.length > 0 ? <img src={this.props.item.images[0].url}/> : <img src='/images/123.jpg' />}
+          <img src={this.props.item.images && this.props.item.images.length > 0 ? this.props.item.images[0].thumb : '/images/123.jpg'} />
         </div>
         <div className="title-1">{this.props.item.title}</div>
         <div className="info-1">{this.props.item.description || this.props.item.text_description}</div>

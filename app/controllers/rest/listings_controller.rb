@@ -11,7 +11,10 @@ class Rest::ListingsController < ApplicationController
       else
         respond_with Listing.published.where('publishment_id < ?', params[:pid].to_i).order('publishment_id desc').limit(10)
       end
-    else
+    elsif params[:user_id] #user profile page
+      u = User.find(params[:user_id])
+      respond_with u.listings.non_draft.order('publishment_id desc')
+    else # bid new page
       respond_with current_user.listings.published.order('publishment_id desc').limit(5)
     end
   end
@@ -25,7 +28,7 @@ class Rest::ListingsController < ApplicationController
   end
 
   def show
-    respond_with Listing.find(params[:id]), include_wish_listed: true
+    respond_with Listing.find(params[:id]), include_listing_detail: true
   end
 
   def update

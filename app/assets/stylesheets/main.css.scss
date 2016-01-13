@@ -345,33 +345,6 @@ body{
   color:#0025ff;
   text-decoration: none;
 }
-.timeline-deal-item-bottom-check{
-  float: left;
-}
-.timeline-deal-item-bottom-bids{
-  float: left;
-  margin-left:10px;
-}
-.timeline-deal-item-bottom-button{
-  float: right;
-  margin-right: 10px;
-}
-.timeline-deal-item-bottom-button.rightmost{
-  margin-right: 0px;
-}
-
-.timeline-deal-item-bottom-check .checkbox, .timeline-deal-item-bottom-bids div, .timeline-deal-item-bottom-button a, .timeline-deal-item-bottom-button button{
-  font-size: 11px !important;
-}
-.timeline-deal-item-bottom-check .checkbox input{
-  margin-top: 0;
-}
-.timeline-deal-item-bottom-check .checkbox{
-  padding-bottom: 0;
-}
-.timeline-deal-item-bottom-check .checkbox{
-  margin-top: 0;
-}
 .btn-success{
   background: #038c00;
   border: 1px solid #037600;
@@ -379,14 +352,6 @@ body{
 .btn-success:hover{
   background: #026e00;
   border: 1px solid #025e00;
-}
-.timeline-deal-item-bottom-bid .btn-primary{
-  background: #003591;
-  border: 1px solid #002f81;
-}
-.timeline-deal-item-bottom-bid .btn-primary:hover{
-  background: #002f81;
-  border: 1px solid #00276c;
 }
 .special .timeline-deal-item-container{
   background: #fff9eb;
@@ -823,7 +788,19 @@ body{
     border: 1px solid #dbdbdb;
     float: left;
   }
-  .full-detail-deal-buttons a.btn, .full-detail-deal-buttons button.btn{
+
+  .timeline-deal-item-bottom-bids-button {
+    margin-left:10px;
+    font-size: 11px !important;
+  }
+
+  .timeline-deal-item-bottom-buttons a.btn {
+    float: right;
+    margin-left: 10px;
+    font-size: 11px !important;
+  }
+
+  .full-detail-deal-buttons a.btn {
     float: right;
     margin-left: 10px;
     margin-top: 10px;
@@ -1765,7 +1742,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   height: 34px;
   width: 34px;
 }
-.timeline-deal-checked{
+.wish-listed{
   font-size: 11px !important;
   color: #333;
   background-color: #fff;
@@ -1788,7 +1765,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   border-radius: 4px;
   cursor: default;
 }
-.full-detail-deal-buttons .timeline-deal-checked{
+.full-detail-deal-buttons .wish-listed{
   font-size: 14px !important;
   margin-top: 10px;
 }

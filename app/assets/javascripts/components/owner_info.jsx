@@ -16,10 +16,10 @@ var OwnerInfo = React.createClass({
         <div className="home-module-title">{I18n.page.owner_info.title}</div>
         <div className="full-detail-user-info-short">
           <div className="full-detail-user-info-img"><img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/no_avatar.png'} /></div>
-          <div className="full-detail-user-info-name"><a href="#">{this.props.user.full_name}</a></div>
+          <div className="full-detail-user-info-name"><a href={'/users/' + this.props.user.id}>{this.props.user.full_name}</a></div>
           <div className="full-detail-user-info-rate">
              {rater} <span>{(this.props.user.user_stat && this.props.user.user_stat.rating) ? ('(' + this.props.user.user_stat.rating + ')') : ''}</span>
-            <div className="full-detail-user-info-raters">{I18n.page.owner_info.rated_by}: {this.props.user.user_stat ? this.props.user.user_stat.rating_count : ''}</div>
+            <div className="full-detail-user-info-raters">{I18n.page.owner_info.rating_count}: {this.props.user.user_stat ? this.props.user.user_stat.rating_count : ''}</div>
           </div>
           <div className="clearfix"></div>
           <div className="hairly-line"></div>

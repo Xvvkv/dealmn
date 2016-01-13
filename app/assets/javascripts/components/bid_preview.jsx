@@ -34,7 +34,7 @@ var BidPreview = React.createClass({
               return (
                 <li key={index} className="als-item timeline-deal-item-bids-item">
                   <a href={"/bids/" + bid.id}>
-                    {bid.images && bid.images.length > 0 ? <img src={bid.images[0].url}/> : <img src='/images/123.jpg' />}
+                    {bid.images && bid.images.length > 0 ? <img src={bid.images[0].thumb}/> : <img src='/images/123.jpg' />}
                   </a>
                 </li>
               );

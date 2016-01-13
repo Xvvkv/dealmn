@@ -23,6 +23,7 @@ class Listing < ActiveRecord::Base
   STATUS = {draft: 0, published: 1, closed: 2}
 
   scope :draft, where(status: STATUS[:draft])
+  scope :non_draft, where('status <> ?', STATUS[:draft])
   scope :published, where(status: STATUS[:published])
   scope :closed, where(status: STATUS[:closed])
 

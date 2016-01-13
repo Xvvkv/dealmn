@@ -7,6 +7,14 @@ class ListingSerializer < ActiveModel::Serializer
   has_one :contact
   has_many :bids
 
+  def published_date
+    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date
+  end
+
+  def include_breadcrumb?
+    @options[:include_listing_detail]
+  end
+
   def breadcrumb
     if object.category
       object.category.breadcrumb
@@ -15,8 +23,8 @@ class ListingSerializer < ActiveModel::Serializer
     end
   end
 
-  def published_date
-    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date
+  def include_listing_stat?
+    @options[:include_listing_detail]
   end
 
   def listing_stat
@@ -34,7 +42,7 @@ class ListingSerializer < ActiveModel::Serializer
   end
 
   def include_wish_listed?
-    @options[:include_wish_listed] && !object.is_draft?
+    @options[:include_listing_detail]
   end
 
   def wish_listed
