@@ -28,7 +28,7 @@ Dealmn::Application.routes.draw do
   end
   resources :bids, only: [:show, :edit]
 
-  resources :users, only: [:show]
+  resources :users, only: [:show, :update]
   
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get

@@ -1,3 +1,3 @@
 class ContactSerializer < ActiveModel::Serializer
-  attributes :email, :phone, :is_primary
+  attributes :email, :phone
 end

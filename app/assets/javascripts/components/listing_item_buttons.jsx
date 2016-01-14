@@ -28,10 +28,10 @@ var ListingItemButtons = React.createClass({
     if(this.props.listing.user){
       if(this.props.current_user_id != this.props.listing.user.id){
         bid_button = <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
-        pm_button = <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
+        pm_button = <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}><span className="glyphicon glyphicon-envelope" /></a>
       }else{
-        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/edit'}>Засах</a>
-        close_button = <a className="btn btn-danger" href="javascript:;" onClick={this.handleCloseListing}>Хаах</a>
+        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/edit'}><span className="glyphicon glyphicon-edit" /></a>
+        close_button = <a className="btn btn-danger" href="javascript:;" onClick={this.handleCloseListing}><span className="glyphicon glyphicon-remove" /></a>
       }
     }
     return (

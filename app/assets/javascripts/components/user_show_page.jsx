@@ -23,7 +23,9 @@ var UserShowPage = React.createClass({
       messages: [],
       messages_loaded: false,
       notifications: [],
-      notifications_loaded: false
+      notifications_loaded: false,
+      edit_mode: false,
+      updating: false
     };
   },
   componentWillMount: function(){
@@ -154,6 +156,50 @@ var UserShowPage = React.createClass({
     delete items[id]
     this.setState({wish_list_items: items});
   },
+  _handleEdit: function(){
+    this.setState({edit_mode: true});
+  },
+  _handleUpdate: function(){
+    if(this.state.updating || !this.state.edit_mode){
+      return;
+    }
+    this.setState({updating: true})
+    
+    var data = {};
+    data["first_name"] = this.state.user.first_name;
+    data["last_name"] = this.state.user.last_name;
+    if(this.state.user.primary_contact){
+      data["phone"] = this.state.user.primary_contact.phone;
+      data["email"] = this.state.user.primary_contact.email;
+    }
+    
+    $.ajax({
+      url: '/rest/users/' + this.props.user_id,
+      type: "put",
+      dataType: 'json',
+      data: data,
+      success: function (user) {
+        $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/listings', status, err.toString());
+        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+      }.bind(this),
+      complete: function () {
+        this.setState({updating: false});
+      }.bind(this)
+    });
+  },
+  _handleUserInfoChange: function(attr, e){
+    user = this.state.user
+    if(attr == 'first_name' || attr == 'last_name'){
+      user[attr] = e.target.value;
+    }else if(attr == 'email' || attr == 'phone'){
+      user.primary_contact = user.primary_contact || {}
+      user.primary_contact[attr] = e.target.value;
+    }
+    this.setState({user: user});
+  },
   render: function(){
     var right_panel;
     if(this.props.user_id != this.props.current_user_id || this.state.rightPanel == 'listing'){
@@ -170,7 +216,8 @@ var UserShowPage = React.createClass({
     return (
       <div className="main">
         <div className="container">
-          <ProfileViewer handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.user} loaded={this.state.user_loaded} rightPanel={this.state.rightPanel} handleRightPanelChange={this._handleRightPanelChange} />
+          {!this.state.edit_mode && <ProfileViewer handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.user} loaded={this.state.user_loaded} rightPanel={this.state.rightPanel} handleRightPanelChange={this._handleRightPanelChange} handleEdit={this._handleEdit} />}
+          {this.state.edit_mode && <ProfileEditor user={this.state.user} loaded={this.state.user_loaded} handleUpdate={this._handleUpdate} handleUserInfoChange={this._handleUserInfoChange} />}
           {right_panel}
         </div>
       </div>
@@ -182,6 +229,35 @@ var ProfileEditor = React.createClass({
   render: function(){
     return (
       <div className="profile-left">
+        <div className="profile-img-change">
+          <div className="profile-img-change-title">Зураг солих</div>
+          <input type="file" />
+        </div>
+        <div className="profile-img portrait">
+          <img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/no_avatar.png'} />
+        </div>
+        <div className="col-md-12">
+          <div className="form-group">
+            <label htmlFor="lastName">Овог</label>
+            <input id="lastName" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'last_name')} value={this.props.user.last_name} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="firstName">Нэр</label>
+            <input id="firstName" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'first_name')} value={this.props.user.first_name}/>
+          </div>
+          <div className="form-group">
+            <label htmlFor="phone">Утас</label>
+            <input id="phone" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'phone')} value={this.props.user.primary_contact ? this.props.user.primary_contact.phone : ''} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">И-Мэйл <a href="#">[?]</a></label>
+            <input id="email" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'email')} value={this.props.user.primary_contact ? this.props.user.primary_contact.email : ''} />
+          </div>
+          <div className="hairly-line" />
+          <div className="text-center">
+            {this.props.loaded && <div onClick={this.props.handleUpdate} className="btn btn-success" style={{width: '50%'}}>Хадгалах</div>}
+          </div>
+        </div>
       </div>
     );
   }
@@ -239,7 +315,7 @@ var ProfileViewer = React.createClass({
           <div className="full-detail-user-info-deals-email"><span className="glyphicon glyphicon-envelope"></span> {I18n.page.user_info.email}: {this.props.user.primary_contact ? this.props.user.primary_contact.email : ''}</div>
           <div className="hairly-line" />
           <div className="text-center">
-            {this.props.user.id == this.props.current_user_id && <div className="btn btn-warning" style={{width: '50%'}}>{I18n.page.user_info.edit}</div>}
+            {this.props.user.id == this.props.current_user_id && <div onClick={this.props.handleEdit} className="btn btn-warning" style={{width: '50%'}}>{I18n.page.user_info.edit}</div>}
           </div>
         </div>
       </div>
