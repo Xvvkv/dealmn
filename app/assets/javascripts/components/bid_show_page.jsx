@@ -6,7 +6,8 @@ var Rating = require('./fixed_star_rate.jsx');
 var BidShowPage = React.createClass({
   getInitialState: function() {
     return {
-      bid: {}
+      bid: {},
+      loaded: false
     };
   },
   componentDidMount: function() {
@@ -20,6 +21,7 @@ var BidShowPage = React.createClass({
         this.setState({
           bid: bid,
           user_rating: bid.user.user_stat.current_user_rating,
+          loaded: true
         });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -28,25 +30,27 @@ var BidShowPage = React.createClass({
     });
   },
   _handleUserRate: function(rating, last_rating) {
-    $.ajax({
-      url: '/rest/user_ratings',
-      type: "post",
-      dataType: 'json',
-      data: {rating: rating, user_email: this.state.bid.user.email},
-      success: function (rating) {
-        b_updated = this.state.bid
-        b_updated.user.user_stat.rating = +((b_updated.user.user_stat.rating_sum + rating.rating) / (b_updated.user.user_stat.rating_count + 1)).toFixed(1)
-        b_updated.user.user_stat.rating_count += 1
-        this.setState({
-          user_rating: rating.rating,
-          bid: b_updated
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/user_ratings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-      }.bind(this)
-    });
+    if(this.state.loaded && this.state.bid.user.id != this.props.current_user_id){
+      $.ajax({
+        url: '/rest/user_ratings',
+        type: "post",
+        dataType: 'json',
+        data: {rating: rating, id: this.state.bid.user.id},
+        success: function (rating) {
+          b_updated = this.state.bid
+          b_updated.user.user_stat.rating = +((b_updated.user.user_stat.rating_sum + rating.rating) / (b_updated.user.user_stat.rating_count + 1)).toFixed(1)
+          b_updated.user.user_stat.rating_count += 1
+          this.setState({
+            user_rating: rating.rating,
+            bid: b_updated
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/user_ratings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this)
+      });
+    }
   },
   render: function() {
     return (
@@ -56,7 +60,7 @@ var BidShowPage = React.createClass({
             <BidDetail bid={this.state.bid}/>
           </div>
           <div className="main-right">
-            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} user={this.state.bid.user || {}} />
+            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} user={this.state.bid.user || {}} loaded={this.state.loaded} current_user_id={this.props.current_user_id} />
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>
             </div>

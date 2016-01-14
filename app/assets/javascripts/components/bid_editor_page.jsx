@@ -3,7 +3,7 @@ var ContactInfo = require('./contact_info.jsx');
 var FreeItemList = require('./free_item_list.jsx');
 var ItemSelector = require('./item_selector.jsx');
 
-var BidNewPage = React.createClass({
+var BidEditorPage = React.createClass({
   getInitialState: function() {
     return {
       listings: []
@@ -28,7 +28,7 @@ var BidNewPage = React.createClass({
     });
   },
   _handleSelectItem: function(item) {
-    this.refs.addBid._handleSelectListingItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddBid component
+    this.refs.editor._handleSelectListingItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddBid component
   },
   render: function() {
     var listing_selector;
@@ -40,7 +40,7 @@ var BidNewPage = React.createClass({
     return (
       <div className="main">
         <div className="container">
-          <AddBid ref="addBid" {...this.props} />
+          <BidEditor ref="editor" {...this.props} />
           <div className="main-right">
             {listing_selector}
             <FreeItemList />
@@ -51,18 +51,38 @@ var BidNewPage = React.createClass({
   }
 });
 
-var AddBid = React.createClass({
+var BidEditor = React.createClass({
   getInitialState: function() {
     return {
       images: [],
       bid: {},
-      contacts: []
+      contacts: [],
+      updating: false
     };
   },
   componentDidMount: function() {
     this.loadDataFromServer();
   },
   loadDataFromServer: function () {
+
+    $.ajax({
+      url: '/rest/bids/' + this.props.bid_id + '.json',
+      dataType: 'json',
+      success: function (bid) {
+        this.setState({
+          bid: bid,
+          images: bid.images,
+          title: bid.title,
+          description: bid.description,
+          email: (bid.contact || {}).email,
+          phone: (bid.contact || {}).phone
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/bids.json', status, err.toString());
+      }.bind(this)
+    });
+
     $.ajax({
       url: '/rest/contacts.json',
       dataType: 'json',
@@ -94,31 +114,70 @@ var AddBid = React.createClass({
     // TODO change this
     console.log(message);
   },
-  _handleSubmit: function () {
+  _handleBid: function(){
+    this._handleSubmit(0);
+  },
+  _handleSave: function(){
+    this._handleSubmit(1);
+  },
+  _handleSubmit: function (mode) {
 
-    $(this.refs.postButton).button('loading');
-    
+    if(this.state.title == null || this.state.title.trim() == ''){
+      $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
+      window.scrollTo(0,0);
+      return;
+    }
+
+    if(this.state.updating){
+      console.log('not finished yet!!!')
+      return;
+    }
+    this.setState({updating: true})
+
     var data = {};
     data["images"] = this.state.images.map(function(image) { return image.id;});
     ["title","description","phone","email"].forEach(function(field) {
       data[field] = this.state[field]
     }.bind(this));
 
-    $.ajax({
-      url: '/rest/listings/' + this.props.listing.id + '/bids',
-      type: "post",
-      dataType: 'json',
-      data: data,
-      success: function (bid) {
-        window.location = '/bids/' + bid.id;
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/listings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-        $(this.refs.postButton).button('reset');
-        window.scrollTo(0,0);
-      }.bind(this)
-    });
+    if(mode == 0){
+      $.ajax({
+        url: '/rest/listings/' + this.props.listing_id + '/bids',
+        type: "post",
+        dataType: 'json',
+        data: data,
+        success: function (bid) {
+          window.location = '/bids/' + bid.id;
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/listings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this),
+        complete: function () {
+          this.setState({updating: false});
+          window.scrollTo(0,0);
+        }.bind(this)
+      });
+
+    }else if (mode == 1){
+      $.ajax({
+        url: '/rest/bids/' + this.props.bid_id,
+        type: "put",
+        dataType: 'json',
+        data: data,
+        success: function (bid) {
+          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});  
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/listings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this),
+        complete: function () {
+          this.setState({updating: false});
+          window.scrollTo(0,0);
+        }.bind(this)
+      });
+    }
   },
   _handleChange: function (e) {
     this.setState({ [e.target.name]: e.target.value});
@@ -148,7 +207,7 @@ var AddBid = React.createClass({
     item.specs.forEach(function(spec) {
       new_description += ('\n' + spec.name + ': ' + spec.value);
     });
-    new_description += ('\n\nhttp://localhost:3000/listings/' + item.id);
+    new_description += ('\n\nhttp://www.deal.mn/listings/' + item.id);
 
     if(this.state.description != new_description){
       changed_inputs.push($(this.refs.desc_input));
@@ -159,7 +218,7 @@ var AddBid = React.createClass({
     }
 
     changed_inputs.forEach(function(i) {
-      i.effect("highlight", {}, 3000);
+      i.effect("highlight", {color: '#e6f6ff'}, 3000);
     });
     
     this.setState({title: item.title, description: new_description, images: uniq_images.slice(0,5)});
@@ -188,11 +247,12 @@ var AddBid = React.createClass({
         <ContactInfo changeHandler={this._handleChange} phone={this.state.phone} email={this.state.email} contacts={this.state.contacts} handleContactItemClick={this._handleContactItemClick} />
         <div className="hairly-line"></div>
         <div className="col-md-12 text-center">
-          <button ref="postButton" type="button" onClick={this._handleSubmit} className="btn btn-success">{I18n.page.bid}</button>
+          {!this.props.edit_mode && <button onClick={this._handleBid} className="btn btn-success">{I18n.page.bid}</button>}
+          {this.props.edit_mode && <button onClick={this._handleSave} className="btn btn-success">{I18n.page.save}</button>}
         </div>
       </div>
     );
   }
 });
 
-module.exports = BidNewPage;
+module.exports = BidEditorPage;

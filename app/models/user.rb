@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   has_many :listings
   has_many :wish_lists
   has_many :wished_listings, :through => :wish_lists, :source => :listing
+  has_many :notifications
 
   has_many :ratings, :class_name => 'UserRating', :foreign_key => :user_id
   has_many :rates, :class_name => 'UserRating', :foreign_key => :rater_id
@@ -70,6 +71,8 @@ class User < ActiveRecord::Base
   end
 
   def rate rater, rating
+    raise "Invalid Request" if self.id == rater.id
+
     ur = UserRating.create(user_id: self.id, rater_id: rater.id, rating: rating)
     
     self.user_stat.rating_sum += rating

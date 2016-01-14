@@ -5,11 +5,15 @@ var Rater = require('react-rater');
 var Rating = require('./fixed_star_rate.jsx');
 var BidPreview = require('./bid_preview.jsx');
 var BidPreviewLarge = require('./bid_preview_large.jsx');
+var WishListButton = require('./wish_list_button.jsx');
+var ListingItemButtons = require('./listing_item_buttons.jsx');
 
 var ListingShowPage = React.createClass({
   getInitialState: function() {
     return {
-      listing: {}
+      listing: {},
+      loaded: false,
+      is_closed: false
     };
   },
   componentDidMount: function() {
@@ -22,8 +26,10 @@ var ListingShowPage = React.createClass({
       success: function (listing) {
         this.setState({
           listing: listing,
+          is_closed: listing.is_closed,
           user_rating: listing.user.user_stat.current_user_rating,
-          listing_rating: listing.listing_stat.current_user_rating
+          listing_rating: listing.listing_stat.current_user_rating,
+          loaded: true
         });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -32,71 +38,63 @@ var ListingShowPage = React.createClass({
     });
   },
   _handleUserRate: function(rating, last_rating) {
-    $.ajax({
-      url: '/rest/user_ratings',
-      type: "post",
-      dataType: 'json',
-      data: {rating: rating, user_email: this.state.listing.user.email},
-      success: function (rating) {
-        l_updated = this.state.listing
-        l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
-        l_updated.user.user_stat.rating_count += 1
-        this.setState({
-          user_rating: rating.rating,
-          listing: l_updated
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/user_ratings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-      }.bind(this)
-    });
+    if(this.state.loaded && this.state.listing.user.id != this.props.current_user_id){
+      $.ajax({
+        url: '/rest/user_ratings',
+        type: "post",
+        dataType: 'json',
+        data: {rating: rating, id: this.state.listing.user.id},
+        success: function (rating) {
+          l_updated = this.state.listing
+          l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
+          l_updated.user.user_stat.rating_count += 1
+          this.setState({
+            user_rating: rating.rating,
+            listing: l_updated
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/user_ratings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this)
+      });
+    }
   },
   _handleListingRate: function(rating, last_rating) {
-    $.ajax({
-      url: '/rest/listings/' + this.state.listing.id + '/listing_ratings',
-      type: "post",
-      dataType: 'json',
-      data: {rating: rating},
-      success: function (rating) {
-        l_updated = this.state.listing
-        l_updated.listing_stat.rating = +((l_updated.listing_stat.rating_sum + rating.rating) / (l_updated.listing_stat.rating_count + 1)).toFixed(1)
-        l_updated.listing_stat.rating_count += 1
-        this.setState({
-          listing_rating: rating.rating,
-          listing: l_updated
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/listing_ratings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-      }.bind(this)
-    });
-  },
-  _handleWishListClick: function(e){
-    
-    if(e.target.tagName == 'SPAN'){
-      return;
+    if(this.state.loaded && this.state.listing.user.id != this.props.current_user_id){
+      $.ajax({
+        url: '/rest/listings/' + this.state.listing.id + '/listing_ratings',
+        type: "post",
+        dataType: 'json',
+        data: {rating: rating},
+        success: function (rating) {
+          l_updated = this.state.listing
+          l_updated.listing_stat.rating = +((l_updated.listing_stat.rating_sum + rating.rating) / (l_updated.listing_stat.rating_count + 1)).toFixed(1)
+          l_updated.listing_stat.rating_count += 1
+          this.setState({
+            listing_rating: rating.rating,
+            listing: l_updated
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/listing_ratings', status, err.toString());
+          $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
+        }.bind(this)
+      });
     }
-    
-    $.ajax({
-      url: '/rest/wish_lists',
-      type: "post",
-      dataType: 'json',
-      data: {listing_id: this.props.listing_id},
-      success: function (wl) {
-        $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
-        l_updated = this.state.listing
-        l_updated.wish_listed = true
-        this.setState({
-          listing: l_updated
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/listings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-      }.bind(this)
-    });
+  },
+  _handleWishList: function(id){
+    l_updated = this.state.listing
+    l_updated.wish_listed = true
+    this.setState({listing: l_updated});
+  },
+  _handleRevertWishList: function(id){
+    l_updated = this.state.listing
+    l_updated.wish_listed = false
+    this.setState({listing: l_updated});
+  },
+  _handleCloseListing: function(e) {
+    this.setState({is_closed: true});
   },
   render: function() {
     return (
@@ -104,11 +102,11 @@ var ListingShowPage = React.createClass({
         <Breadcrumb listing={this.state.listing} />
         <div className="container">
           <div className="deal-full-detail-page-container">
-            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishListClick={this._handleWishListClick}/>
+            <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} handleCloseListing={this._handleCloseListing} loaded={this.state.loaded} is_closed={this.state.is_closed} />
             <RelatedItems />
           </div>
           <div className="main-right">
-            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} user={this.state.listing.user || {}} />
+            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} />
             <FreeItemList />
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>
@@ -123,7 +121,15 @@ var ListingShowPage = React.createClass({
 
 var ListingDetail = React.createClass({
   render: function() {
-    var rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
+    var rater
+    if(this.props.loaded){
+      if(this.props.listing.user.id != this.props.current_user_id){
+        rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
+      }else{
+        rater = <Rating rating={Math.round(this.props.listing.listing_stat.rating)} />
+      }
+    }
+
     var p_condition;
     if(this.props.listing.is_product){
       p_condition = (
@@ -154,25 +160,13 @@ var ListingDetail = React.createClass({
     }
     
     var wish_list_button;
-    if(!this.props.listing.wish_listed){
-      wish_list_button = (
-        <div onClick={this.props.handleWishListClick} className="checkbox btn btn-default">
-          <label>
-            <input type="checkbox" /> Дугуйлах
-          </label>
-        </div>
-      );
+    if(this.props.loaded){
+      wish_list_button = <WishListButton current_user_id={this.props.current_user_id} listing={this.props.listing} handleWishList={this.props.handleWishList} handleRevertWishList={this.props.handleRevertWishList} wish_listed={this.props.listing.wish_listed} is_closed={this.props.is_closed} />;
     }
-
-    var bid_button, pm_button, edit_button, delete_button;
-    if(this.props.listing.user){
-      if(this.props.current_user_id != this.props.listing.user.id){
-        bid_button = <a className="btn btn-primary" href={'/listings/' + this.props.listing.id + '/bids/new'}>Санал илгээх</a>
-        pm_button = <a className="btn btn-success" href={'/listings/' + this.props.listing.id + '/bids/new'}>Холбогдох</a>
-      }else{
-        edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/bids/new'}>Засах</a>
-        delete_button = <a className="btn btn-danger" href={'/listings/' + this.props.listing.id + '/bids/new'}>Устгах</a>
-      }
+    
+    var listing_item_buttons;
+    if(this.props.loaded){
+      listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.props.handleCloseListing} is_closed={this.props.is_closed} />
     }
 
     var spec_table;
@@ -200,7 +194,7 @@ var ListingDetail = React.createClass({
       <div className="deal-full-detail-page">
         <ImageViewer images={this.props.listing.images}/>
         <div className="full-detail-short-info">
-          <div className="full-detail-title">{this.props.listing.title}</div>
+          <div className="full-detail-title">{this.props.listing.title} {this.props.is_closed ? '(Тохиролцоо хаагдсан)' : ''}</div>
           <div className="full-detail-watchers">
             <span>Үзсэн: N/A</span>
             <div className="full-detail-rate">
@@ -223,11 +217,12 @@ var ListingDetail = React.createClass({
             {bid_prev}
             <div className="hairly-line" />
             <div className="full-detail-deal-buttons">
-              {wish_list_button}
-              {bid_button}
-              {pm_button}
-              {delete_button}
-              {edit_button}
+              <div style={{float: 'left'}}>
+                {wish_list_button}
+              </div>
+              <div>
+                {listing_item_buttons}
+              </div>
             </div>
           </div>
           <div className="clearfix" />

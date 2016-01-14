@@ -11,4 +11,9 @@ class BidsController < ApplicationController
     redirect_to root_path and return unless (@listing.is_active? && @listing.user.id != current_user.id)
   end
 
+  def edit
+    @bid = Bid.find(params[:id])
+    redirect_to root_path and return if (@bid.is_deleted? || @bid.user_id != current_user.id)
+  end
+
 end

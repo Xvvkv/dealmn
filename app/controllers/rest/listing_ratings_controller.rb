@@ -7,7 +7,6 @@ class Rest::ListingRatingsController < ActionController::Base
     r = params[:rating].to_i
     raise "invalid request" unless (r > 0 && r <= 5)
     lr = l.rate(current_user, r)
-    puts lr
     respond_with :rest, l, lr
   end
 

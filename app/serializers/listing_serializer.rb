@@ -1,11 +1,19 @@
 class ListingSerializer < ActiveModel::Serializer
-  attributes :breadcrumb, :title, :text_description, :wanted_description, :is_free, :id, :published_date, :publishment_id, :listing_stat, :is_product, :wish_listed
+  attributes :breadcrumb, :title, :text_description, :wanted_description, :is_free, :id, :published_date, :publishment_id, :listing_stat, :is_product, :wish_listed, :is_closed?
   has_many :images
   has_many :specs
   has_one :user
   has_one :item
   has_one :contact
   has_many :bids
+
+  def published_date
+    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date
+  end
+
+  def include_breadcrumb?
+    @options[:include_listing_detail]
+  end
 
   def breadcrumb
     if object.category
@@ -15,8 +23,8 @@ class ListingSerializer < ActiveModel::Serializer
     end
   end
 
-  def published_date
-    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date
+  def include_listing_stat?
+    @options[:include_listing_detail]
   end
 
   def listing_stat
@@ -34,7 +42,7 @@ class ListingSerializer < ActiveModel::Serializer
   end
 
   def include_wish_listed?
-    @options[:include_wish_listed] && !object.is_draft?
+    @options[:include_listing_detail]
   end
 
   def wish_listed

@@ -23,6 +23,7 @@ class Listing < ActiveRecord::Base
   STATUS = {draft: 0, published: 1, closed: 2}
 
   scope :draft, where(status: STATUS[:draft])
+  scope :non_draft, where('status <> ?', STATUS[:draft])
   scope :published, where(status: STATUS[:published])
   scope :closed, where(status: STATUS[:closed])
 
@@ -65,7 +66,13 @@ class Listing < ActiveRecord::Base
     #TODO catch uniq publishment_id constraint exception & generate id again
   end
 
+  def update_data
+    raise 'Validation Failed' unless (self.status == STATUS[:published] && self.title.present? && self.category.is_bottom_level)
+    self.save
+  end
+
   def rate rater, rating
+    raise "Invalid Request" if self.user.id == rater.id
     ListingRating.create(listing_id: self.id, rater_id: rater.id, rating: rating)
   end
   

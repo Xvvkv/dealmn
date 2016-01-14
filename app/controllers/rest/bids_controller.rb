@@ -21,6 +21,35 @@ class Rest::BidsController < ApplicationController
     respond_with Bid.find(params[:id]), include_user: true, include_biddable: true
   end
 
+  def update
+    bid = Bid.find(params[:id])
+    raise "invalid request" unless bid.user_id == current_user.id
+
+    bid.title = params[:title]
+    bid.description = params[:description]
+
+    images = []
+    if params[:images] && (params[:images].is_a? Array)
+      params[:images].each do |image_id|
+        image = Image.find(image_id)
+        images << image
+      end
+    end
+    bid.images = images
+
+    if(params[:phone].present? || params[:email].present?)
+      #TODO check user id
+      contact = Contact.where(user_id: current_user.id, phone: params[:phone], email: params[:email]).first_or_create
+      bid.contact = contact
+    else
+      bid.contact = nil
+    end
+
+    bid.save
+
+    respond_with :rest, bid
+  end
+
   def create
     if params[:listing_id]
       listing = Listing.find(params[:listing_id])
@@ -41,7 +70,6 @@ class Rest::BidsController < ApplicationController
         bid.images = images
 
         if(params[:phone].present? || params[:email].present?)
-          #TODO check user id
           contact = Contact.where(user_id: current_user.id, phone: params[:phone], email: params[:email]).first_or_create
           bid.contact = contact
         end

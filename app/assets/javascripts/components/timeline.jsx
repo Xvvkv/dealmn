@@ -8,7 +8,7 @@ var Timeline = React.createClass({
       listings: [],
       hasMore: true,
       min_publishment_id: -1,
-      wish_list: []
+      wish_list: null
     };
   },
   componentDidMount: function() {
@@ -47,35 +47,23 @@ var Timeline = React.createClass({
       }.bind(this)
     });
   },
-  _handleWishListClick: function(id,e){
-    if(e.target.tagName == 'SPAN'){
-      return;
+  _handleWishList: function(id){
+    var wish_list = this.state.wish_list
+    wish_list.push(id);
+    this.setState({wish_list: wish_list});
+  },
+  _handleRevertWishList: function(id){
+    var wish_list = this.state.wish_list
+    var index = wish_list.indexOf(id);
+    if (index > -1) {
+      wish_list.splice(index, 1);
     }
-    
-    $.ajax({
-      url: '/rest/wish_lists',
-      type: "post",
-      dataType: 'json',
-      data: {listing_id: id},
-      success: function (wl) {
-        $.growl.notice({ title: '', message: "Дугуйлагдлаа" , location: "br", delayOnHover: true});
-        var wish_list = this.state.wish_list
-        wish_list.push(id);
-        this.setState({wish_list: wish_list});
-
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/listings', status, err.toString());
-        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
-
-        //$(this.refs.saveButton).button('reset');
-      }.bind(this)
-    });
+    this.setState({wish_list: wish_list});
   },
   render: function() {
     var items = this.state.listings.map(function(listing,index) {
       return (
-        <ListingItem key={index} c={index} listing={listing} wish_listed={this.state.wish_list.indexOf(listing.id) > -1} handleWishListClick={this._handleWishListClick} current_user_id={this.props.current_user_id} />
+        <ListingItem key={index} listing={listing} wish_listed={this.state.wish_list ? this.state.wish_list.indexOf(listing.id) > -1 : null} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} current_user_id={this.props.current_user_id} />
       );
     }.bind(this))
     var timeline;

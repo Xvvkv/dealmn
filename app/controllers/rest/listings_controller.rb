@@ -11,17 +11,31 @@ class Rest::ListingsController < ApplicationController
       else
         respond_with Listing.published.where('publishment_id < ?', params[:pid].to_i).order('publishment_id desc').limit(10)
       end
-    else
+    elsif params[:user_id] #user profile page
+      u = User.find(params[:user_id])
+      respond_with u.listings.non_draft.order('publishment_id desc')
+    else # bid new page
       respond_with current_user.listings.published.order('publishment_id desc').limit(5)
     end
   end
 
+  # won't delete. just mark it closed.
+  def destroy
+    listing = Listing.find(params[:id])
+    raise "invalid request" unless listing.user_id == current_user.id
+    listing.update_attribute(:status, Listing::STATUS[:closed])
+    respond_with :rest, listing
+  end
+
   def show
-    respond_with Listing.find(params[:id]), include_wish_listed: true
+    respond_with Listing.find(params[:id]), include_listing_detail: true
   end
 
   def update
     listing = Listing.find(params[:id])
+
+    raise "invalid request" unless listing.user_id == current_user.id
+
     listing.title = params[:title]
     listing.text_description = params[:text_description]
     listing.wanted_description = params[:wanted_description]
@@ -78,10 +92,15 @@ class Rest::ListingsController < ApplicationController
       listing.contact = contact
     end
     
-    if(params[:is_publishing] && params[:is_publishing].to_i == 1)
-      listing.publish
-    else
+    params[:mode] ||= 0
+    if params[:mode].to_i == 0
       listing.save
+    elsif params[:mode].to_i == 1
+      listing.publish
+    elsif params[:mode].to_i == 2
+      listing.update_data
+    else
+      raise "invalid request"
     end
     
     respond_with listing

@@ -1,13 +1,18 @@
 class BidSerializer < ActiveModel::Serializer
-  attributes :title, :description, :id, :bidder_name, :biddable
+  attributes :title, :description, :id, :user_id, :user_name, :biddable
   has_many :images
   has_one :user
+  has_one :contact
 
-  def include_bidder_name?
+  def include_user_id?
     !@options[:include_user]
   end
 
-  def bidder_name
+  def include_user_name?
+    !@options[:include_user]
+  end
+
+  def user_name
     object.user.full_name
   end
 

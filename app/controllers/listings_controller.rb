@@ -12,4 +12,10 @@ class ListingsController < ApplicationController
     @product_conditions = ProductCondition.conditions
   end
 
+  def edit
+    @listing = Listing.find(params[:id])
+    redirect_to root_path and return if (!@listing.is_active? || @listing.user_id != current_user.id)
+    @product_conditions = ProductCondition.conditions
+  end
+
 end
