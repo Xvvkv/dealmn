@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,  
-    :recoverable, :rememberable, :trackable, :validatable
+    :recoverable, :rememberable, :trackable, :validatable, :confirmable
         
   attr_accessible :email, :password, :password_confirmation, :remember_me, :first_name, :last_name
   
@@ -42,6 +42,7 @@ class User < ActiveRecord::Base
   has_many :listings
   has_many :wish_lists
   has_many :wished_listings, :through => :wish_lists, :source => :listing
+  has_many :notifications
 
   has_many :ratings, :class_name => 'UserRating', :foreign_key => :user_id
   has_many :rates, :class_name => 'UserRating', :foreign_key => :rater_id
