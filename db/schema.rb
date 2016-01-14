@@ -70,9 +70,9 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
     t.integer  "user_id",                       :null => false
     t.string   "email"
     t.string   "phone"
+    t.boolean  "is_primary", :default => false, :null => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
-    t.boolean  "is_primary", :default => false, :null => false
   end
 
   add_index "contacts", ["user_id", "email", "phone"], :name => "index_contacts_on_user_id_and_email_and_phone", :unique => true
