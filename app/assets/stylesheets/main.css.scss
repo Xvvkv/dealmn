@@ -285,7 +285,6 @@ body{
 .timeline-deal-item-container{
   border: 1px solid #dbdbdb;
   width: 100%;
-  height: 155px;
   padding: 10px;
   background: #fff;
 }
@@ -315,9 +314,17 @@ body{
 .timeline-deal-item-title{
   font-weight: bold;
   color:#1d1d1d;
-  margin-bottom: 7px;
-  padding-top: 5px;
+  margin-bottom: 2px;
+  padding-top: 0px;
   font-size: 14px;
+}
+.timeline-deal-item-date{
+  font-size: 10px;
+  color:#999;
+  padding-bottom: 3px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #eee;
+  margin-left: 95px;
 }
 .timeline-deal-item-info{
   color:#616161;
@@ -334,7 +341,7 @@ body{
 }
 .timeline-deal-item-want{
   overflow: hidden;
-  margin-top: 10px;
+  margin-top: 5px;
   word-wrap:break-word;
   max-height: 15px;
   font-size: 12px;
@@ -811,20 +818,43 @@ body{
   }
 
   .timeline-deal-item-bottom-bids-button {
-    margin-left:10px;
     font-size: 11px !important;
   }
 
   .timeline-deal-item-bottom-buttons .wish-list {
     font-size: 16px !important;
   }
-
   .timeline-deal-item-bottom-buttons a.btn {
     float: right;
     margin-left: 10px;
-    font-size: 11px !important;
+    font-size: 11px;
   }
-
+  .timeline-deal-item-bottom-buttons .btn-success{
+    font-size: 12px !important;
+    padding: 6px 8px 4px 9px;
+  }
+  .timeline-deal-item-bottom-buttons .btn-warning {
+    font-size: 14px !important;
+    padding: 4px 8px 3px 10px;
+  }
+  .full-detail-deal-buttons .wish-list{
+    font-size: 19px;
+    padding: 4px 8px 3px 8px;
+    width: 40px;
+    max-height: 34px;
+  }
+  .profile-user-deals-buttons .wish-list{
+    padding: 1px 1px;
+    height: 23px;
+    width: 25px;
+  }
+  .profile-user-deals-buttons .btn-primary{
+    float: right;
+    margin-left: 5px;
+  }
+  .profile-user-deals-buttons .btn-success{
+    float: right;
+  }
   .full-detail-deal-buttons a.btn {
     float: right;
     margin-left: 10px;
@@ -1604,12 +1634,11 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   border-bottom: 1px solid #dbdbdb;
   width: 550px;
   float: left;
+  margin-bottom: 10px;
 }
-.chat-adv{
+.chat-right{
   float: right;
   width: 243px;
-  margin-top: 20px;
-  cursor: pointer;
 }
 .message-from{
   width: 100%;
@@ -1672,6 +1701,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 .message-send-input{
   width: 550px;
   margin-top: 10px;
+}
+.message-send-input textarea{
+  resize:none;
 }
 .message-send-input .btn{
   margin-top: 10px;
@@ -1759,7 +1791,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .wish-list{
   font-size: 14px;
-  color: #333;
+  color: #ccc;
   background-color: #fff;
   border: #ccc 1px solid;
   padding: 4px 3px 0px 3px;
@@ -1768,10 +1800,14 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   cursor: pointer;
   width: 30px;
   float: left;
+  margin-right: 10px;
+  transition-duration: 0.3s;
 }
 
 .wish-list:hover{
+  transition-duration: 0.3s;
   color: #0081ff;
+  border-color: #0081ff;
 }
 
 .wish-list.wish-listed{
@@ -1779,6 +1815,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   background-color: #0081ff;
   border-color: #0081ff;
   cursor: default;
+  transition-duration: 0.3s;
 }
 
 .full-detail-deal-buttons .wish-list{
@@ -2017,7 +2054,36 @@ a.anchor {
   opacity: 1;
   transition-duration: 0.3s;
 }
-
+.profile-user-deals-information{
+  display: -webkit-box;
+  margin: 0 auto;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 50px;
+}
+.profile-rank .ranking-stars div span{
+  font-size: 18px;
+}
+.profile-user-deals-buttons .btn-danger{
+  float: right;
+  margin-left:5px; 
+}
+.profile-user-deals-buttons .btn-warning{
+  float: right;
+}
+address{
+  font-size: 12px;
+  color:#555;
+}
+address strong{
+  color:#000;
+  line-height: 20px;
+}
+.bs-callout-info-address{
+  margin-right: 20px;
+}
 .unread-message td:nth-child(1), .read-message td:nth-child(1){
   width:30px;
 }
