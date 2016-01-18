@@ -17,7 +17,7 @@ var BidPreviewLargeItem = React.createClass({
     return (
       <div className="full-detail-bid-item">
         <div className="full-detail-bid-item-detail-img">
-          <img src={this.props.bid.images && this.props.bid.images.length > 0 ? this.props.bid.images[0].thumb : '/images/123.jpg'} />
+          <img src={this.props.bid.images && this.props.bid.images.length > 0 ? this.props.bid.images[0].thumb : '/images/no_image.jpg'} />
         </div>
         <div className="full-detail-bid-item-detail">
           <div className="full-detail-bid-item-detail-title"><a href={"/bids/" + this.props.bid.id}>{this.props.bid.title}</a></div>

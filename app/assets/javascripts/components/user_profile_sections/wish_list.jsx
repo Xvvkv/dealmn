@@ -6,7 +6,7 @@ var UserProfileWishListItem = React.createClass({
     var wish_list_item_buttons = <WishListItemButtons item={this.props.item} handleDeleteWishListItem={this.props.handleDeleteWishListItem.bind(null,this.props.item.id)}/>
     return (
       <div className="profile-user-deals">
-        <div className="profile-user-deals-img"><img src={this.props.item.listing.images && this.props.item.listing.images.length > 0 ? this.props.item.listing.images[0].url : '/images/123.jpg'} /></div>
+        <div className="profile-user-deals-img"><img src={this.props.item.listing.images && this.props.item.listing.images.length > 0 ? this.props.item.listing.images[0].url : '/images/no_image_large.jpg'} /></div>
         <div className="profile-user-deals-name"><a href={'/listings/' + this.props.item.listing.id}>{this.props.item.listing.title}</a></div>
         <div className="profile-user-deals-information">{this.props.item.listing.text_description}</div>
         <div className="hairly-line" />

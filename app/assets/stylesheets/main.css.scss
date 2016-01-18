@@ -1584,20 +1584,10 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   font-size: 13px;
   background: #eee;
 }
-.message-title{
-  margin-right: 3px;
-}
- .unread-message .message-title{
-  font-weight: 700;
-}
-.message-intro{
-  color:#999;
-  font-size: 13px;
-}
 .profile-user-messages input[type="checkbox"]{
   margin-top: 8px;
 }
-.unread-message .profile-message-user-name{
+.unread-message td:nth-child(2){
   font-weight: 700;
 }
 .profile-user-messages .pagination{
@@ -2026,4 +2016,18 @@ a.anchor {
   margin-top: 150px !important;
   opacity: 1;
   transition-duration: 0.3s;
+}
+
+.unread-message td:nth-child(1), .read-message td:nth-child(1){
+  width:30px;
+}
+.unread-message td:nth-child(2), .read-message td:nth-child(2){
+  width:200px;
+}
+.unread-message td:nth-child(4), .read-message td:nth-child(4){
+  width:140px;
+}
+.message-intro{
+  color:#999;
+  font-size: 13px;
 }
