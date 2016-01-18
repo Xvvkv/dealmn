@@ -12,7 +12,7 @@ var UserProfileListingsItem = React.createClass({
     
     return (
       <div className="profile-user-deals">
-        <div className="profile-user-deals-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].url : '/images/123.jpg'} /></div>
+        <div className="profile-user-deals-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].url : '/images/no_image_large.jpg'} /></div>
         <div className="profile-user-deals-name"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
         <div className="profile-user-deals-information">{this.props.listing.text_description}</div>
         <div className="hairly-line" />

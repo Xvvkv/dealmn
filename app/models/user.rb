@@ -51,6 +51,9 @@ class User < ActiveRecord::Base
 
   delegate :rating, :rating_count, to: :user_stat
 
+  has_many :initiated_messages, :class_name => 'Message', :foreign_key => :initiator_id
+  has_many :participated_messages, :class_name => 'Message', :foreign_key => :participant_id
+
   def display_name
     return "#{self.last_name[0...1].upcase}.#{self.first_name.camelcase}" if self.last_name.present? && self.first_name.present?
     return self.first_name if self.first_name.present?
@@ -64,6 +67,10 @@ class User < ActiveRecord::Base
 
   def prof_pic type=:thumb
     self.avatar.image.url(type) if self.avatar
+  end
+
+  def prof_pic_large
+    prof_pic :large
   end
 
   def registered_date
@@ -81,6 +88,11 @@ class User < ActiveRecord::Base
     
     ur
   end
+
+  def messages
+    Message.where("(initiator_id = ? AND initiator_status <> ?) OR (participant_id = ? AND participant_status <> ?)", self.id, Message::STATUS[:deleted], self.id, Message::STATUS[:deleted]).order('last_message_at DESC')
+  end
+
 
   private
 

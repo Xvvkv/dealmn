@@ -12,6 +12,18 @@ class Rest::UsersController < ActionController::Base
     user = User.find(params[:id])
 
     raise "invalid request" unless user.id == current_user.id
+
+    if params[:image].present?
+      image = Image.new
+      image.crop_x = params[:crop_x]
+      image.crop_y = params[:crop_y]
+      image.crop_w = params[:crop_w]
+      image.crop_h = params[:crop_h]
+      image.image = params[:image]
+      image.save
+      user.avatar.destroy if user.avatar.present?
+      user.avatar = image
+    end
     
     user.contacts.update_all(is_primary: false)
     if(params[:phone].present? || params[:email].present?)
@@ -24,7 +36,8 @@ class Rest::UsersController < ActionController::Base
     user.first_name = params[:first_name]
     user.save
 
-    respond_with user
+    #respond_with :rest, user
+    render json: user # put request was sending 204 no content response.
   end
 
 end

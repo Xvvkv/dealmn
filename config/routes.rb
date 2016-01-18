@@ -16,10 +16,11 @@ Dealmn::Application.routes.draw do
     resources :contacts
     resources :wish_lists, only: [:index, :create, :destroy]
     resources :user_ratings
-    resources :users, only: [:show] do
+    resources :users, only: [:show, :update] do
       resources :listings, only: [:index]
       resources :bids, only: [:index]
       resources :wish_lists, only: [:index]
+      resources :messages, only: [:index, :show]
     end
   end
 
@@ -28,7 +29,7 @@ Dealmn::Application.routes.draw do
   end
   resources :bids, only: [:show, :edit]
 
-  resources :users, only: [:show, :update]
+  resources :users, only: [:show]
   
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get

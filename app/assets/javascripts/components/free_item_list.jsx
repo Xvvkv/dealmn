@@ -24,7 +24,7 @@ var FreeItem = React.createClass({
       <div className="item-list-item">
         <div className="item-list-item-img">
           <div className="item-list-item-badget"></div>
-          <img src='/images/123.jpg' />
+          <img src='/images/no_image.jpg' />
         </div>
         <div className="title-1">Iphone 6 space grey</div>
         <div className="info-1">Хэрэгтэй нэгэнд нь хэрэг болох биз үнэгүй ирээд аваарай.</div>

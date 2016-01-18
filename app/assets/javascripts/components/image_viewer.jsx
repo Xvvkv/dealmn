@@ -23,7 +23,7 @@ var ImageViewer = React.createClass({
     }
     var image = <div className="full-detail-image-loader" />;
     if(this.props.images){
-      image = <img src={this.props.images[this.state.selectedImage] ? this.props.images[this.state.selectedImage].url : '/images/1234.jpg'} />
+      image = <img src={this.props.images[this.state.selectedImage] ? this.props.images[this.state.selectedImage].url : '/images/no_image_large.jpg'} />
     }
     return (
       <div className="full-detail-images">

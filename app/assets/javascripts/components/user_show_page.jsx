@@ -25,7 +25,12 @@ var UserShowPage = React.createClass({
       notifications: [],
       notifications_loaded: false,
       edit_mode: false,
-      updating: false
+      updating: false,
+      avatarFile: null,
+      avatarPreview: null,
+      avatarIsPortrait: false,
+      avatarOriginalWidth: 1,
+      avatarOriginalHeigth: 1
     };
   },
   componentWillMount: function(){
@@ -105,6 +110,25 @@ var UserShowPage = React.createClass({
       });
     }
   },
+  loadMessages: function () {
+    console.log('loadMessages called');
+    if(!this.state.messages_loaded){
+      console.log('loading...');
+      $.ajax({
+        url: '/rest/users/' + this.props.user_id + '/messages.json',
+        dataType: 'json',
+        success: function (messages) {
+          this.setState({
+            messages: messages,
+            messages_loaded: true
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/messages.json', status, err.toString());
+        }.bind(this)
+      });
+    }
+  },
   _handleUserRate: function(rating, last_rating){
     if(this.state.user_loaded && this.state.user.id != this.props.current_user_id){
       $.ajax({
@@ -165,21 +189,38 @@ var UserShowPage = React.createClass({
     }
     this.setState({updating: true})
     
-    var data = {};
-    data["first_name"] = this.state.user.first_name;
-    data["last_name"] = this.state.user.last_name;
-    if(this.state.user.primary_contact){
-      data["phone"] = this.state.user.primary_contact.phone;
-      data["email"] = this.state.user.primary_contact.email;
+    var data = new FormData();
+
+    if(this.state.avatarFile){
+      data.append("image",this.state.avatarFile);
+
+      var w = this.state.avatarOriginalWidth;
+      var h = this.state.avatarOriginalHeigth;
+      var m = Math.min(h,w);
+      
+      data.append("crop_x", (w/2 - m/2));
+      data.append("crop_y", (h/2 - m/2));
+      data.append("crop_w", m);
+      data.append("crop_h", m);
     }
-    
+
+    data.append("first_name", this.state.user.first_name);
+    data.append("last_name", this.state.user.last_name);
+    if(this.state.user.primary_contact){
+      data.append("phone", this.state.user.primary_contact.phone);
+      data.append("email", this.state.user.primary_contact.email);
+    }
+
     $.ajax({
       url: '/rest/users/' + this.props.user_id,
       type: "put",
       dataType: 'json',
       data: data,
+      processData: false,
+      contentType: false,
       success: function (user) {
         $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});
+        this.setState({edit_mode: false, user: user})
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/listings', status, err.toString());
@@ -200,6 +241,39 @@ var UserShowPage = React.createClass({
     }
     this.setState({user: user});
   },
+  _handleImageChange: function(e) {
+    e.preventDefault();
+    
+    var reader = new FileReader();
+    var file = e.target.files[0];
+    var image = new Image();
+    var err = false;
+    reader.onload = function(_file) {
+      image.src    = _file.target.result;              // url.createObjectURL(file);
+      image.onload = function() {
+        var w = image.width, h = image.height, s = file.size;
+        if (w < 230 || h < 230 || s > 20*1024*1024){
+          // TODO handle error...
+          $.growl.error({ title: '', message: "Зургийн хэмжээ 230х230 пиксэлээс багагүй, файлын хэмжээ 20МВ-аас ихгүй байх хэрэгтэй" , location: "br", delayOnHover: true});
+        }else{
+          this.setState({
+            avatarFile: file,
+            avatarPreview: reader.result,
+            avatarOriginalWidth: w,
+            avatarOriginalHeigth: h,
+            avatarIsPortrait: (h>w)
+          });
+        }
+      }.bind(this);
+      image.onerror= function() {
+        err = true;
+        // TODO handle error...
+        console.log('Invalid file type: '+ file.type);
+      };
+    }.bind(this);
+
+    reader.readAsDataURL(file);
+  },
   render: function(){
     var right_panel;
     if(this.props.user_id != this.props.current_user_id || this.state.rightPanel == 'listing'){
@@ -209,7 +283,7 @@ var UserShowPage = React.createClass({
     }else if(this.state.rightPanel == 'wishlist'){
       right_panel = <UserProfileWishListSection loadData={this.loadWishListItems} loaded={this.state.wish_list_items_loaded} wish_list={this.state.wish_list_items} handleDeleteWishListItem={this._handleDeleteWishListItem}/>
     }else if(this.state.rightPanel == 'message'){
-      right_panel = <UserProfileMessagesSection />
+      right_panel = <UserProfileMessagesSection loadData={this.loadMessages} loaded={this.state.messages_loaded} messages={this.state.messages} />
     }else if(this.state.rightPanel == 'notification'){
       right_panel = <UserProfileNotificationsSection />
     }
@@ -217,7 +291,7 @@ var UserShowPage = React.createClass({
       <div className="main">
         <div className="container">
           {!this.state.edit_mode && <ProfileViewer handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.user} loaded={this.state.user_loaded} rightPanel={this.state.rightPanel} handleRightPanelChange={this._handleRightPanelChange} handleEdit={this._handleEdit} />}
-          {this.state.edit_mode && <ProfileEditor user={this.state.user} loaded={this.state.user_loaded} handleUpdate={this._handleUpdate} handleUserInfoChange={this._handleUserInfoChange} />}
+          {this.state.edit_mode && <ProfileEditor user={this.state.user} loaded={this.state.user_loaded} handleUpdate={this._handleUpdate} handleUserInfoChange={this._handleUserInfoChange} handleImageChange={this._handleImageChange} avatarPreview={this.state.avatarPreview} avatarIsPortrait={this.state.avatarIsPortrait} />}
           {right_panel}
         </div>
       </div>
@@ -227,14 +301,23 @@ var UserShowPage = React.createClass({
 
 var ProfileEditor = React.createClass({
   render: function(){
+    var img, img_class;
+    if(this.props.avatarPreview){
+      img = <img src={this.props.avatarPreview} />
+      if(this.props.avatarIsPortrait){
+        img_class = "portrait"
+      }
+    }else{
+      img = <img src={this.props.user.prof_pic_large ? this.props.user.prof_pic_large : '/images/no_avatar.png'} />
+    }
     return (
       <div className="profile-left">
         <div className="profile-img-change">
           <div className="profile-img-change-title">Зураг солих</div>
-          <input type="file" />
+          <input type="file" onChange={this.props.handleImageChange} />
         </div>
-        <div className="profile-img portrait">
-          <img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/no_avatar.png'} />
+        <div className={"profile-img " + img_class}>
+          {img}
         </div>
         <div className="col-md-12">
           <div className="form-group">
@@ -293,7 +376,7 @@ var ProfileViewer = React.createClass({
     return (
       <div className="profile-left">
         <div className="profile-img">
-          <img src={this.props.user.prof_pic ? this.props.user.prof_pic : '/images/no_avatar.png'} />
+          <img src={this.props.user.prof_pic_large ? this.props.user.prof_pic_large : '/images/no_avatar.png'} />
         </div>
         <div className="profile-name">
           {this.props.user.full_name}

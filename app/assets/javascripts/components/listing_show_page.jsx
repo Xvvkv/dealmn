@@ -261,7 +261,7 @@ var RelatedItems = React.createClass({
             </div>
           </div>
           <div className="deal-full-similar-item">
-            <div className="deal-full-similar-item-img"><img src="/images/1234.jpg" /></div>
+            <div className="deal-full-similar-item-img"><img src="/images/no_image_large.jpg" /></div>
             <div className="deal-full-similar-item-name"><a href="#">Apple iphone 5s fu 32gb</a></div>
             <div className="deal-full-similar-item-user"><a href="#">Энхбаяр Элбэгдорж</a></div>
             <div className="deal-full-similar-item-discription">
@@ -269,7 +269,7 @@ var RelatedItems = React.createClass({
             </div>
           </div>
           <div className="deal-full-similar-item">
-            <div className="deal-full-similar-item-img"><img src="/images/123.jpg" /></div>
+            <div className="deal-full-similar-item-img"><img src="/images/no_image_large.jpg" /></div>
             <div className="deal-full-similar-item-name"><a href="#">Apple iphone 5s fu 32gb</a></div>
             <div className="deal-full-similar-item-user"><a href="#">Энхбаяр Элбэгдорж</a></div>
             <div className="deal-full-similar-item-discription">

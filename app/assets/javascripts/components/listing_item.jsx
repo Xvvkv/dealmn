@@ -50,7 +50,7 @@ var ListingItem = React.createClass({
           {this.props.listing.is_free && <div className="timeline-badget free-badget"></div>}
           <div className="timeline-deal-item-container">
             <div className="timeline-deal-item-detail">
-              <div className="timeline-deal-item-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].thumb : '/images/123.jpg'} /></div>
+              <div className="timeline-deal-item-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].thumb : '/images/no_image.jpg'} /></div>
               <div className="timeline-deal-item-title"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
               <div className="timeline-deal-item-date">2015-12-11 21:34:12</div>
               <div className="timeline-deal-item-info">{this.props.listing.text_description}</div>

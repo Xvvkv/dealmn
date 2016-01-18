@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160105032550) do
+ActiveRecord::Schema.define(:version => 20160115074654) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -70,9 +70,9 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
     t.integer  "user_id",                       :null => false
     t.string   "email"
     t.string   "phone"
-    t.boolean  "is_primary", :default => false, :null => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.boolean  "is_primary", :default => false, :null => false
   end
 
   add_index "contacts", ["user_id", "email", "phone"], :name => "index_contacts_on_user_id_and_email_and_phone", :unique => true
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "listing_ratings", ["listing_id", "rater_id"], :name => "index_listing_ratings_on_listing_id_and_rater_id", :unique => true
+
   create_table "listing_tags", :force => true do |t|
     t.integer  "listing_id"
     t.integer  "tag_id"
@@ -132,6 +134,34 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
 
   add_index "listings", ["published_date"], :name => "index_listings_on_published_date"
   add_index "listings", ["publishment_id"], :name => "index_listings_on_publishment_id", :unique => true
+
+  create_table "message_texts", :force => true do |t|
+    t.integer  "message_id",   :null => false
+    t.integer  "direction",    :null => false
+    t.text     "message_text", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
+  create_table "messages", :force => true do |t|
+    t.integer  "initiator_id",                     :null => false
+    t.integer  "participant_id",                   :null => false
+    t.integer  "initiator_status",                 :null => false
+    t.integer  "participant_status",               :null => false
+    t.datetime "last_message_at",                  :null => false
+    t.integer  "last_initiator_deleted_message"
+    t.integer  "last_participant_deleted_message"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
+  end
+
+  create_table "notifications", :force => true do |t|
+    t.integer  "user_id",    :null => false
+    t.text     "message",    :null => false
+    t.string   "url"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "product_conditions", :force => true do |t|
     t.string   "title"
@@ -191,6 +221,8 @@ ActiveRecord::Schema.define(:version => 20160105032550) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "user_ratings", ["user_id", "rater_id"], :name => "index_user_ratings_on_user_id_and_rater_id", :unique => true
 
   create_table "user_settings", :force => true do |t|
     t.integer  "user_id",    :null => false
