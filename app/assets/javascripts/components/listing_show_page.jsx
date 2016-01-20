@@ -106,7 +106,7 @@ var ListingShowPage = React.createClass({
             <RelatedItems />
           </div>
           <div className="main-right">
-            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} />
+            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} title={I18n.page.user_info.title} />
             <FreeItemList />
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>

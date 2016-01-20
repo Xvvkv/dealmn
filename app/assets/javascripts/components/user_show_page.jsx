@@ -6,6 +6,17 @@ var UserProfileBidsSection = require('./user_profile_sections/bids.jsx');
 var UserProfileMessagesSection = require('./user_profile_sections/messages.jsx');
 var UserProfileWishListSection = require('./user_profile_sections/wish_list.jsx');
 var UserProfileNotificationsSection = require('./user_profile_sections/notifications.jsx');
+var UserProfileMessageSenderSection = require('./user_profile_sections/message_sender.jsx');
+
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
 
 var UserShowPage = React.createClass({
   getInitialState: function() {
@@ -20,8 +31,9 @@ var UserShowPage = React.createClass({
       wish_list_items_loaded: false,
       bids: [],
       bids_loaded: false,
-      messages: [],
+      messages: {},
       messages_loaded: false,
+      messages_loading: false,
       notifications: [],
       notifications_loaded: false,
       edit_mode: false,
@@ -34,10 +46,14 @@ var UserShowPage = React.createClass({
     };
   },
   componentWillMount: function(){
-    var anchor = window.location.hash.substring(1);
-    if(anchor){
-      if(["notification","wishlist","message"].indexOf(anchor) >= 0){
-        this.setState({rightPanel: anchor});
+    var p = $.urlParam('p');
+    if(p){
+      if(["notification","wishlist","message"].indexOf(p) >= 0){
+        this.setState({rightPanel: p});
+      }
+      if(p == 'send_msg'){
+        var u = $.urlParam('u');
+        if(u != this.props.current_user_id) this.setState({rightPanel: 'showMessage', message_u_id: u});
       }
     }
   },
@@ -112,22 +128,27 @@ var UserShowPage = React.createClass({
   },
   loadMessages: function () {
     console.log('loadMessages called');
-    if(!this.state.messages_loaded){
-      console.log('loading...');
-      $.ajax({
-        url: '/rest/users/' + this.props.user_id + '/messages.json',
-        dataType: 'json',
-        success: function (messages) {
-          this.setState({
-            messages: messages,
-            messages_loaded: true
-          });
-        }.bind(this),
-        error: function (xhr, status, err) {
-          console.error('/rest/messages.json', status, err.toString());
-        }.bind(this)
-      });
+    if(this.state.messages_loading){
+      return;
     }
+    console.log('loading...');
+    this.setState({messages_loading: true});
+    $.ajax({
+      url: '/rest/users/' + this.props.user_id + '/messages.json',
+      dataType: 'json',
+      success: function (messages) {
+        this.setState({
+          messages: messages.reduce(function(messages, message) { messages[message.id] = message; return messages; }, {}),
+          messages_loaded: true
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/messages.json', status, err.toString());
+      }.bind(this),
+      complete: function () {
+        this.setState({messages_loading: false});
+      }.bind(this)
+    });
   },
   _handleUserRate: function(rating, last_rating){
     if(this.state.user_loaded && this.state.user.id != this.props.current_user_id){
@@ -274,6 +295,41 @@ var UserShowPage = React.createClass({
 
     reader.readAsDataURL(file);
   },
+  _handleMessageClick: function(id){
+    messages = this.state.messages;
+    messages[id].unread = false;
+    this.setState({rightPanel: 'showMessage', message_id: id, messages: messages});
+  },
+  _handleMessageUpdate: function(message){
+    messages = this.state.messages
+    if(message.id){
+      if(messages[message.id]){
+        messages[message.id].last_message = message.last_message
+        messages[message.id].last_message_at = message.last_message_at
+      }else{
+        messages[message.id] = message
+      }
+      this.setState({messages: messages})
+    }
+  },
+  _handleRefreshMessages: function(){
+    this.setState({messages_loaded: false});
+    this.loadMessages();
+  },
+  _handleMarkAllMessages: function(selected_ids,as_read){
+    messages = this.state.messages;
+    selected_ids.forEach(function(id) {
+      messages[id].unread = !as_read;
+    });
+    this.setState({messages: messages});
+  },
+  _handleDeleteMessages: function(selected_ids){
+    messages = this.state.messages;
+    selected_ids.forEach(function(id) {
+      delete messages[id];
+    });
+    this.setState({messages: messages});
+  },
   render: function(){
     var right_panel;
     if(this.props.user_id != this.props.current_user_id || this.state.rightPanel == 'listing'){
@@ -283,9 +339,11 @@ var UserShowPage = React.createClass({
     }else if(this.state.rightPanel == 'wishlist'){
       right_panel = <UserProfileWishListSection loadData={this.loadWishListItems} loaded={this.state.wish_list_items_loaded} wish_list={this.state.wish_list_items} handleDeleteWishListItem={this._handleDeleteWishListItem}/>
     }else if(this.state.rightPanel == 'message'){
-      right_panel = <UserProfileMessagesSection loadData={this.loadMessages} loaded={this.state.messages_loaded} messages={this.state.messages} />
+      right_panel = <UserProfileMessagesSection loadData={this.loadMessages} loaded={this.state.messages_loaded} messages={this.state.messages} handleClick={this._handleMessageClick} handleRefresh={this._handleRefreshMessages} handleMarkAll={this._handleMarkAllMessages} handleDelete={this._handleDeleteMessages} current_user_id={this.props.current_user_id} />
     }else if(this.state.rightPanel == 'notification'){
       right_panel = <UserProfileNotificationsSection />
+    }else if(this.state.rightPanel == 'showMessage'){
+      right_panel = <UserProfileMessageSenderSection current_user_id={this.props.current_user_id} message_id={this.state.message_id} message_u_id={this.state.message_u_id} handleMessageUpdate={this._handleMessageUpdate} />
     }
     return (
       <div className="main">
@@ -365,7 +423,7 @@ var ProfileViewer = React.createClass({
             <li role="presentation" className={this.props.rightPanel == 'listing' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'listing')}>Таны оруулсан тохиролцоо</a></li>
             <li role="presentation" className={this.props.rightPanel == 'bid' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'bid')}>Ирсэн саналууд<span className="badge">5</span></a></li>
             <li role="presentation" className={this.props.rightPanel == 'wishlist' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'wishlist')}>Дугуйлсан тохиролцоо<span className="badge">5</span></a></li>
-            <li role="presentation" className={this.props.rightPanel == 'message' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'message')}>Захиа<span className="badge">1</span></a></li>
+            <li role="presentation" className={(this.props.rightPanel == 'message' || this.props.rightPanel == 'showMessage') ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'message')}>Захиа<span className="badge">1</span></a></li>
             <li role="presentation" className={this.props.rightPanel == 'notification' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'notification')}>Сонордуулга<span className="badge">1</span></a></li>
           </ul>
           <div className="hairly-line" />
@@ -385,15 +443,15 @@ var ProfileViewer = React.createClass({
           <div className="ranking-stars">
             {rater} <span>{(this.props.user.user_stat && this.props.user.user_stat.rating) ? ('(' + this.props.user.user_stat.rating + ')') : ''}</span>
           </div>
-          <div className="full-detail-user-info-raters">{I18n.page.user_info.rating_count}: {this.props.user.user_stat ? this.props.user.user_stat.rating_count : ''}</div>
+          <div className="full-detail-user-info-raters">{I18n.user_info.rating_count}: {this.props.user.user_stat ? this.props.user.user_stat.rating_count : ''}</div>
         </div>
         <div className="hairly-line" />
         {links}
         <div className="full-detail-user-info-deals">
-          <div className="full-detail-user-info-deals-reg"><span className="glyphicon glyphicon-calendar"></span> {I18n.page.user_info.registered}: {this.props.user.registered_date}</div>
-          <div className="full-detail-user-info-deals-all-deal"><span className="glyphicon glyphicon-tags"></span> {I18n.page.user_info.total_listing}: {this.props.user.user_stat ? this.props.user.user_stat.total_listing : ''}</div>
-          <div className="full-detail-user-info-deals-active-deal"><span className="glyphicon glyphicon-tags"></span> {I18n.page.user_info.total_active_listing}: {this.props.user.user_stat ? this.props.user.user_stat.total_active_listing : ''}</div>
-          <div className="full-detail-user-info-deals-done-deal"><span className="glyphicon glyphicon-ok"></span> {I18n.page.user_info.total_accepted_bid}: {this.props.user.user_stat ? this.props.user.user_stat.total_accepted_bid : ''}</div>
+          <div className="full-detail-user-info-deals-reg"><span className="glyphicon glyphicon-calendar"></span> {I18n.user_info.registered}: {this.props.user.registered_date}</div>
+          <div className="full-detail-user-info-deals-all-deal"><span className="glyphicon glyphicon-tags"></span> {I18n.user_info.total_listing}: {this.props.user.user_stat ? this.props.user.user_stat.total_listing : ''}</div>
+          <div className="full-detail-user-info-deals-active-deal"><span className="glyphicon glyphicon-tags"></span> {I18n.user_info.total_active_listing}: {this.props.user.user_stat ? this.props.user.user_stat.total_active_listing : ''}</div>
+          <div className="full-detail-user-info-deals-done-deal"><span className="glyphicon glyphicon-ok"></span> {I18n.user_info.total_accepted_bid}: {this.props.user.user_stat ? this.props.user.user_stat.total_accepted_bid : ''}</div>
           <div className="full-detail-user-info-deals-phone"><span className="glyphicon glyphicon-phone"></span> {I18n.page.user_info.phone}: {this.props.user.primary_contact ? this.props.user.primary_contact.phone : ''}</div>
           <div className="full-detail-user-info-deals-email"><span className="glyphicon glyphicon-envelope"></span> {I18n.page.user_info.email}: {this.props.user.primary_contact ? this.props.user.primary_contact.email : ''}</div>
           <div className="hairly-line" />

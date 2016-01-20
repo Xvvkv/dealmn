@@ -2086,6 +2086,14 @@ address strong{
 }
 .unread-message td:nth-child(1), .read-message td:nth-child(1){
   width:30px;
+  padding: 0;
+  text-align: center;
+}
+.unread-message td:nth-child(1) label, .read-message td:nth-child(1) label{
+  width:100%;
+  padding: 8px 8px 13px 8px;
+  margin: 0px;
+  cursor: pointer;
 }
 .unread-message td:nth-child(2), .read-message td:nth-child(2){
   width:200px;

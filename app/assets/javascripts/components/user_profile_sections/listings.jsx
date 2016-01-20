@@ -6,12 +6,12 @@ var UserProfileListingsItem = React.createClass({
     
     var wish_list_button;
     if(this.props.wish_listed != null){
-      wish_list_button = <WishListButton current_user_id={this.props.current_user_id} listing={this.props.listing} handleWishList={this.props.handleWishList} handleRevertWishList={this.props.handleRevertWishList} wish_listed={this.props.wish_listed} />;
+      wish_list_button = <WishListButton current_user_id={this.props.current_user_id} listing={this.props.listing} handleWishList={this.props.handleWishList} handleRevertWishList={this.props.handleRevertWishList} wish_listed={this.props.wish_listed} is_closed={this.props.listing.is_closed}/>;
     }
     var listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.props.handleCloseListing.bind(null,this.props.listing.id)} is_closed={this.props.listing.is_closed}/>
     
     return (
-      <div className="profile-user-deals">
+      <div className={this.props.listing.is_closed ? "profile-user-deals closed-item" : "profile-user-deals"}>
         <div className="profile-user-deals-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].url : '/images/no_image_large.jpg'} /></div>
         <div className="profile-user-deals-name"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
         <div className="profile-user-deals-information">{this.props.listing.text_description}</div>
@@ -20,6 +20,11 @@ var UserProfileListingsItem = React.createClass({
           <div style={{float: 'left'}}>
             {wish_list_button}
           </div>
+          {this.props.listing.is_closed && (
+            <div style={{float: 'left'}}>
+              Хаагдсан тохиролцоо
+            </div>
+            )}
           <div>
             {listing_item_buttons}
           </div>
@@ -45,16 +50,20 @@ var UserProfileListingsSection = React.createClass({
       }.bind(this));
 
       panel = (
-        <div className="profile-right">
-          <div className="home-module-title big-title">{this.props.user_id == this.props.current_user_id ? 'Таны' : 'Хэрэглэгчийн'} оруулсан тохиролцоо</div>
-          {this.props.listings.length == 0 && <div className="alert alert-info" role="alert">Тохиролцоо оруулаагүй байна.</div>}
+        <div>
+          {listings.length == 0 && <div className="alert alert-info" role="alert">Тохиролцоо оруулаагүй байна.</div>}
           {listings}
         </div>
       );
     }else{
-      panel = <div>loader</div>
+      panel = <div className="page-loader" />
     }
-    return panel;
+    return (
+        <div className="profile-right">
+          <div className="home-module-title big-title">{this.props.user_id == this.props.current_user_id ? 'Таны' : 'Хэрэглэгчийн'} оруулсан тохиролцоо</div>
+          {panel}
+        </div>
+      );
   }
 })
 

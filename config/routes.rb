@@ -20,7 +20,12 @@ Dealmn::Application.routes.draw do
       resources :listings, only: [:index]
       resources :bids, only: [:index]
       resources :wish_lists, only: [:index]
-      resources :messages, only: [:index, :show]
+      resources :messages, only: [:index, :show, :create] do
+        collection do
+          post :mark
+          delete :delete_selected
+        end
+      end
     end
   end
 
@@ -30,7 +35,7 @@ Dealmn::Application.routes.draw do
   resources :bids, only: [:show, :edit]
 
   resources :users, only: [:show]
-  
+
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get
   match 'test3' => 'home#page3', via: :get

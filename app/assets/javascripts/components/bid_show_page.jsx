@@ -60,7 +60,7 @@ var BidShowPage = React.createClass({
             <BidDetail bid={this.state.bid}/>
           </div>
           <div className="main-right">
-            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} user={this.state.bid.user || {}} loaded={this.state.loaded} current_user_id={this.props.current_user_id} />
+            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} user={this.state.bid.user || {}} loaded={this.state.loaded} current_user_id={this.props.current_user_id} title={I18n.page.user_info.title} />
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>
             </div>
