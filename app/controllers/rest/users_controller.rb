@@ -5,7 +5,7 @@ class Rest::UsersController < ActionController::Base
   skip_before_filter :authenticate_user!, :only => [:show]
 
   def show
-    respond_with User.find(params[:id])
+    respond_with User.find(params[:id]), include_user_detail: (current_user && params[:id].to_i == current_user.id )
   end
 
   def update

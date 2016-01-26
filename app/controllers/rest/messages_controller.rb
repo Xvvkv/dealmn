@@ -4,7 +4,9 @@ class Rest::MessagesController < ApplicationController
 
   def index
     raise "Invalid Request" unless params[:user_id].to_i == current_user.id
-    respond_with current_user.messages
+    options = {mark_seen: true}
+    options[:limit] = 5 if params[:limit] && params[:limit] == "5" # TODO will change when we implement pagination in messages page (or scrolling in messages panel etc..) Right now only 5 will be accepted :)
+    respond_with current_user.messages(options)
   end
 
   def show
@@ -17,10 +19,10 @@ class Rest::MessagesController < ApplicationController
       end
     else
       message = Message.find(params[:id])
-      message.mark_as_read(current_user)
     end
+    message.mark_as_read(current_user) if message.id.present?
     raise "Invalid Request" unless (params[:user_id].to_i == current_user.id) && (message.participant_id == current_user.id || message.initiator_id == current_user.id)
-    respond_with message, include_detail: true
+    respond_with message, include_message_detail: true
   end
 
   def create
@@ -38,7 +40,7 @@ class Rest::MessagesController < ApplicationController
       direction = MessageText::DIRECTION[:i2p]
     end
     message.send_text(params[:text], direction)
-    respond_with :rest, current_user, message, include_detail: true
+    respond_with :rest, current_user, message, include_message_detail: true
   end
 
   def mark

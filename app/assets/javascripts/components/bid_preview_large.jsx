@@ -15,7 +15,8 @@ var BidPreviewLarge = React.createClass({
 var BidPreviewLargeItem = React.createClass({
   render: function() {
     return (
-      <div className="full-detail-bid-item">
+      <div className={this.props.bid.is_accepted ? "full-detail-bid-item accepted-bid-item" : "full-detail-bid-item"}>
+        {this.props.bid.is_accepted && <div className="timeline-badget accepted-badget" />}
         <div className="full-detail-bid-item-detail-img">
           <img src={this.props.bid.images && this.props.bid.images.length > 0 ? this.props.bid.images[0].thumb : '/images/no_image.jpg'} />
         </div>

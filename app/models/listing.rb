@@ -1,6 +1,6 @@
 class Listing < ActiveRecord::Base
 
-  attr_accessible :status, :item, :user_id
+  attr_accessible :status, :item, :user_id, :contact_id
 
   before_create :randomize_id
   
@@ -36,7 +36,7 @@ class Listing < ActiveRecord::Base
 
   def self.create_draft user
     return unless user.listings.draft.blank?
-    Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new)  
+    Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new, contact_id: user.primary_contact.try(:id))
   end
 
   def is_product
@@ -62,6 +62,11 @@ class Listing < ActiveRecord::Base
     self.publishment_id = next_publishment_seq
     self.published_date = Time.now
     self.save
+
+    user_stat = self.user.user_stat
+    user_stat.total_listing += 1
+    user_stat.total_active_listing += 1
+    user_stat.save
 
     #TODO catch uniq publishment_id constraint exception & generate id again
   end

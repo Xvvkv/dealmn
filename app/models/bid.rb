@@ -17,6 +17,12 @@ class Bid < ActiveRecord::Base
   scope :accepted, where(status: STATUS[:accepted])
   scope :deleted, where(status: STATUS[:deleted])
 
+  scope :active, where('status <> ?', STATUS[:deleted])
+
+  def is_active?
+    !self.is_deleted?
+  end
+
   def is_deleted?
     self.status == STATUS[:deleted]
   end

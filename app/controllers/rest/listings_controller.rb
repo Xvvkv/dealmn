@@ -1,4 +1,5 @@
 class Rest::ListingsController < ApplicationController
+  include ApplicationHelper
   respond_to :json
 
   before_filter :authenticate_user!
@@ -24,6 +25,9 @@ class Rest::ListingsController < ApplicationController
     listing = Listing.find(params[:id])
     raise "invalid request" unless listing.user_id == current_user.id
     listing.update_attribute(:status, Listing::STATUS[:closed])
+    user_stat = listing.user.user_stat
+    user_stat.total_active_listing -= 1
+    user_stat.save
     respond_with :rest, listing
   end
 
@@ -39,6 +43,12 @@ class Rest::ListingsController < ApplicationController
     listing.title = params[:title]
     listing.text_description = params[:text_description]
     listing.wanted_description = params[:wanted_description]
+
+    listing.is_free = (params[:is_free] == 'true')
+
+    listing.price_range_min = params[:price_range_min] if params[:price_range_min] && is_non_negative_integer(params[:price_range_min])
+    listing.price_range_max = params[:price_range_max] if params[:price_range_max] && is_non_negative_integer(params[:price_range_max])
+
 
     if params[:category] && params[:category].to_i > 0
       category = Category.find(params[:category].to_i)
@@ -90,6 +100,8 @@ class Rest::ListingsController < ApplicationController
     if(params[:phone].present? || params[:email].present?)
       contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_create
       listing.contact = contact
+    else
+      listing.contact = nil
     end
     
     params[:mode] ||= 0

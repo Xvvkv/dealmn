@@ -9,9 +9,9 @@ var UserProfileMessagesItem = React.createClass({
     return (
       <tr className={this.props.message.unread ? "unread-message" : "read-message"}>
         <td><label><input type="checkbox" onChange={this.props.handleSelect.bind(null,this.props.message.id,this.props.is_selected)} checked={this.props.is_selected} /></label></td>
-        <td onClick={this.handleClick.bind(null,this.props.message.id)}>{this.props.message.participant_name}</td>
+        <td onClick={this.handleClick.bind(null,this.props.message.id)}>{this.props.message.participant_hash.full_name}</td>
         <td onClick={this.handleClick.bind(null,this.props.message.id)}><span className="message-intro">{this.props.message.last_message}</span></td>
-        <td onClick={this.handleClick.bind(null,this.props.message.id)}>{this.props.message.last_message_at}</td>
+        <td onClick={this.handleClick.bind(null,this.props.message.id)}>{this.props.message.last_message_at_in_words}</td>
       </tr>
     );
   }

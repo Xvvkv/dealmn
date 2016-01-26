@@ -1,7 +1,16 @@
 var ListingItemButtons = React.createClass({
+  getInitialState: function() {
+    return {
+      updating: false
+    };
+  },
   handleCloseListing: function(e) {
+    if(this.state.updating){
+      console.log('not finished yet!!!')
+      return;
+    }
     if (confirm('Тохиролцоог хааснаар санал хүлээж авах болон буцааж нээх боломжгүй болно. Үргэлжлүүлэх үү?')) {
-      $(e.target).button('loading');
+      this.setState({updating: true})
 
       $.ajax({
         url: '/rest/listings/' + this.props.listing.id + '.json',
@@ -16,7 +25,7 @@ var ListingItemButtons = React.createClass({
           console.error('/rest/listings.json', status, err.toString());
         }.bind(this),
         complete: function () {
-          $(e.target).button('reset');
+          this.setState({updating: false})
         }.bind(this)
       });
     } else {
@@ -31,7 +40,7 @@ var ListingItemButtons = React.createClass({
         pm_button = <a className="btn btn-success" href={'/users/' + this.props.current_user_id + '?p=send_msg&u=' + this.props.listing.user.id}><span className="glyphicon glyphicon-envelope" /></a>
       }else{
         edit_button = <a className="btn btn-warning" href={'/listings/' + this.props.listing.id + '/edit'}><span className="glyphicon glyphicon-edit" /></a>
-        close_button = <a className="btn btn-danger" href="javascript:;" onClick={this.handleCloseListing}><span className="glyphicon glyphicon-remove" /></a>
+        close_button = <a ref="close_button" className="btn btn-danger" href="javascript:;" onClick={this.handleCloseListing}><span className="glyphicon glyphicon-remove" /></a>
       }
     }
     return (

@@ -70,6 +70,11 @@ mn:
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
+        price:
+          section_title: Үнэлгээ
+          is_free_item: Үнэгүй бараа
+          min_price_range: Доод /₮/
+          max_price_range: Дээд /₮/
         wanted:
           section_title: Сонирхож буй
           title: Сонирхож буй бараа бүтээгдэхүүн
@@ -97,6 +102,11 @@ mn:
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
+        price:
+          section_title: Үнэлгээ
+          is_free_item: Үнэгүй бараа
+          min_price_range: Доод /₮/
+          max_price_range: Дээд /₮/
         wanted:
           section_title: Сонирхож буй
           title: Сонирхож буй бараа бүтээгдэхүүн

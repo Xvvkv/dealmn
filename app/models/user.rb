@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
 
   has_many :bids
   has_many :listings
+  has_many :received_bids, :through => :listings, :source => :bids
   has_many :wish_lists
   has_many :wished_listings, :through => :wish_lists, :source => :listing
   has_many :notifications
@@ -89,8 +90,39 @@ class User < ActiveRecord::Base
     ur
   end
 
-  def messages
-    Message.where("(initiator_id = ? AND initiator_status <> ?) OR (participant_id = ? AND participant_status <> ?)", self.id, Message::STATUS[:deleted], self.id, Message::STATUS[:deleted]).order('last_message_at DESC')
+  def messages options={}
+    if options[:mark_seen]
+      Message.where(initiator_id: self.id, initiator_status: Message::STATUS[:unseen]).update_all(initiator_status: Message::STATUS[:seen])
+      Message.where(participant_id: self.id, participant_status: Message::STATUS[:unseen]).update_all(participant_status: Message::STATUS[:seen])
+    end
+
+    messages = Message.where("(initiator_id = ? AND initiator_status <> ?) OR (participant_id = ? AND participant_status <> ?)", self.id, Message::STATUS[:deleted], self.id, Message::STATUS[:deleted]).order('last_message_at DESC')
+    messages = messages.limit(options[:limit]) if options[:limit]
+
+    messages
+  end
+
+  def unseen_messages
+    Message.where("(initiator_id = ? AND initiator_status = ?) OR (participant_id = ? AND participant_status = ?)", self.id, Message::STATUS[:unseen], self.id, Message::STATUS[:unseen]).order('last_message_at DESC')
+  end
+
+  def unread_messages
+    Message.where("(initiator_id = ? AND initiator_status in (?)) OR (participant_id = ? AND participant_status in (?))", self.id, [Message::STATUS[:unseen],Message::STATUS[:seen]], self.id, [Message::STATUS[:unseen],Message::STATUS[:seen]]).order('last_message_at DESC')
+  end
+
+  def sync_stat
+    stat = self.user_stat
+    stat ||= UserStat.create(user_id: self.id)
+
+    stat.rating_count = self.ratings.size
+    stat.rating_sum = self.ratings.sum(:rating)
+    
+    stat.total_listing = self.listings.non_draft.size
+    stat.total_active_listing = self.listings.published.size
+    stat.total_accepted_bid = self.bids.accepted.size + self.received_bids.accepted.size
+    stat.total_bids_sent = self.bids.active.size
+    stat.total_bids_received = self.received_bids.where('bids.status <> ?',Bid::STATUS[:deleted]).size
+    stat.save
   end
 
 

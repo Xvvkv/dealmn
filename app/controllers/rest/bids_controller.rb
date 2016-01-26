@@ -50,6 +50,21 @@ class Rest::BidsController < ApplicationController
     respond_with :rest, bid
   end
 
+  def destroy
+    bid = Bid.find(params[:id])
+    raise "invalid request" unless bid.user_id == current_user.id
+    bid.update_attribute(:status, Bid::STATUS[:deleted])
+    
+    user_stat_bidder = current_user.user_stat
+    user_stat_listing_owner = bid.biddable.user.user_stat
+    user_stat_bidder.total_bids_sent -= 1
+    user_stat_listing_owner.total_bids_received -= 1
+    user_stat_bidder.save
+    user_stat_listing_owner.save
+
+    respond_with :rest, bid
+  end
+
   def create
     if params[:listing_id]
       listing = Listing.find(params[:listing_id])
@@ -75,6 +90,14 @@ class Rest::BidsController < ApplicationController
         end
 
         bid.save
+
+        user_stat_bidder = current_user.user_stat
+        user_stat_listing_owner = listing.user.user_stat
+        user_stat_bidder.total_bids_sent += 1
+        user_stat_listing_owner.total_bids_received += 1
+        user_stat_bidder.save
+        user_stat_listing_owner.save
+
       end
 
       respond_with :rest, bid
@@ -83,6 +106,22 @@ class Rest::BidsController < ApplicationController
     else
       raise "invalid request"
     end
+  end
+
+  def accept
+    bid = Bid.find(params[:id])
+    raise "Invalid Request" unless bid.is_active? && bid.biddable.user_id == current_user.id && bid.biddable.is_active?
+
+    bid.update_attribute(:status, Bid::STATUS[:accepted])
+
+    user_stat_bidder = bid.user.user_stat
+    user_stat_listing_owner = current_user.user_stat
+    user_stat_bidder.total_accepted_bid += 1
+    user_stat_listing_owner.total_accepted_bid += 1
+    user_stat_bidder.save
+    user_stat_listing_owner.save
+
+    render :nothing => true, :status => 200
   end
 
 end

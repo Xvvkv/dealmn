@@ -4,6 +4,7 @@ class BidsController < ApplicationController
 
   def show
     @bid = Bid.find(params[:id])
+    redirect_to root_path and return if @bid.is_deleted?
   end
 
   def new

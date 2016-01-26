@@ -29,8 +29,10 @@ var UserShowPage = React.createClass({
       wish_list: null, // used in listing page (viewing someone else's profile)
       wish_list_items: {}, // used in wish list page (viewing own profile)
       wish_list_items_loaded: false,
-      bids: [],
-      bids_loaded: false,
+      bids_received: [],
+      bids_received_loaded: false,
+      bids_sent: [],
+      bids_sent_loaded: false,
       messages: {},
       messages_loaded: false,
       messages_loading: false,
@@ -48,7 +50,7 @@ var UserShowPage = React.createClass({
   componentWillMount: function(){
     var p = $.urlParam('p');
     if(p){
-      if(["notification","wishlist","message"].indexOf(p) >= 0){
+      if(["notification","wishlist","message","bids_received"].indexOf(p) >= 0){
         this.setState({rightPanel: p});
       }
       if(p == 'send_msg'){
@@ -191,15 +193,19 @@ var UserShowPage = React.createClass({
   },
   _handleCloseListing: function(id){
     var listings = this.state.listings;
+    var user = this.state.user
     if(listings[id]){
-      listings[id].is_closed = true
+      listings[id].is_closed = true;
+      user.user_stat.total_active_listing -= 1;
     }
-    this.setState({listings: listings});
+    this.setState({listings: listings, user: user});
   },
   _handleDeleteWishListItem: function(id){
     var items = this.state.wish_list_items;
     delete items[id]
-    this.setState({wish_list_items: items});
+    var user = this.state.user
+    user.user_stat.total_wish_list_items -= 1;
+    this.setState({wish_list_items: items, user: user});
   },
   _handleEdit: function(){
     this.setState({edit_mode: true});
@@ -297,15 +303,22 @@ var UserShowPage = React.createClass({
   },
   _handleMessageClick: function(id){
     messages = this.state.messages;
-    messages[id].unread = false;
-    this.setState({rightPanel: 'showMessage', message_id: id, messages: messages});
+    user = this.state.user  
+    if(messages[id].unread){
+      user.user_stat.total_unread_messages -= 1;
+      messages[id].unread = false;
+    }
+    this.setState({rightPanel: 'showMessage', message_id: id, messages: messages, user: user});
   },
   _handleMessageUpdate: function(message){
     messages = this.state.messages
     if(message.id){
       if(messages[message.id]){
+        console.log(messages[message.id]);
+        console.log(message);
         messages[message.id].last_message = message.last_message
         messages[message.id].last_message_at = message.last_message_at
+        messages[message.id].last_message_at_in_words = message.last_message_at_in_words
       }else{
         messages[message.id] = message
       }
@@ -318,10 +331,18 @@ var UserShowPage = React.createClass({
   },
   _handleMarkAllMessages: function(selected_ids,as_read){
     messages = this.state.messages;
+    user = this.state.user;
+    unread_diff = 0;
     selected_ids.forEach(function(id) {
+      if(messages[id].unread && as_read){
+        unread_diff -= 1;
+      }else if(!messages[id].unread && !as_read){
+        unread_diff += 1;
+      }
       messages[id].unread = !as_read;
     });
-    this.setState({messages: messages});
+    user.user_stat.total_unread_messages += unread_diff;
+    this.setState({messages: messages, user: user});
   },
   _handleDeleteMessages: function(selected_ids){
     messages = this.state.messages;
@@ -334,7 +355,9 @@ var UserShowPage = React.createClass({
     var right_panel;
     if(this.props.user_id != this.props.current_user_id || this.state.rightPanel == 'listing'){
       right_panel = <UserProfileListingsSection {...this.props} loadData={this.loadListings} loaded={this.state.listings_loaded} listings={this.state.listings} wish_list={this.state.wish_list} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} handleCloseListing={this._handleCloseListing}/>
-    }else if(this.state.rightPanel == 'bid'){
+    }else if(this.state.rightPanel == 'bids_received'){
+      right_panel = <UserProfileBidsSection />
+    }else if(this.state.rightPanel == 'bids_sent'){
       right_panel = <UserProfileBidsSection />
     }else if(this.state.rightPanel == 'wishlist'){
       right_panel = <UserProfileWishListSection loadData={this.loadWishListItems} loaded={this.state.wish_list_items_loaded} wish_list={this.state.wish_list_items} handleDeleteWishListItem={this._handleDeleteWishListItem}/>
@@ -420,11 +443,12 @@ var ProfileViewer = React.createClass({
       links = (
         <div>
           <ul className="nav nav-pills nav-stacked">
-            <li role="presentation" className={this.props.rightPanel == 'listing' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'listing')}>Таны оруулсан тохиролцоо</a></li>
-            <li role="presentation" className={this.props.rightPanel == 'bid' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'bid')}>Ирсэн саналууд<span className="badge">5</span></a></li>
-            <li role="presentation" className={this.props.rightPanel == 'wishlist' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'wishlist')}>Дугуйлсан тохиролцоо<span className="badge">5</span></a></li>
-            <li role="presentation" className={(this.props.rightPanel == 'message' || this.props.rightPanel == 'showMessage') ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'message')}>Захиа<span className="badge">1</span></a></li>
-            <li role="presentation" className={this.props.rightPanel == 'notification' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'notification')}>Сонордуулга<span className="badge">1</span></a></li>
+            <li role="presentation" className={this.props.rightPanel == 'listing' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'listing')}>Таны оруулсан тохиролцоо<span className="badge">{this.props.user.user_stat.total_listing > 0 && this.props.user.user_stat.total_listing}</span></a></li>
+            <li role="presentation" className={this.props.rightPanel == 'bids_received' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'bids_received')}>Ирсэн саналууд<span className="badge">{this.props.user.user_stat.total_bids_received > 0 && this.props.user.user_stat.total_bids_received}</span></a></li>
+            <li role="presentation" className={this.props.rightPanel == 'bids_sent' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'bids_sent')}>Илгээсэн саналууд<span className="badge">{this.props.user.user_stat.total_bids_sent > 0 && this.props.user.user_stat.total_bids_sent}</span></a></li>
+            <li role="presentation" className={this.props.rightPanel == 'wishlist' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'wishlist')}>Дугуйлсан тохиролцоо<span className="badge">{this.props.user.user_stat.total_wish_list_items > 0 && this.props.user.user_stat.total_wish_list_items}</span></a></li>
+            <li role="presentation" className={(this.props.rightPanel == 'message' || this.props.rightPanel == 'showMessage') ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'message')}>Захиа<span className="badge">{this.props.user.user_stat.total_unread_messages > 0 && this.props.user.user_stat.total_unread_messages}</span></a></li>
+            <li role="presentation" className={this.props.rightPanel == 'notification' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'notification')}>Сонордуулга<span className="badge">{this.props.user.user_stat.total_unread_notifications > 0 && this.props.user.user_stat.total_unread_notifications}</span></a></li>
           </ul>
           <div className="hairly-line" />
         </div>

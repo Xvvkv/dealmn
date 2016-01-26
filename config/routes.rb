@@ -11,7 +11,11 @@ Dealmn::Application.routes.draw do
       resources :bids, only: [:index, :create]
       resources :listing_ratings
     end
-    resources :bids, only: [:index, :show, :update]
+    resources :bids, only: [:index, :show, :update, :destroy] do
+      member do
+        put :accept
+      end
+    end
     resources :images
     resources :contacts
     resources :wish_lists, only: [:index, :create, :destroy]

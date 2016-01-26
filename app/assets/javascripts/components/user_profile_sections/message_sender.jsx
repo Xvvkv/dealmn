@@ -8,7 +8,7 @@ var UserProfileMessageItem = React.createClass({
           <div className="message-to-text">
             {this.props.message_text.message_text}
             <div className="message-to-date">
-              {this.props.message_text.created_at}
+              {this.props.message_text.created_at_in_words}
             </div>
           </div>
           <div className="clearfix"></div>
@@ -28,7 +28,7 @@ var UserProfileMessageParticipantItem = React.createClass({
           <div className="message-from-text">
             {this.props.message_text.message_text}
             <div className="message-from-date">
-              {this.props.message_text.created_at}
+              {this.props.message_text.created_at_in_words}
             </div>
           </div>
           <div className="clearfix"></div>
