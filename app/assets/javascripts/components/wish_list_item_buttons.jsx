@@ -1,6 +1,15 @@
 var WishListItemButtons = React.createClass({
+  getInitialState: function() {
+    return {
+      updating: false
+    };
+  },
   handleDelete: function(e) {
-    $(e.target).button('loading');
+    if(this.state.updating){
+      console.log('not finished yet!!!')
+      return;
+    }
+    this.setState({updating: true})
     $.ajax({
       url: '/rest/wish_lists/' + this.props.item.id + '.json',
       type: "delete",
@@ -14,7 +23,7 @@ var WishListItemButtons = React.createClass({
         console.error('/rest/listings.json', status, err.toString());
       }.bind(this),
       complete: function () {
-        $(e.target).button('reset');
+        this.setState({updating: false})
       }.bind(this)
     });
   },

@@ -1,11 +1,15 @@
 class ListingSerializer < ActiveModel::Serializer
-  attributes :breadcrumb, :title, :text_description, :wanted_description, :is_free, :id, :published_date, :publishment_id, :listing_stat, :is_product, :wish_listed, :is_closed?
+  attributes :breadcrumb, :title, :text_description, :wanted_description, :is_free, :price_range_min, :price_range_max, :id, :published_date, :publishment_id, :listing_stat, :is_product, :wish_listed, :is_closed?
   has_many :images
   has_many :specs
   has_one :user
   has_one :item
   has_one :contact
   has_many :bids
+
+  def bids
+    object.bids.active
+  end
 
   def published_date
     object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date

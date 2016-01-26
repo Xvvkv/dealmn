@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160115074654) do
+ActiveRecord::Schema.define(:version => 20160122100538) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -144,15 +144,15 @@ ActiveRecord::Schema.define(:version => 20160115074654) do
   end
 
   create_table "messages", :force => true do |t|
-    t.integer  "initiator_id",                     :null => false
-    t.integer  "participant_id",                   :null => false
-    t.integer  "initiator_status",                 :null => false
-    t.integer  "participant_status",               :null => false
-    t.datetime "last_message_at",                  :null => false
-    t.integer  "last_initiator_deleted_message"
-    t.integer  "last_participant_deleted_message"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.integer  "initiator_id",            :null => false
+    t.integer  "participant_id",          :null => false
+    t.integer  "initiator_status",        :null => false
+    t.integer  "participant_status",      :null => false
+    t.datetime "last_message_at",         :null => false
+    t.integer  "initiator_deletion_id"
+    t.integer  "participant_deletion_id"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "notifications", :force => true do |t|
@@ -239,6 +239,8 @@ ActiveRecord::Schema.define(:version => 20160115074654) do
     t.datetime "created_at",                          :null => false
     t.datetime "updated_at",                          :null => false
     t.integer  "total_active_listing", :default => 0, :null => false
+    t.integer  "total_bids_sent",      :default => 0, :null => false
+    t.integer  "total_bids_received",  :default => 0, :null => false
   end
 
   create_table "users", :force => true do |t|

@@ -1371,7 +1371,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
     border-left-color: #337ab7;
     position: relative;
 }
-.bid-accept-button{
+.header-info-button{
   position: absolute;
   right: 10px;
   top:10px;
@@ -1796,6 +1796,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   height: 34px;
   width: 34px;
 }
+.header-login-social-media a{
+  margin-right: 5px;
+}
 .wish-list{
   font-size: 14px;
   color: #ccc;
@@ -1899,6 +1902,7 @@ a.anchor {
   text-align: center;
   vertical-align: middle;
   position: relative;
+  cursor: pointer;
 }
 .header-notification:hover{
   background: #ddd;
@@ -2009,9 +2013,6 @@ a.anchor {
 .notification-unread{
   background-color: #edf0f4;
 }
-.notification-dropdown-container{
-  display: none;
-}
 .sign-up-page-input i{
   font-size: 12px;
 }
@@ -2099,7 +2100,8 @@ address strong{
 .unread-message td:nth-child(1) label, .read-message td:nth-child(1) label{
   width:100%;
   padding: 8px 8px 13px 8px;
-  margin: 0;
+  margin: 0px;
+  cursor: pointer;
 }
 .unread-message td:nth-child(2), .read-message td:nth-child(2){
   width:200px;
@@ -2276,4 +2278,10 @@ address strong{
   padding-left: 5px;
   border-left: 1px solid white;
 }
-.header-profile-info .dropdown{}
+.header-profile-info .dropdown{
+
+}
+.add-deal-page button{
+  margin: 0 5px;
+}
+

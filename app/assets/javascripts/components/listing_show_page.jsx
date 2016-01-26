@@ -106,7 +106,7 @@ var ListingShowPage = React.createClass({
             <RelatedItems />
           </div>
           <div className="main-right">
-            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} />
+            <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} title={I18n.page.user_info.title} />
             <FreeItemList />
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>
@@ -120,6 +120,10 @@ var ListingShowPage = React.createClass({
 
 
 var ListingDetail = React.createClass({
+  handleHeaderCloseListingClick: function(e) {
+    this.refs.listing_item_buttons.handleCloseListing(e);
+    return false;
+  },
   render: function() {
     var rater
     if(this.props.loaded){
@@ -166,7 +170,7 @@ var ListingDetail = React.createClass({
     
     var listing_item_buttons;
     if(this.props.loaded){
-      listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.props.handleCloseListing} is_closed={this.props.is_closed} />
+      listing_item_buttons = <ListingItemButtons ref="listing_item_buttons" current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.props.handleCloseListing} is_closed={this.props.is_closed} />
     }
 
     var spec_table;
@@ -190,11 +194,82 @@ var ListingDetail = React.createClass({
       );
     }
 
+    var header_info;
+    
+    if(this.props.loaded && this.props.listing.user.id == this.props.current_user_id){
+      if(this.props.listing.bids && this.props.listing.bids.length > 0){
+        var accepted_bids = []
+        this.props.listing.bids.forEach(function(bid) {
+          if(bid.is_accepted) accepted_bids.push(bid);
+        });
+        if(accepted_bids.length > 0){
+          header_info = (
+            <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
+              {!this.props.is_closed && <div onClick={this.handleHeaderCloseListingClick} className="btn btn-danger header-info-button">Тохиролцоог хаах</div>}
+              <h5>Та доорхи {accepted_bids.length == 1 ? 'саналыг' : 'саналуудыг'} зөвшөөрсөн байна.</h5>
+              {accepted_bids.map(function(bid,index) {
+                return (
+                  <div key={index} className="pull-left bs-callout-info-address">
+                    <p><strong><a href={"/bids/" + bid.id}>{bid.title}</a></strong></p>
+                    <address>
+                      <strong>Холбоо барих</strong><br />
+                      Утас: {bid.contact ? bid.contact.phone : 'N\\A'}<br />
+                      И-Мэйл хаяг: {bid.contact ? bid.contact.email : 'N\\A'}<br />
+                    </address>
+                  </div>
+                );
+              })}
+              <div className="clearfix"></div>
+            </div>
+          );
+        }
+      }
+    }else if(this.props.loaded){
+      if(this.props.listing.bids && this.props.listing.bids.length > 0){
+        var current_user_bids = []
+        var current_user_accepted_bids = []
+        this.props.listing.bids.forEach(function(bid) {
+          if(bid.is_accepted && bid.user_id == this.props.current_user_id) current_user_accepted_bids.push(bid);
+          if(bid.user_id == this.props.current_user_id) current_user_bids.push(bid);
+        }.bind(this));
+        if(current_user_accepted_bids.length > 0){
+          header_info = (
+            <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
+              <h5>Таны энэхүү тохиролцоонд илгээсэн доорхи {current_user_accepted_bids.length == 1 ? 'саналыг' : 'саналуудыг'} хүлээн авсан байна.</h5>
+              {current_user_accepted_bids.map(function(bid,index) {
+                return (
+                  <p key={index}><strong><a href={"/bids/" + bid.id}>{bid.title}</a></strong></p>
+                );
+              })}
+              <address>
+                <strong>Холбоо барих</strong><br />
+                Утас: {this.props.listing.contact ? this.props.listing.contact.phone : 'N\\A'}<br />
+                И-Мэйл хаяг: {this.props.listing.contact ? this.props.listing.contact.email : 'N\\A'}<br />
+              </address>
+            </div>
+          );
+        }else if(current_user_bids.length > 0){
+          header_info = (
+            <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
+              <h5>Та доорхи {current_user_bids.length == 1 ? 'саналыг' : 'саналуудыг'} энэхүү тохиролцоонд илгээсэн байна.</h5>
+              {current_user_bids.map(function(bid,index) {
+                return (
+                  <p key={index}><strong><a href={"/bids/" + bid.id}>{bid.title}</a></strong></p>
+                );
+              })}
+            </div>
+          );
+        }
+      }   
+    }
+    
+
     return (
       <div className="deal-full-detail-page">
+        {header_info}
         <ImageViewer images={this.props.listing.images}/>
         <div className="full-detail-short-info">
-          <div className="full-detail-title">{this.props.listing.title} {this.props.is_closed ? '(Тохиролцоо хаагдсан)' : ''}</div>
+          <div className="full-detail-title">{this.props.listing.title}</div>
           <div className="full-detail-watchers">
             <span>Үзсэн: N/A</span>
             <div className="full-detail-rate">
@@ -202,6 +277,8 @@ var ListingDetail = React.createClass({
             </div>
           </div>
           <div className="full-detail-short-information">
+            {this.props.is_closed && <div className="full-detail-short-closed">Хаагдсан тохиролцоо. Та санал илгээх боломжгүй</div>}
+            {this.props.is_closed && <div className="hairly-line"></div>}
             {p_condition}
             <div className="full-detail-short-wanted">
               <strong>Хүсэж буй: </strong>

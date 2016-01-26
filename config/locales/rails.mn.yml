@@ -55,39 +55,39 @@ mn:
   datetime:
     distance_in_words:
       about_x_hours:
-        one: 1 цаг орчим
-        other: "%{count} цаг орчим"
+        one: 1 цаг орчмын өмнө
+        other: "%{count} цаг орчмын өмнө"
       about_x_months:
-        one: 1 сар орчим
-        other: "%{count} сар орчим"
+        one: 1 сар орчмын өмнө
+        other: "%{count} сар орчмын өмнө"
       about_x_years:
-        one: 1 жил орчим
-        other: "%{count} жил орчим"
+        one: 1 жил орчмын өмнө
+        other: "%{count} жил орчмын өмнө"
       almost_x_years:
-        one: бараг 1 жил
-        other: бараг %{count} жил
-      half_a_minute: хагас минут
+        one: Бараг 1 жилийн өмнө
+        other: "Бараг %{count} жилийн өмнө"
+      half_a_minute: 1 минутын өмнө
       less_than_x_minutes:
-        one: 1 минутаас бага
-        other: "%{count} минутаас бага"
+        one: 1 минутын өмнө
+        other: "%{count} минутын өмнө"
       less_than_x_seconds:
-        one: 1 секундээс бага
-        other: "%{count} секундээс бага"
+        one: 1 секундын өмнө
+        other: "%{count} секундын өмнө"
       over_x_years:
-        one: 1 жилээс илүү
-        other: "%{count} жилээс илүү"
+        one: 1 жилийн гаруйн өмнө
+        other: "%{count} жилийн гаруйн өмнө"
       x_days:
-        one: 1 өдөр
-        other: "%{count} өдөр"
+        one: 1 өдрийн өмнө
+        other: "%{count} өдрийн өмнө"
       x_minutes:
-        one: 1 минут
-        other: "%{count} минут"
+        one: 1 минутын өмнө
+        other: "%{count} минутын өмнө"
       x_months:
-        one: 1 сар
-        other: "%{count} сар"
+        one: 1 сарын өмнө
+        other: "%{count} сарын өмнө"
       x_seconds:
-        one: 1 секунд
-        other: "%{count} секунд"
+        one: 1 секундын өмнө
+        other: "%{count} секундын өмнө"
     prompts:
       day: Өдөр
       hour: Цаг

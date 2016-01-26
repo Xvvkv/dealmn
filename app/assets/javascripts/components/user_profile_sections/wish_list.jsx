@@ -36,19 +36,22 @@ var UserProfileWishListSection = React.createClass({
       }.bind(this));
 
       panel = (
-        <div className="profile-right">
-          <div className="home-module-title big-title">Дугуйлсан тохиролцоо</div>
-          {this.props.wish_list.length == 0 && <div className="alert alert-info" role="alert">Дугуйлсан тохиролцоо байхгүй байна.</div>}
-          
+        <div>
+          {wish_list.length == 0 && <div className="alert alert-info" role="alert">Дугуйлсан тохиролцоо байхгүй байна.</div>}
           <ReactCSSTransitionGroup transitionName="fadeInOut" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
             {wish_list}
           </ReactCSSTransitionGroup>
         </div>
       );
     }else{
-      panel = <div>loader</div>
+      panel = <div className="page-loader" />
     }
-    return panel;
+    return (
+        <div className="profile-right">
+          <div className="home-module-title big-title">Дугуйлсан тохиролцоо</div>
+          {panel}
+        </div>
+      );;
   }
 })
 

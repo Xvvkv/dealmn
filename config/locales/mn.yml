@@ -39,6 +39,13 @@ mn:
         phone_placeholder: '99999999, 88888888'
         email: Имэйл
         email_placeholder: 'example@gmail.com, example@yahoo.com'
+      user_info:
+        rating_count: Үнэлсэн
+        registered: Бүртгүүлсэн
+        total_listing: Нийт оруулсан тохиролцоо
+        total_active_listing: Идэвхитэй тохиролцоо
+        total_accepted_bid: Тохиролцсон
+        send_pm: Холбогдох
     home:
       index:
         add_spec: Тохиролцоо оруулах
@@ -63,6 +70,11 @@ mn:
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
+        price:
+          section_title: Үнэлгээ
+          is_free_item: Үнэгүй бараа
+          min_price_range: Доод /₮/
+          max_price_range: Дээд /₮/
         wanted:
           section_title: Сонирхож буй
           title: Сонирхож буй бараа бүтээгдэхүүн
@@ -90,6 +102,11 @@ mn:
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
+        price:
+          section_title: Үнэлгээ
+          is_free_item: Үнэгүй бараа
+          min_price_range: Доод /₮/
+          max_price_range: Дээд /₮/
         wanted:
           section_title: Сонирхож буй
           title: Сонирхож буй бараа бүтээгдэхүүн
@@ -97,16 +114,8 @@ mn:
           placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
         save: Хадгалах
       show:
-        owner_info:
+        user_info:
           title: Тохиролцоо оруулсан
-          rating_count: Үнэлсэн
-          registered: Бүртгүүлсэн
-          total_listing: Нийт оруулсан тохиролцоо
-          total_active_listing: Идэвхитэй тохиролцоо
-          total_accepted_bid: Тохиролцсон
-          phone: Утас
-          email: И-Мэйл
-          send_pm: Холбогдох
     bids:
       new:
         title: Санал илгээх
@@ -123,24 +132,11 @@ mn:
           description: Барааны тайлбар
         save: Хадгалах
       show:
-        owner_info:
+        user_info:
           title: Cанал оруулсан
-          rating_count: Үнэлсэн
-          registered: Бүртгүүлсэн
-          total_listing: Нийт оруулсан тохиролцоо
-          total_active_listing: Идэвхитэй тохиролцоо
-          total_accepted_bid: Тохиролцсон
-          phone: Утас
-          email: И-Мэйл
-          send_pm: Холбогдох
     users:
       show:
         user_info:
-          rating_count: Үнэлсэн
-          registered: Бүртгүүлсэн
-          total_listing: Нийт оруулсан тохиролцоо
-          total_active_listing: Идэвхитэй тохиролцоо
-          total_accepted_bid: Тохиролцсон
           phone: Утас
           email: И-Мэйл
           edit: Засах

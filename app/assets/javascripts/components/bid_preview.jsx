@@ -33,8 +33,9 @@ var BidPreview = React.createClass({
             {this.props.bids.map(function(bid,index) {
               return (
                 <li key={index} className="als-item timeline-deal-item-bids-item">
-                  <a href={"/bids/" + bid.id}>
+                  <a className={bid.is_accepted ? "accepted-bid-item-little hover" : "hover"} href={"/bids/" + bid.id}>
                     {bid.images && bid.images.length > 0 ? <img src={bid.images[0].thumb}/> : <img src='/images/no_image.jpg' />}
+                    <div className="tooltip text-tooltip">{bid.title}</div>
                   </a>
                 </li>
               );

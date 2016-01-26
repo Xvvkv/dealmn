@@ -91,7 +91,10 @@ var ListingEditor = React.createClass({
           images: listing.images,
           specs: listing.specs.reduce(function(specs, spec) { specs[spec.name] = spec; return specs; }, {}),
           email: (listing.contact || {}).email,
-          phone: (listing.contact || {}).phone
+          phone: (listing.contact || {}).phone,
+          is_free: listing.is_free,
+          price_range_min: (listing.price_range_min || ''),
+          price_range_max: (listing.price_range_max || '')
         });
       }.bind(this),
       error: function (xhr, status, err) {
@@ -149,13 +152,12 @@ var ListingEditor = React.createClass({
       return;
     }
     this.setState({updating: true})
-    //$(this.refs.saveButton).button('loading');
     
     var data = {};
     data["category"] = this.state.selectedCat[2];
     data["mode"] = mode
     data["images"] = this.state.images.map(function(image) { return image.id;});
-    ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title"].forEach(function(field) {
+    ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title","is_free","price_range_max","price_range_min"].forEach(function(field) {
       data[field] = this.state[field]
     }.bind(this));
 
@@ -176,7 +178,6 @@ var ListingEditor = React.createClass({
         $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
       }.bind(this),
       complete: function () {
-        //$(this.refs.saveButton).button('reset');
         this.setState({updating: false});
         window.scrollTo(0,0);
       }.bind(this)
@@ -237,6 +238,16 @@ var ListingEditor = React.createClass({
   },
   _handleChange: function (e) {
     this.setState({ [e.target.name]: e.target.value});
+  },
+  _handleChangeNumeric: function (e) {
+    var v = parseInt(e.target.value);
+    if((v > 0 && v.toString() == e.target.value) || e.target.value == ''){
+     this.setState({[e.target.name]: e.target.value});
+    }
+  },
+  _handleIsFreeCheck: function () {
+    old = this.state.is_free
+    this.setState({is_free: !old})
   },
   _handleSpecChange: function (e) {
     var specs = this.state.specs;
@@ -327,6 +338,26 @@ var ListingEditor = React.createClass({
         </div>
         <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} addSpecChangeHandler={this._handleChange} addSpecName={this.state.addSpecName} addSpecValue={this.state.addSpecValue} removeHandler={this._handleSpecRemove} addHandler={this._handleSpecAdd} />
         <ContactInfo changeHandler={this._handleChange} phone={this.state.phone} email={this.state.email} contacts={this.state.contacts} handleContactItemClick={this._handleContactItemClick} />
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">{I18n.page.price.section_title}</div>
+        </div>
+        <div className="col-md-12">
+          <div className="price-free">
+            <label>
+              <input type="checkbox" onChange={this._handleIsFreeCheck} checked={this.state.is_free}/> {I18n.page.price.is_free_item}
+            </label>
+          </div>
+        </div>
+        <div className="col-md-12" style={{padding: '10px 0 0 0'}}>
+          <div className="form-group col-md-3">
+            <label>{I18n.page.price.min_price_range} <a href="#">[?]</a></label>
+            <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} type="text" className="form-control" />
+          </div>
+          <div className="form-group col-md-3">
+            <label>{I18n.page.price.max_price_range} <a href="#">[?]</a></label>
+            <input name="price_range_max" value={this.state.price_range_max} onChange={this._handleChangeNumeric} type="text" className="form-control " />
+          </div>
+        </div>
         <div className="col-md-12">
           <div className="home-module-title sub-title">{I18n.page.wanted.section_title}</div>
         </div>
