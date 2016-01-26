@@ -104,7 +104,6 @@ body{
 .header-profile{
   float:right;
   width: auto;
-  margin-right: 15px;
 }
 .header-profile-img{
   float: left;
@@ -1473,6 +1472,13 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   padding:10px 15px;
   width: 100%; 
 }
+.timeline-message-box{
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #dbdbdb;
+  padding:10px 15px;
+  width: 100%;
+}
 .btn-warning{
   background: #ff9500;
   border-color: #d58512;
@@ -1631,7 +1637,6 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   border-top: 1px solid #dbdbdb;
   font-size: 13px;
   color:#333;
-  border-bottom: 1px solid #dbdbdb;
   width: 550px;
   float: left;
   margin-bottom: 10px;
@@ -1659,7 +1664,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .message-from-user img{
   height: 50px;
-  border-radius: 50%;
+  border-radius: 2px;
 }
 .message-from-text{
   float: left;
@@ -1781,6 +1786,8 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .header-profile-logged, .header-profile-notifications{
   float: left;
+}
+.header-profile-notifications{
   margin-right: 10px;
 }
 .header-login-social-media img{
@@ -2106,6 +2113,175 @@ address strong{
   color:#999;
   font-size: 13px;
 }
+.profile-all-notification{
+  width: 100%;
+  position: relative;
+}
+.profile-all-notification a{
+  text-decoration: none;
+}
+.profile-all-notification-item{
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.profile-all-notification-item:hover{
+  text-decoration: none !important;
+  background-color: #f9f9f9;
+}
+.profile-all-notification-item .notification-content-img img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.profile-all-notification-item .notification-content-text{
+  margin-top: 5px;
+}
+.closed-item-description{
+  color: red;
+  font-size: 12px;
+  padding:3px 0;
+}
+.closed-item .profile-user-deals-img{
+  opacity: 0.5;
+}
+.closed-item .profile-user-deals-name a{
+  color:#999;
+}
+.closed-item .profile-user-deals-information{
+  color:#d9d9d9;
+}
+.page-loader{
+  margin-left: calc(50% - 150px);
+  background: image-url('page-loader.gif') #fff no-repeat center center;
+  height: 200px;
+  width: 300px;
+}
+.loader{
+  background: image-url('loading1.gif') #fff no-repeat left -190px center;
+  height: 50px;
+  width: 137px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  color:#0081ff;
+  padding: 15px 10px 15px 45px;
+}
+.header-profile-info .dropdown-menu{
+  border-radius: 0;
+}
+.left-container{
+  background: #fff;
+  padding:10px;
+  margin:15px 0;
+  border: 1px solid #e5e5e5;
+}
+.left-filter-category ul{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-left: 10px;
+}
+.left-filter-category ul li{
+  font-size: 12px;
+  margin: 0;
+  line-height: 24px;
+  color:#333;
+  font-weight: bold;
+}
+.left-filter-category ul li ul li a{
+  font-weight: normal;
+}
+.title4{
+  font-weight: bold;
+  font-size: 12px;
+}
+.left-filter-condition a, .left-filter-rank a{
+  font-size: 12px;
+  color:#999;
+  margin-left: 10px;
+}
+.left-filter-condition a .glyphicon, .left-filter-rank a .glyphicon{
+  font-size: 11px;
+  font-weight: normal;
+}
+.left-filter-condition a:hover, .left-filter-rank a:hover{
+  text-decoration: none;
+  color:#000;
+}
+.left-filter-condition a.active, .left-filter-rank a.active{
+  font-weight: bold;
+  color:#000;
+}
+.left-filter-category > a:nth-child(1){
+  font-size: 12px;
+}
+.left-filter-rank span{
+  font-size: 18px;
+  cursor: pointer;
+}
+.left-filter-price .form-group{
+  float: left;
+  width: 50%;
+  padding: 5px;
+  margin-bottom:0px;
+}
+.left-filter-price .form-group label{
+  font-size: 11px;
+}
+.left-filter-price .form-group input{
+  font-size: 11px;
+  height: 25px;
+  padding: 5px;
+}
+.left-filter-price .checkbox{
+  margin-top: 0px;
+}
+.left-filter-price .checkbox label{
+  font-size: 12px;
+  margin-left: 5px;
+  margin-top: 5px;
+}
+.left-filter-price .checkbox input{
+  margin-top: 0px;
+}
+.title5{
+  font-size: 16px;
+  color:#d1d1d1;
+  margin: 10px 0;
+}
+.left-filter-category .glyphicon{
+  font-size: 11px;
+}
+.left-filter-closed .checkbox input{
+  margin-top: 0;
+}
+.left-filter-closed label{
+  font-size: 12px;
+  margin-left: 5px;
+}
+.timeline-message-box-items{
+  font-size: 12px;
+  float: left;
+  cursor: pointer;
+  margin: 3px 6px 3px 0;
+  border-radius: 3px;
+  padding:5px 8px;
+  background: #337ab7;
+  color: white;
+}
+.timeline-message-box-items:hover{
+  background: #006fdb;
+}
+.timeline-message-box-items span{
+  font-size: 10px;
+  margin-left: 3px;
+  padding-left: 5px;
+  border-left: 1px solid white;
+}
+.header-profile-info .dropdown{
+
+}
 .add-deal-page button{
   margin: 0 5px;
 }
+
