@@ -104,6 +104,7 @@ body{
 .header-profile{
   float:right;
   width: auto;
+  position: relative;
 }
 .header-profile-img{
   float: left;
@@ -1332,6 +1333,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   float: right;
   margin-left: 15px;
 }
+.full-width .profile-right{
+  width: 100%;
+}
 .badge{
   float: right;
 }
@@ -1342,6 +1346,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+.full-width .profile-user-deals{
+  width: 24%;
 }
 .profile-user-deals-img img{
   width: 100%;
@@ -2158,7 +2165,7 @@ address strong{
   width: 300px;
 }
 .loader{
-  background: image-url('loading1.gif') #fff no-repeat left -190px center;
+  background: #fff;
   height: 50px;
   width: 137px;
   border-radius: 5px;
@@ -2284,4 +2291,3 @@ address strong{
 .add-deal-page button{
   margin: 0 5px;
 }
-

@@ -79,7 +79,7 @@ var Timeline = React.createClass({
             pageStart={0}
             loadMore={this.loadListings}
             hasMore={this.state.hasMore}
-            loader={<div className="loader">Уншиж байна ...</div>}>
+            loader={<div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>}>
           {items}
         </InfiniteScroll>
       );

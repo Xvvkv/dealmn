@@ -10,6 +10,9 @@ Dealmn::Application.routes.draw do
     resources :listings do
       resources :bids, only: [:index, :create]
       resources :listing_ratings
+      collection do
+        get :free_items
+      end
     end
     resources :bids, only: [:index, :show, :update, :destroy] do
       member do
@@ -23,7 +26,6 @@ Dealmn::Application.routes.draw do
     resources :users, only: [:show, :update] do
       resources :listings, only: [:index]
       resources :bids, only: [:index]
-      resources :wish_lists, only: [:index]
       resources :messages, only: [:index, :show, :create] do
         collection do
           post :mark
@@ -39,6 +41,8 @@ Dealmn::Application.routes.draw do
   resources :bids, only: [:show, :edit]
 
   resources :users, only: [:show]
+
+  resources :wish_lists, only: [:index]
 
   match 'test1' => 'home#page1', via: :get
   match 'test2' => 'home#page2', via: :get

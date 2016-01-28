@@ -80,6 +80,20 @@ class Listing < ActiveRecord::Base
     raise "Invalid Request" if self.user.id == rater.id
     ListingRating.create(listing_id: self.id, rater_id: rater.id, rating: rating)
   end
+
+  def is_wish_listed? user,cookies
+    if user
+      return user.wish_lists.where(listing_id: self.id).present?
+    elsif cookies
+      begin
+        wish_list = JSON.parse(cookies[:wish_list]) if cookies[:wish_list]
+      rescue
+      end
+      return (wish_list && (wish_list.is_a? Array) && wish_list.include?(self.id))
+    else
+      false
+    end
+  end
   
   private
   

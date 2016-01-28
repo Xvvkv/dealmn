@@ -1,4 +1,5 @@
 ClickOutside = require ('./mixins/click-outside.js')
+var PubSub = require('pubsub-js');
 
 var HeaderProfile = React.createClass({
   mixins: [ClickOutside],
@@ -6,12 +7,21 @@ var HeaderProfile = React.createClass({
     return {
       current_user: {},
       user_loaded: false,
-      selectedPanel: null
+      selectedPanel: null,
+      wish_list_items: [],
+      total_wish_list_items: 0,
+      wish_list_items_loaded: false,
+      wish_list_items_loading: false
     };
   },
   componentDidMount: function() {
     this.loadDataFromServer();
     this.setOnClickOutside('mainDiv', this.onClickOutside);
+    PubSub.subscribe('wishlist_created', this._handleWishListCreatedEvent);
+    PubSub.subscribe('messages_seen', this._handleMessagesSeenEvent);
+  },
+  componentWillUnmount: function() {
+    PubSub.unsubscribe('wishlist_created');
   },
   loadDataFromServer: function () {
     if (this.props.current_user_id){
@@ -28,6 +38,8 @@ var HeaderProfile = React.createClass({
           console.error('/rest/users.json', status, err.toString());
         }.bind(this)
       });
+    }else {
+      this.loadWishList();
     }
   },
   onClickOutside: function () {
@@ -51,12 +63,63 @@ var HeaderProfile = React.createClass({
       this.setState({selectedPanel: panel});
     }
   },
+  loadWishList: function() {
+    console.log('loadWishList called');
+    if(this.state.wish_list_items_loading){
+      return;
+    }
+    console.log('loading...');
+    this.setState({wish_list_items_loading: true});
+    $.ajax({
+      url: '/rest/wish_lists.json?include_detail=1&limit=5',
+      dataType: 'json',
+      success: function (res) {
+        if (this.props.current_user_id){
+          this.setState({
+            wish_list_items: res,
+            wish_list_items_loaded: true
+          });
+        }else{
+          this.setState({
+            wish_list_items: res.items,
+            wish_list_items_loaded: true,
+            total_wish_list_items: res.meta.total
+          });
+        }
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/wishlist.json', status, err.toString());
+      }.bind(this),
+      complete: function () {
+        this.setState({wish_list_items_loading: false});
+      }.bind(this)
+    });
+  },
+  _handleWishListCreatedEvent: function(msg, wl) {
+    if(this.state.wish_list_items_loaded){
+      wish_list_items = this.state.wish_list_items;
+      wish_list_items.unshift(wl);
+      total_wish_list_items = this.state.total_wish_list_items;
+      total_wish_list_items +=1;
+      this.setState({wish_list_items: wish_list_items.slice(0,5), total_wish_list_items: total_wish_list_items})
+    }
+    if(this.state.user_loaded){
+      current_user = this.state.current_user;
+      current_user.user_stat.total_wish_list_items += 1;
+      this.setState({current_user: current_user});
+    }
+  },
+  _handleMessagesSeenEvent: function () {
+    user = this.state.current_user;
+    user.user_stat.total_unseen_messages = 0;
+    this.setState({current_user: user});
+  },
   render: function() {
     var section;
     if (this.props.current_user_id){
-      section = <HeaderUserProfile user={this.state.current_user} selectedPanel={this.state.selectedPanel} handlePanelChange={this._handlePanelChange} loaded={this.state.user_loaded} />
+      section = <HeaderUserProfile user={this.state.current_user} selectedPanel={this.state.selectedPanel} handlePanelChange={this._handlePanelChange} loaded={this.state.user_loaded} wish_list_items={this.state.wish_list_items} loadWishList={this.loadWishList} wish_list_items_loaded={this.state.wish_list_items_loaded} />
     }else{
-      section = <HeaderLogin />
+      section = <HeaderLogin selectedPanel={this.state.selectedPanel} handlePanelChange={this._handlePanelChange} wish_list_items={this.state.wish_list_items} loadWishList={this.loadWishList} wish_list_items_loaded={this.state.wish_list_items_loaded} total_wish_list_items={this.state.total_wish_list_items} />
     }
     return (
       <div ref="mainDiv" className="header-profile">
@@ -69,6 +132,10 @@ var HeaderProfile = React.createClass({
 
 var HeaderLogin = React.createClass({
   render: function() {
+    var panel;
+    if(this.props.selectedPanel == 'wishlist'){
+      panel = <HeaderUserProfileWishListPanel loadData={this.props.loadWishList} loaded={this.props.wish_list_items_loaded} wishlist={this.props.wish_list_items} />
+    }
     return (
       <div className="header-login">
         <div className="header-login-social-media">
@@ -79,6 +146,11 @@ var HeaderLogin = React.createClass({
         <div className="header-profile-info">   
           <a href="/login"><div className="btn btn-default">Нэвтрэх</div></a>
         </div>
+        <div onClick={this.props.handlePanelChange.bind(null,'wishlist')} className={this.props.wish_list_items_loaded && this.props.total_wish_list_items > 0 ? "header-notification notification-active" : "header-notification"}>
+          {this.props.wish_list_items_loaded && this.props.total_wish_list_items > 0 && <div className="header-notification-number">{this.props.total_wish_list_items}</div>}
+          <span className="glyphicon glyphicon-ok-circle"></span>
+        </div>
+        {panel}
       </div>
     );
   }
@@ -96,6 +168,7 @@ var HeaderUserProfileMessagePanel = React.createClass({
     if(this.props.loaded){
       panel = (
         <div>
+          {this.props.messages.length == 0 && <div className="no-content-info">Танд захидал байхгүй байна</div>}
           {this.props.messages.map(function(message,index) {
             return (
               <div key={index} className={message.unread ? "notification-dropdown-content notification-unread" : "notification-dropdown-content"}>
@@ -114,7 +187,7 @@ var HeaderUserProfileMessagePanel = React.createClass({
         </div>
       );
     }else{
-      panel = <div className="loader">Уншиж байна ...</div>
+      panel = <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>
     }
     return (
       <div className="notification-dropdown-container message-panel">
@@ -133,8 +206,49 @@ var HeaderUserProfileNotificationPanel = React.createClass({
 });
 
 var HeaderUserProfileWishListPanel = React.createClass({
+  componentDidMount: function() {
+    if(!this.props.loaded){
+      this.props.loadData();
+    }
+  },
   render: function() {
-    <div />
+    var panel;
+    if(this.props.loaded){
+      panel = (
+        <div>
+          {this.props.wishlist.length == 0 && <div className="no-content-info">Дугуйлсан тохиролцоо байхгүй байна.</div>}
+          {this.props.wishlist.map(function(item,index) {
+            return (
+              <a href={'/listings/' + item.listing.id}>
+                <div key={index} className={item.listing.is_closed ? "notification-dropdown-content notification-closed" : "notification-dropdown-content"}>
+                  <div className="notification-content-img"><img src={item.listing.image ? item.listing.image.thumb : '/images/no_image.jpg'} /></div>
+                  <div className="notification-content-text">
+                    <strong>{item.listing.title}</strong><br/>
+                    {item.listing.text_description}
+                  </div>                
+                  <div className="clearfix"></div>
+                </div>
+              </a>
+            );
+          }.bind(this))}
+        </div>
+      );
+    }else{
+      panel = <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>
+    }
+    var link_url;
+    if(this.props.user){
+      link_url = '/users/' + this.props.user.id + '?p=wishlist';
+    }else{
+      link_url = '/wish_lists'
+    }
+    return (
+      <div className={this.props.user ? "notification-dropdown-container wishlist-panel" : "notification-dropdown-container notification-panel"}>
+        <div className="notification-dropdown-header">Дугуйлсан тохиролцоо</div>
+        {panel}
+        <div className="notification-dropdown-footer"><a href={link_url}>Бүгдийг харах</a></div>
+      </div>
+    );
   }
 });
 
@@ -142,8 +256,6 @@ var HeaderUserProfileWishListPanel = React.createClass({
 var HeaderUserProfile = React.createClass({
   getInitialState: function() {
     return {
-      wish_list_items: [],
-      wish_list_items_loaded: false,
       messages: {},
       messages_loaded: false,
       messages_loading: false,
@@ -178,59 +290,14 @@ var HeaderUserProfile = React.createClass({
   render: function() {
     var panel;
     if(this.props.selectedPanel == 'wishlist'){
-      panel = (
-        <div className="notification-dropdown-container wishlist-panel">
-          <div className="notification-dropdown-header">Дугуйлсан тохиролцоо</div>
-          <div className="notification-dropdown-content notification-unread">
-            <div className="notification-content-img"><img src='/images/no_avatar.png' /></div>
-            <div className="notification-content-text">
-              <strong>Хүүкү Батка</strong> таньд илгээсэн <strong>Iphone 6 FU SpaceGray</strong> саналаа устгасан байна.
-            </div>
-            <div className="notification-content-date">2 цагийн өмнө</div>
-            <div className="clearfix"></div>
-          </div>
-          <div className="notification-dropdown-content">
-            <div className="notification-content-img"><img src='/images/no_avatar.png' /></div>
-            <div className="notification-content-text">
-              <strong>Хүүкү Батка</strong><br/> Хайртай шүү чамдаа. Алийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда миньАлийшүү сда минь
-            </div>
-            
-            <div className="clearfix"></div>
-          </div>
-          <div className="notification-dropdown-content notification-unread">
-            <div className="notification-content-img"><img src='/images/no_avatar.png' /></div>
-            <div className="notification-content-text">
-              <strong>Хүүкү Батка</strong> таньд илгээсэн <strong>Iphone 6 FU SpaceGray</strong> саналаа устгасан байна.
-            </div>
-            <div className="notification-content-date">2 цагийн өмнө</div>
-            <div className="clearfix"></div>
-          </div>
-          <div className="notification-dropdown-content">
-            <div className="notification-content-img"><img src='/images/no_avatar.png' /></div>
-            <div className="notification-content-text">
-              <strong>Хүүкү Батка</strong> таньд илгээсэн <strong>Iphone 6 FU SpaceGray</strong> саналаа устгасан байна.
-            </div>
-            <div className="notification-content-date">2 цагийн өмнө</div>
-            <div className="clearfix"></div>
-          </div>
-          <div className="notification-dropdown-content">
-            <div className="notification-content-img"><img src='/images/no_avatar.png' /></div>
-            <div className="notification-content-text">
-              <strong>Хүүкү Батка</strong> таньд илгээсэн <strong>Iphone 6 FU SpaceGray</strong> саналаа устгасан байна.
-            </div>
-            <div className="notification-content-date">2 цагийн өмнө</div>
-            <div className="clearfix"></div>
-          </div>
-          <div className="notification-dropdown-footer"><a href="#">Бүгдийг харах</a></div>
-        </div>
-      );
+      panel = <HeaderUserProfileWishListPanel loadData={this.props.loadWishList} loaded={this.props.wish_list_items_loaded} wishlist={this.props.wish_list_items} user={this.props.user} />
     }else if(this.props.selectedPanel == 'message'){
       panel = <HeaderUserProfileMessagePanel loadData={this.loadMessages} loaded={this.state.messages_loaded} messages={this.state.messages} user={this.props.user} />
     }else if(this.props.selectedPanel == 'notification'){
       panel = (
         <div className="notification-dropdown-container notification-panel">
           <div className="notification-dropdown-header">Сонордуулга</div>
-          <div className="loader">Уншиж байна ...</div>
+          <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>
           <div className="notification-dropdown-footer"><a href="#">Бүгдийг харах</a></div>
         </div>
       );

@@ -1,3 +1,5 @@
+var PubSub = require('pubsub-js');
+
 var WishListButton = React.createClass({
   handleWishList: function(id, e){  
     this.props.handleWishList(id);
@@ -8,6 +10,7 @@ var WishListButton = React.createClass({
       dataType: 'json',
       data: {listing_id: id},
       success: function (wl) {
+        PubSub.publish( 'wishlist_created', wl );
         $.growl.notice({ title: '', message: "Тохиролцоо амжилттай дугуйлагдлаа" , location: "br", delayOnHover: true});
       }.bind(this),
       error: function (xhr, status, err) {

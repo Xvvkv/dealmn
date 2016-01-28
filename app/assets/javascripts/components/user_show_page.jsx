@@ -1,5 +1,6 @@
 var Rater = require('react-rater');
 var Rating = require('./fixed_star_rate.jsx');
+var PubSub = require('pubsub-js');
 
 var UserProfileListingsSection = require('./user_profile_sections/listings.jsx');
 var UserProfileBidsSection = require('./user_profile_sections/bids.jsx');
@@ -114,7 +115,7 @@ var UserShowPage = React.createClass({
     if(!this.state.wish_list_items_loaded){
       console.log('loading...');
       $.ajax({
-        url: '/rest/users/' + this.props.user_id + '/wish_lists.json',
+        url: '/rest/wish_lists.json?include_detail=1',
         dataType: 'json',
         success: function (items) {
           this.setState({
@@ -139,6 +140,7 @@ var UserShowPage = React.createClass({
       url: '/rest/users/' + this.props.user_id + '/messages.json',
       dataType: 'json',
       success: function (messages) {
+        PubSub.publish('messages_seen');
         this.setState({
           messages: messages.reduce(function(messages, message) { messages[message.id] = message; return messages; }, {}),
           messages_loaded: true

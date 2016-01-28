@@ -3,7 +3,7 @@ class Rest::ListingsController < ApplicationController
   respond_to :json
 
   before_filter :authenticate_user!
-  skip_before_filter :authenticate_user!, :only => [:show, :index]
+  skip_before_filter :authenticate_user!, :only => [:show, :index, :free_items]
 
   def index
     if params[:pid] #timeline
@@ -32,7 +32,7 @@ class Rest::ListingsController < ApplicationController
   end
 
   def show
-    respond_with Listing.find(params[:id]), include_listing_detail: true
+    respond_with Listing.find(params[:id]), include_listing_detail: true, cookies: cookies
   end
 
   def update
@@ -116,6 +116,10 @@ class Rest::ListingsController < ApplicationController
     end
     
     respond_with listing
+  end
+
+  def free_items
+    respond_with Listing.free_item.published.order('publishment_id desc').limit(10) 
   end
 
 end
