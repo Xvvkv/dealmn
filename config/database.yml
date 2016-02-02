@@ -25,8 +25,8 @@ production:
   adapter: postgresql
   encoding: unicode
   min_messages: warning
-  database: dealmn_dev
+  database: dealmn
   pool: 5
-  host: 127.0.0.1
-  username: leandata
-  password: leandata
+  host: dealmn.cnztxs5sm2rg.us-west-2.rds.amazonaws.com
+  username: dealmn_ebt
+  password: dealmn_EBT
