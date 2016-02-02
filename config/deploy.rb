@@ -21,6 +21,8 @@ set :puma_preload_app, true
 set :puma_worker_timeout, nil
 set :puma_init_active_record, false  # Change to true if using ActiveRecord
 set :linked_dirs, %w{tmp/pids tmp/sockets log}
+set :rvm_type, :user
+set :rvm_ruby_version, 'ruby-2.1.2'
 
 namespace :puma do
   desc 'Create Directories for Puma Pids and Socket'
