@@ -25,6 +25,7 @@ group :development do
     gem 'capistrano-rails',   require: false
     gem 'capistrano-bundler', require: false
     gem 'capistrano3-puma', '0.9.0'
+    gem 'capistrano-npm'
 end
 
 gem 'sticky-rails'
