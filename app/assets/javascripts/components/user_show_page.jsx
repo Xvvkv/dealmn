@@ -154,6 +154,31 @@ var UserShowPage = React.createClass({
       }.bind(this)
     });
   },
+  loadNotifications: function () {
+    console.log('loadNotifications called');
+    if(this.state.notifications_loading){
+      return;
+    }
+    console.log('loading...');
+    this.setState({notifications_loading: true});
+    $.ajax({
+      url: '/rest/users/' + this.props.user_id + '/notifications.json',
+      dataType: 'json',
+      success: function (notifications) {
+        PubSub.publish('notifications_seen');
+        this.setState({
+          notifications: notifications,
+          notifications_loaded: true
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/notifications.json', status, err.toString());
+      }.bind(this),
+      complete: function () {
+        this.setState({notifications_loading: false});
+      }.bind(this)
+    });
+  },
   _handleUserRate: function(rating, last_rating){
     if(this.state.user_loaded && this.state.user.id != this.props.current_user_id){
       $.ajax({
@@ -366,7 +391,7 @@ var UserShowPage = React.createClass({
     }else if(this.state.rightPanel == 'message'){
       right_panel = <UserProfileMessagesSection loadData={this.loadMessages} loaded={this.state.messages_loaded} messages={this.state.messages} handleClick={this._handleMessageClick} handleRefresh={this._handleRefreshMessages} handleMarkAll={this._handleMarkAllMessages} handleDelete={this._handleDeleteMessages} current_user_id={this.props.current_user_id} />
     }else if(this.state.rightPanel == 'notification'){
-      right_panel = <UserProfileNotificationsSection />
+      right_panel = <UserProfileNotificationsSection loadData={this.loadNotifications} loaded={this.state.notifications_loaded} notifications={this.state.notifications}/>
     }else if(this.state.rightPanel == 'showMessage'){
       right_panel = <UserProfileMessageSenderSection current_user_id={this.props.current_user_id} message_id={this.state.message_id} message_u_id={this.state.message_u_id} handleMessageUpdate={this._handleMessageUpdate} />
     }
@@ -450,7 +475,7 @@ var ProfileViewer = React.createClass({
             <li role="presentation" className={this.props.rightPanel == 'bids_sent' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'bids_sent')}>Илгээсэн саналууд<span className="badge">{this.props.user.user_stat.total_bids_sent > 0 && this.props.user.user_stat.total_bids_sent}</span></a></li>
             <li role="presentation" className={this.props.rightPanel == 'wishlist' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'wishlist')}>Дугуйлсан тохиролцоо<span className="badge">{this.props.user.user_stat.total_wish_list_items > 0 && this.props.user.user_stat.total_wish_list_items}</span></a></li>
             <li role="presentation" className={(this.props.rightPanel == 'message' || this.props.rightPanel == 'showMessage') ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'message')}>Захиа<span className="badge">{this.props.user.user_stat.total_unread_messages > 0 && this.props.user.user_stat.total_unread_messages}</span></a></li>
-            <li role="presentation" className={this.props.rightPanel == 'notification' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'notification')}>Сонордуулга<span className="badge">{this.props.user.user_stat.total_unread_notifications > 0 && this.props.user.user_stat.total_unread_notifications}</span></a></li>
+            <li role="presentation" className={this.props.rightPanel == 'notification' ? 'active' :''}><a href="javascript:;" onClick={this.props.handleRightPanelChange.bind(null,'notification')}>Сонордуулга<span className="badge">{this.props.user.user_stat.total_unseen_notifications > 0 && this.props.user.user_stat.total_unseen_notifications}</span></a></li>
           </ul>
           <div className="hairly-line" />
         </div>

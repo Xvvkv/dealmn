@@ -1,3 +1,5 @@
+include ActionView::Helpers::DateHelper
+
 class MessageTextSerializer < ActiveModel::Serializer
   attributes :id, :message_text, :direction, :created_at, :created_at_in_words
   

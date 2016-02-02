@@ -116,8 +116,8 @@ var ListingEditor = React.createClass({
     $.ajax({
       url: '/rest/contacts.json',
       dataType: 'json',
-      success: function (contacts) {
-        this.setState({contacts: contacts});
+      success: function (res) {
+        this.setState({contacts: res.latest_contacts});
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/contacts.json', status, err.toString());
@@ -197,6 +197,12 @@ var ListingEditor = React.createClass({
     }
   },
   validate: function() {
+    if(this.refs.imageUpload.state.imagePreviewUrl){
+      if (!confirm('warning text for unfinished image uploading. Үргэлжлүүлэх үү?')) {
+        return false;
+      }
+    }
+
     if(this.state.title == null || this.state.title.trim() == ''){
       $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
       window.scrollTo(0,0);

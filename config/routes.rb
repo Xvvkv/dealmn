@@ -32,6 +32,7 @@ Dealmn::Application.routes.draw do
           delete :delete_selected
         end
       end
+      resources :notifications, onlly: [:index]
     end
   end
 

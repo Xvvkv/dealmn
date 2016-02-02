@@ -26,6 +26,10 @@ class Bid < ActiveRecord::Base
   def is_deleted?
     self.status == STATUS[:deleted]
   end
+
+  def is_editable?
+    self.status == STATUS[:initial]
+  end
   
   private
 

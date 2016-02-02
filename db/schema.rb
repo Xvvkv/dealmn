@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160122100538) do
+ActiveRecord::Schema.define(:version => 20160129063806) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -156,11 +156,13 @@ ActiveRecord::Schema.define(:version => 20160122100538) do
   end
 
   create_table "notifications", :force => true do |t|
-    t.integer  "user_id",    :null => false
-    t.text     "message",    :null => false
+    t.integer  "user_id",                   :null => false
+    t.text     "message",                   :null => false
     t.string   "url"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "sender_id"
+    t.integer  "status",     :default => 0, :null => false
   end
 
   create_table "product_conditions", :force => true do |t|

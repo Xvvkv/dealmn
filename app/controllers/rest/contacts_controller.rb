@@ -4,7 +4,12 @@ class Rest::ContactsController < ApplicationController
   before_filter :authenticate_user!
   
   def index
-    respond_with Contact.where(user_id: current_user.id).order('updated_at desc').limit(5)
+
+    res = {
+      primary_contact: ContactSerializer.new(current_user.primary_contact),
+      latest_contacts: ActiveModel::ArraySerializer.new(current_user.contacts.order('id desc').limit(5))
+    }
+    respond_with res
   end
 
 end

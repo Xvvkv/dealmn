@@ -110,6 +110,16 @@ class User < ActiveRecord::Base
     Message.where("(initiator_id = ? AND initiator_status in (?)) OR (participant_id = ? AND participant_status in (?))", self.id, [Message::STATUS[:unseen],Message::STATUS[:seen]], self.id, [Message::STATUS[:unseen],Message::STATUS[:seen]]).order('last_message_at DESC')
   end
 
+  def notifications_with_opt options={}
+    res = Notification.where(user_id: self.id).order('id desc')
+    res = res.limit(options[:limit]) if options[:limit]
+    res = res.clone
+    if options[:mark_seen]
+      Notification.where(user_id: self.id, status: Notification::STATUS[:unseen]).update_all(status: Notification::STATUS[:seen])
+    end
+    res
+  end
+
   def sync_stat
     stat = self.user_stat
     stat ||= UserStat.create(user_id: self.id)

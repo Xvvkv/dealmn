@@ -16,6 +16,17 @@ gem 'devise'
 
 gem 'thin'
 
+gem 'figaro'
+gem 'puma', '2.11.2'
+
+group :development do
+    gem 'capistrano'
+    gem 'capistrano-rvm'
+    gem 'capistrano-rails',   require: false
+    gem 'capistrano-bundler', require: false
+    gem 'capistrano3-puma', '0.9.0'
+end
+
 gem 'sticky-rails'
 
 gem 'simple_form'
@@ -25,8 +36,6 @@ gem 'rails-assets-growl'
 #gem 'rails-i18n', '~> 3.0.0'
 
 gem "paperclip", "~> 4.2"
-
-gem 'rinku', :require => 'rails_rinku'
 
 gem 'browserify-rails', '~> 0.9.1'
 

@@ -781,17 +781,19 @@ body{
     font-size: 12px;
     margin-bottom: 10px;
   }
-  .full-detail-short-description-intro{
+  .full-detail-short-description{
     margin-top: 5px;
     font-size: 12px;
   }
-  .full-detail-short-description-intro span{
+  .full-detail-short-description > span{
+    line-height: 18px;
+  }
+  .full-detail-short-description.intro > span{
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 18px;
   }
   .full-detaul-bid-item-detail-description{
     display: -webkit-box;

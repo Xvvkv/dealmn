@@ -133,7 +133,7 @@ mn:
         save: Хадгалах
       show:
         user_info:
-          title: Cанал оруулсан
+          title: Cанал илгээсэн
     users:
       show:
         user_info:

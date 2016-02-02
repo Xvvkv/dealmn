@@ -14,7 +14,7 @@ class BidsController < ApplicationController
 
   def edit
     @bid = Bid.find(params[:id])
-    redirect_to root_path and return if (@bid.is_deleted? || @bid.user_id != current_user.id)
+    redirect_to root_path and return unless (@bid.is_editable? && @bid.user_id == current_user.id)
   end
 
 end

@@ -19,6 +19,7 @@ var HeaderProfile = React.createClass({
     this.setOnClickOutside('mainDiv', this.onClickOutside);
     PubSub.subscribe('wishlist_created', this._handleWishListCreatedEvent);
     PubSub.subscribe('messages_seen', this._handleMessagesSeenEvent);
+    PubSub.subscribe('notifications_seen', this._handleNotificationsSeenEvent);
   },
   componentWillUnmount: function() {
     PubSub.unsubscribe('wishlist_created');
@@ -53,7 +54,7 @@ var HeaderProfile = React.createClass({
       this.setState({current_user: user});
     }else if(panel == 'notification'){
       user = this.state.current_user;
-      user.user_stat.total_unread_notifications = 0;
+      user.user_stat.total_unseen_notifications = 0;
       this.setState({current_user: user});
     }
 
@@ -112,6 +113,11 @@ var HeaderProfile = React.createClass({
   _handleMessagesSeenEvent: function () {
     user = this.state.current_user;
     user.user_stat.total_unseen_messages = 0;
+    this.setState({current_user: user});
+  },
+  _handleNotificationsSeenEvent: function () {
+    user = this.state.current_user;
+    user.user_stat.total_unseen_notifications = 0;
     this.setState({current_user: user});
   },
   render: function() {
@@ -313,8 +319,8 @@ var HeaderUserProfile = React.createClass({
               {this.props.loaded && this.props.user.user_stat.total_unseen_messages > 0 && <div className="header-notification-number">{this.props.user.user_stat.total_unseen_messages}</div>}
               <span className="glyphicon glyphicon-envelope"></span>
             </div>
-            <div onClick={this.props.handlePanelChange.bind(null,'notification')} className={this.props.loaded && this.props.user.user_stat.total_unread_notifications > 0 ? "header-notification notification-active" : "header-notification"}>
-              {this.props.loaded && this.props.user.user_stat.total_unread_notifications > 0 && <div className="header-notification-number">{this.props.user.user_stat.total_unread_notifications}</div>}
+            <div onClick={this.props.handlePanelChange.bind(null,'notification')} className={this.props.loaded && this.props.user.user_stat.total_unseen_notifications > 0 ? "header-notification notification-active" : "header-notification"}>
+              {this.props.loaded && this.props.user.user_stat.total_unseen_notifications > 0 && <div className="header-notification-number">{this.props.user.user_stat.total_unseen_notifications}</div>}
               <span className="glyphicon glyphicon-list"></span>
             </div>
           {panel}
