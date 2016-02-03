@@ -67,4 +67,12 @@ Dealmn::Application.configure do
 
 
   config.react.variant = :production
+
+  config.action_mailer.default_url_options = { :host => 'deal.mn' }
+
+  config.paperclip_defaults = {
+    :storage => :s3,
+    :bucket => 'dealmnimages'
+  }
+
 end

@@ -20,7 +20,9 @@ set :ssh_options,     { forward_agent: true, user: 'deployer', keys: %w(~/.ssh/d
 set :puma_preload_app, true
 set :puma_worker_timeout, nil
 set :puma_init_active_record, false  # Change to true if using ActiveRecord
+set :linked_files, %w{config/database.yml config/aws.yml}
 set :linked_dirs, %w{tmp/pids tmp/sockets log}
+set :keep_releases, 5
 set :rvm_type, :user
 set :rvm_ruby_version, 'ruby-2.1.2'
 

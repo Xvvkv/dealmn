@@ -28,6 +28,8 @@ group :development do
     gem 'capistrano-npm'
 end
 
+gem 'aws-sdk'
+
 gem 'sticky-rails'
 
 gem 'simple_form'
