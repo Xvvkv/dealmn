@@ -34,6 +34,10 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.8)
     arel (3.0.3)
+    aws-sdk (1.11.0)
+      json (~> 1.4)
+      nokogiri (>= 1.4.4)
+      uuidtools (~> 2.1)
     babel-source (5.8.27)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -342,6 +346,7 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    uuidtools (2.1.4)
     warden (1.2.1)
       rack (>= 1.0)
     xml-simple (1.1.5)
@@ -352,6 +357,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.8.0)
+  aws-sdk
   browserify-rails (~> 0.9.1)
   capistrano
   capistrano-bundler
