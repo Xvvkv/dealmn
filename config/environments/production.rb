@@ -73,7 +73,9 @@ Dealmn::Application.configure do
   Paperclip.options[:command_path] = "/usr/local/bin/"
   config.paperclip_defaults = {
     :storage => :s3,
-    :bucket => 'dealmnimages'
+    :bucket => 'dealmnimages',
+    :url =>':s3_domain_url',
+    :path => '/:class/:attachment/:id_partition/:style/:filename',
   }
 
 end
