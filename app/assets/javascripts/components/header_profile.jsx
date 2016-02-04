@@ -177,17 +177,17 @@ var HeaderUserProfileMessagePanel = React.createClass({
           {this.props.messages.length == 0 && <div className="no-content-info">Танд захидал байхгүй байна</div>}
           {this.props.messages.map(function(message,index) {
             return (
-              <div key={index} className={message.unread ? "notification-dropdown-content notification-unread" : "notification-dropdown-content"}>
-                <a href={'/users/' + this.props.user.id + '?p=send_msg&u=' + message.participant_hash.id}>
+              <a key={index} href={'/users/' + this.props.user.id + '?p=send_msg&u=' + message.participant_hash.id}>
+                <div className={message.unread ? "notification-dropdown-content notification-unread" : "notification-dropdown-content"}>
                   <div className="notification-content-img"><img src={message.participant_hash.prof_pic ? message.participant_hash.prof_pic : '/images/no_avatar.png'} /></div>
                   <div className="notification-content-text">
                     <strong>{message.participant_hash.full_name}</strong><br/>
                     {message.last_message}
                     <div className="notification-content-date">{message.last_message_at_in_words}</div>
                   </div>
-                </a>
-                <div className="clearfix"></div>
-              </div>
+                  <div className="clearfix"></div>
+                </div>
+              </a>
             );
           }.bind(this))}
         </div>
@@ -206,8 +206,53 @@ var HeaderUserProfileMessagePanel = React.createClass({
 });
 
 var HeaderUserProfileNotificationPanel = React.createClass({
+  componentDidMount: function() {
+    if(!this.props.loaded){
+      this.props.loadData();
+    }
+  },
   render: function() {
-    <div />
+    var panel;
+    if(this.props.loaded){
+      panel = (
+        <div>
+          {this.props.notifications.length == 0 && <div className="no-content-info">Танд сонордуулга байхгүй байна</div>}
+          {this.props.notifications.map(function(notification,index) {
+            var avatar = '/images/no_avatar.png';
+            var name;
+            if(notification.sender){
+              if(notification.sender.prof_pic){
+                avatar = notification.sender.prof_pic;
+              }
+              name = <strong>{notification.sender.name}</strong>;
+            }else{
+              avatar = '/images/no_avatar.png' // System Avatar
+            }
+            return (
+              <a key={index} href={notification.url}>
+                <div className={notification.unseen ? "notification-dropdown-content notification-unread" : "notification-dropdown-content"}>
+                  <div className="notification-content-img"><img src={avatar} /></div>
+                  <div className="notification-content-text">
+                    {name} {notification.message}
+                    <div className="notification-content-date">{notification.created_at_in_words}</div>
+                  </div>
+                  <div className="clearfix"></div>
+                </div>
+              </a>
+            );
+          }.bind(this))}
+        </div>
+      );
+    }else{
+      panel = <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>
+    }
+    return (
+      <div className="notification-dropdown-container notification-panel">
+        <div className="notification-dropdown-header">Сонордуулга</div>
+        {panel}
+        <div className="notification-dropdown-footer"><a href={'/users/' + this.props.user.id + '?p=notification'}>Бүгдийг харах</a></div>
+      </div>
+    );
   }
 });
 
@@ -225,8 +270,8 @@ var HeaderUserProfileWishListPanel = React.createClass({
           {this.props.wishlist.length == 0 && <div className="no-content-info">Дугуйлсан тохиролцоо байхгүй байна.</div>}
           {this.props.wishlist.map(function(item,index) {
             return (
-              <a href={'/listings/' + item.listing.id}>
-                <div key={index} className={item.listing.is_closed ? "notification-dropdown-content notification-closed" : "notification-dropdown-content"}>
+              <a key={index} href={'/listings/' + item.listing.id}>
+                <div className={item.listing.is_closed ? "notification-dropdown-content notification-closed" : "notification-dropdown-content"}>
                   <div className="notification-content-img"><img src={item.listing.image ? item.listing.image.thumb : '/images/no_image.jpg'} /></div>
                   <div className="notification-content-text">
                     <strong>{item.listing.title}</strong><br/>
@@ -266,7 +311,8 @@ var HeaderUserProfile = React.createClass({
       messages_loaded: false,
       messages_loading: false,
       notifications: [],
-      notifications_loaded: false
+      notifications_loaded: false,
+      notifications_loading: false
     };
   },
   loadMessages: function () {
@@ -293,6 +339,30 @@ var HeaderUserProfile = React.createClass({
       }.bind(this)
     });
   },
+  loadNotifications: function () {
+    console.log('loadNotifications called');
+    if(this.state.notifications_loading){
+      return;
+    }
+    console.log('loading...');
+    this.setState({notifications_loading: true});
+    $.ajax({
+      url: '/rest/users/' + this.props.user.id + '/notifications.json?limit=5',
+      dataType: 'json',
+      success: function (notifications) {
+        this.setState({
+          notifications: notifications,
+          notifications_loaded: true
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/notifications.json', status, err.toString());
+      }.bind(this),
+      complete: function () {
+        this.setState({notifications_loading: false});
+      }.bind(this)
+    });
+  },
   render: function() {
     var panel;
     if(this.props.selectedPanel == 'wishlist'){
@@ -300,13 +370,7 @@ var HeaderUserProfile = React.createClass({
     }else if(this.props.selectedPanel == 'message'){
       panel = <HeaderUserProfileMessagePanel loadData={this.loadMessages} loaded={this.state.messages_loaded} messages={this.state.messages} user={this.props.user} />
     }else if(this.props.selectedPanel == 'notification'){
-      panel = (
-        <div className="notification-dropdown-container notification-panel">
-          <div className="notification-dropdown-header">Сонордуулга</div>
-          <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>
-          <div className="notification-dropdown-footer"><a href="#">Бүгдийг харах</a></div>
-        </div>
-      );
+      panel = <HeaderUserProfileNotificationPanel loadData={this.loadNotifications} loaded={this.state.notifications_loaded} notifications={this.state.notifications} user={this.props.user} />
     }
     return (
       <div className="header-profile-logged">

@@ -6,4 +6,8 @@ class Notification < ActiveRecord::Base
   STATUS = {unseen: 0, seen: 1}
 
   scope :unseen, where(status: STATUS[:unseen])
+
+  def self.mark_seen user
+    user.notifications.unseen.update_all(status: STATUS[:seen])
+  end
 end

@@ -28,6 +28,9 @@ class Rest::ListingsController < ApplicationController
     user_stat = listing.user.user_stat
     user_stat.total_active_listing -= 1
     user_stat.save
+    listing.bids.initial.each do |bid|
+      bid.user.send_notification(I18n.t('notifications.listing_closed', {listing_name: listing.title, bid_name: bid.title}), "/listings/#{listing.id}", current_user)
+    end
     respond_with :rest, listing
   end
 
@@ -111,6 +114,9 @@ class Rest::ListingsController < ApplicationController
       listing.publish
     elsif params[:mode].to_i == 2
       listing.update_data
+      listing.bids.initial.each do |bid|
+        bid.user.send_notification(I18n.t('notifications.listing_updated', {listing_name: listing.title, bid_name: bid.title}), "/listings/#{listing.id}", current_user)
+      end
     else
       raise "invalid request"
     end

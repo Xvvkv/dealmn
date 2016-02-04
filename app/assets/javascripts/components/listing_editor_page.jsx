@@ -167,10 +167,10 @@ var ListingEditor = React.createClass({
       dataType: 'json',
       data: data,
       success: function (listing) {
-        if (mode == 1){
-          window.location = '/listings/' + this.props.listing_id;
+        if (mode == 0){
+          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});
         }else{
-          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});  
+          window.location = '/listings/' + this.props.listing_id;
         }
       }.bind(this),
       error: function (xhr, status, err) {

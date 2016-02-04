@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
 
   before_create :randomize_id
   after_create :create_dependents
+  after_create :send_welcome_notification
 
   belongs_to :avatar, :class_name => 'Image', :foreign_key => :avatar_id
 
@@ -135,6 +136,9 @@ class User < ActiveRecord::Base
     stat.save
   end
 
+  def send_notification message, url='#', sender=nil
+    Notification.create(message: message, url: url, user_id: self.id, sender_id: (sender.try(:id) || 0), status: Notification::STATUS[:unseen])
+  end
 
   private
 
@@ -151,6 +155,10 @@ class User < ActiveRecord::Base
     UserStat.create(user_id: self.id)
     UserSetting.create(user_id: self.id)
     Contact.create(user_id: self.id, is_primary: true, email: self.email)
+  end
+
+  def send_welcome_notification
+    self.send_notification I18n.t('notifications.welcome')
   end
 
   def randomize_id
