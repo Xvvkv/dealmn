@@ -18,4 +18,8 @@ class ListingsController < ApplicationController
     @product_conditions = ProductCondition.conditions
   end
 
+  def index
+    @product_conditions = ProductCondition.conditions
+  end
+
 end

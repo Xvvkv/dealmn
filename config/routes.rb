@@ -12,6 +12,7 @@ Dealmn::Application.routes.draw do
       resources :listing_ratings
       collection do
         get :free_items
+        get :fetch_ids
       end
     end
     resources :bids, only: [:index, :show, :update, :destroy] do

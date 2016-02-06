@@ -51,7 +51,7 @@ var UserShowPage = React.createClass({
   componentWillMount: function(){
     var p = $.urlParam('p');
     if(p){
-      if(["notification","wishlist","message","bids_received"].indexOf(p) >= 0){
+      if(["notification","wishlist","message","bids_received","bids_sent"].indexOf(p) >= 0){
         this.setState({rightPanel: p});
       }
       if(p == 'send_msg'){

@@ -64,7 +64,7 @@ class Rest::BidsController < ApplicationController
     user_stat_bidder.save
     user_stat_listing_owner.save
 
-    bid.biddable.user.send_notification(I18n.t('notifications.bid_deleted', {listing_name: bid.biddable.title, bid_name: bid.title}), "/bids/#{bid.id}", current_user)
+    bid.biddable.user.send_notification(I18n.t('notifications.bid_deleted', {listing_name: bid.biddable.title, bid_name: bid.title}), "/listings/#{bid.biddable.id}", current_user)
 
     respond_with :rest, bid
   end

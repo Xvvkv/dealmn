@@ -6,6 +6,10 @@
 
 			<div class="login-page-title"><%= t('view.login.login') %></div>
 
+			<% if flash[:alert] %>
+          <p class="error-msg"><%= flash[:alert] %></p>
+      <% end %>
+
 			<div class="login-page-other-acc-use">
 
 				<a href="#" style="margin-right:5px;"><%= image_tag('login-with-fb.jpg')%></a><a href="#" style="margin-right:5px;"><%= image_tag('login-with-tw.jpg')%></a><a href="#"><%= image_tag('login-with-gp.jpg')%></a>

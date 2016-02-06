@@ -9,6 +9,7 @@ mn:
         last_name: Овог
         password: Нууц үг
         password_confirmation: Нууц үг /давт/
+        current_password: Одоогийн нууц үг
         email: И-Мэйл хаяг
   view:
     header:
@@ -57,6 +58,8 @@ mn:
       index:
         add_spec: Тохиролцоо оруулах
     listings:
+      index:
+        add_spec: Тохиролцоо оруулах
       new:
         title: Тохиролцоо оруулах
         general_info:

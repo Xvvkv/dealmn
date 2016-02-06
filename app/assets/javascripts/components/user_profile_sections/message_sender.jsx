@@ -113,7 +113,8 @@ var UserProfileMessageSenderSection = React.createClass({
     }
   },
   handleChange: function(e) {
-    this.setState({ [e.target.name]: e.target.value});
+    field = e.target.name;
+    this.setState({field: e.target.value});
   },
   handleSend: function() {
     if(this.state.new_message && this.state.new_message.length > 0){

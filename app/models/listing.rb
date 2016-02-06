@@ -7,6 +7,10 @@ class Listing < ActiveRecord::Base
   has_many :bids, :as => :biddable
   belongs_to :item, :polymorphic => true
 
+  belongs_to :product, foreign_key: :item_id, class_name: Product, conditions: {listings: {item_type: Product}}
+  belongs_to :service, foreign_key: :item_id, class_name: Service, conditions: {listings: {item_type: Service}}
+
+  
   #delegate :product_condition_id, :product_condition, :condition_description, to: :item, allow_nil: true
   belongs_to :user
 

@@ -23,6 +23,8 @@ var HeaderProfile = React.createClass({
   },
   componentWillUnmount: function() {
     PubSub.unsubscribe('wishlist_created');
+    PubSub.unsubscribe('messages_seen');
+    PubSub.unsubscribe('notifications_seen');
   },
   loadDataFromServer: function () {
     if (this.props.current_user_id){
@@ -397,7 +399,9 @@ var HeaderUserProfile = React.createClass({
             <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
               <li><a href={'/users/' + this.props.user.id}>Хувийн булан</a></li>
               <li><a href={'/users/' + this.props.user.id + '?p=bids_received'}>Ирсэн саналууд</a></li>
+              <li><a href={'/users/' + this.props.user.id + '?p=bids_sent'}>Илгээсэн саналууд</a></li>
               <li role="separator" className="divider"></li>
+              <li><a href='/edit'>Нууц үг солих </a></li>
               <li><a href="/logout" data-method="delete" rel="nofollow">Гарах</a></li>
             </ul>
           </div>

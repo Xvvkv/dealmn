@@ -1487,6 +1487,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   border: 1px solid #dbdbdb;
   padding:10px 15px;
   width: 100%;
+  margin-bottom: 20px;
 }
 .btn-warning{
   background: #ff9500;
@@ -2184,22 +2185,26 @@ address strong{
   margin:15px 0;
   border: 1px solid #e5e5e5;
 }
+
+.left-filter-category {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.left-filter-category span.selected{
+  font-weight: bold;
+  padding-left: 15px;
+}
+
 .left-filter-category ul{
   list-style: none;
   margin: 0;
   padding: 0;
-  padding-left: 10px;
-}
-.left-filter-category ul li{
-  font-size: 12px;
-  margin: 0;
+  padding-left: 30px;
   line-height: 24px;
-  color:#333;
-  font-weight: bold;
 }
-.left-filter-category ul li ul li a{
-  font-weight: normal;
-}
+
 .title4{
   font-weight: bold;
   font-size: 12px;
@@ -2224,7 +2229,7 @@ address strong{
 .left-filter-category > a:nth-child(1){
   font-size: 12px;
 }
-.left-filter-rank span{
+.left-filter-rank .static-rating span{
   font-size: 18px;
   cursor: pointer;
 }
@@ -2281,7 +2286,7 @@ address strong{
 .timeline-message-box-items:hover{
   background: #006fdb;
 }
-.timeline-message-box-items span{
+.timeline-message-box-items span.glyphicon{
   font-size: 10px;
   margin-left: 3px;
   padding-left: 5px;
