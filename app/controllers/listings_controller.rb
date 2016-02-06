@@ -1,6 +1,6 @@
 class ListingsController < ApplicationController
   before_filter :authenticate_user!
-  skip_before_filter :authenticate_user!, :only => [:show]
+  skip_before_filter :authenticate_user!, :only => [:show, :index]
 
   def show
     @listing = Listing.find(params[:id])
