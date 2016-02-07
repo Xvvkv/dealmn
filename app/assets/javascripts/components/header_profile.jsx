@@ -149,7 +149,7 @@ var HeaderLogin = React.createClass({
         <div className="header-login-social-media">
           <a href="/auth/facebook"><img src='/images/fb-login.png' /></a>
           <a href="/auth/twitter"><img src='/images/tw-login.png' /></a>
-          <a href="/auth/google"><img src='/images/gp-login.png' /></a>
+          <a href="/auth/google_oauth2"><img src='/images/gp-login.png' /></a>
         </div>
         <div className="header-profile-info">   
           <a href="/login"><div className="btn btn-default">Нэвтрэх</div></a>

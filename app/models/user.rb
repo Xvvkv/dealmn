@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
 
   def full_name
     return "#{self.last_name} #{self.first_name}" if self.last_name.present? && self.first_name.present?
+    return "#{self.last_name}#{self.first_name}" if self.last_name.present? || self.first_name.present?
     return self.email
   end
 
@@ -193,7 +194,7 @@ class User < ActiveRecord::Base
   def create_dependents
     UserStat.create(user_id: self.id)
     UserSetting.create(user_id: self.id)
-    Contact.create(user_id: self.id, is_primary: true, email: self.email)
+    Contact.create(user_id: self.id, is_primary: true, email: self.email) unless self.provider == 'twitter'
   end
 
   def send_welcome_notification
