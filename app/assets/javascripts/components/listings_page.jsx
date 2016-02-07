@@ -273,6 +273,17 @@ var ListingsPage = React.createClass({
       delete filters.is_free;
     }else{
       filters.is_free = {display_name: 'Үнэгүй бараа', value: true}
+      delete filters.price_range
+    }
+    this.setState({filters: filters});
+    this.refs.timeline.filterAgain();
+  },
+  _handleIncludeClosedCheck: function(){
+    var filters = this.state.filters
+    if(filters.include_closed){
+      delete filters.include_closed;
+    }else{
+      filters.include_closed = {display_name: 'Хаагдсан тохиролцоог оруулах', value: true}
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
@@ -280,15 +291,28 @@ var ListingsPage = React.createClass({
   _handleChangeNumeric: function (e) {
     var v = parseInt(e.target.value);
     if((v > 0 && v.toString() == e.target.value) || e.target.value == ''){
-      this.setState({[e.target.name]: v});
+      this.setState({[e.target.name]: e.target.value});
     }
   },
   _handleFilterPriceRange: function() {
     var filters = this.state.filters
-    if(this.state.price_range_min && this.state.price_range_min != ''){
-      delete filters.rating;
+    var existing_price_range = filters.price_range
+    var new_price_range = {value: (this.state.price_range_min + '/' + this.state.price_range_max)}
+    if((existing_price_range && existing_price_range.value == new_price_range.value) || (!existing_price_range && new_price_range.value == '/')){
+      return // nothing changed
+    }
+
+    if(this.state.price_range_min == '' && this.state.price_range_max == ''){
+      delete filters.price_range // cleared
     }else{
-      filters.rating = {display_name: (rating + ' ба түүнээс дээш үнэлгээтэй'), value: rating}
+      if(this.state.price_range_min != '' && this.state.price_range_max == ''){ //only min have value
+        new_price_range['display_name'] = (this.state.price_range_min + '\u20AE-өөс дээш үнэлэгдсэн');
+      }else if (this.state.price_range_min == '' && this.state.price_range_max != ''){ // only max have value
+        new_price_range['display_name'] = (this.state.price_range_max + '\u20AE-өөс доош үнэлэгдсэн');
+      }else { // bot have value
+        new_price_range['display_name'] = (this.state.price_range_min + '-' + this.state.price_range_max + '\u20AE-ийн хооронд үнэлэгдсэн')
+      }
+      filters.price_range = new_price_range;
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
@@ -370,7 +394,7 @@ var ListingsPage = React.createClass({
                   <div className="title4">Бусад</div>
                   <div className="checkbox">
                     <label>
-                    <input type="checkbox" /> Хаагдсан тохиролцооноос хайх
+                    <input type="checkbox" onChange={this._handleIncludeClosedCheck} checked={this.state.filters.include_closed} /> Хаагдсан тохиролцооноос хайх
                     </label>
                   </div>
                   <div className="clearfix"></div>

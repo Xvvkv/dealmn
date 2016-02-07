@@ -61,7 +61,7 @@ var Timeline = React.createClass({
       }
     }
 
-    ["is_free","product_condition","rating","include_closed","price_range_min","price_range_max","search_text"].forEach(function(filter_type) {
+    ["is_free","product_condition","rating","include_closed","search_text"].forEach(function(filter_type) {
       if(this.props.filters && this.props.filters[filter_type]){
         data[filter_type] = this.props.filters[filter_type].value;
       }
@@ -69,6 +69,21 @@ var Timeline = React.createClass({
 
     if(this.props.filters && this.props.filters.top_level_cat && this.props.filters.top_level_cat.value == this.props.service_cat){
       delete data["product_condition"]
+    }
+
+    if(this.props.filters && this.props.filters.price_range){
+      var price_range = this.props.filters.price_range.value.split("/");
+      if (price_range[0] != ""){
+        data["price_range_min"] = price_range[0];
+      }
+      if (price_range[1] != ""){
+        data["price_range_max"] = price_range[1];
+      }
+    }
+
+    if(this.props.filters && this.props.filters.is_free){
+      delete data["price_range_min"]
+      delete data["price_range_max"]
     }
 
     console.log(data);
