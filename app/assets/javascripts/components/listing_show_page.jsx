@@ -311,7 +311,7 @@ var ListingDetail = React.createClass({
           <div className="full-detail-full-title">Барааны мэдээлэл</div>
           <div className="full-detail-description">
             <strong style={{fontSize: 14}}>Тайлбар: <br /></strong>
-            <p style={{whiteSpace: 'pre'}}><Linkify>{this.props.listing.text_description && this.props.listing.text_description.trim().replace(/\n\s*\n/g, '\n\n')}</Linkify></p>
+            <p style={{whiteSpace: 'pre-line'}}><Linkify>{this.props.listing.text_description && this.props.listing.text_description.trim().replace(/\n\s*\n/g, '\n\n')}</Linkify></p>
           </div>
           {spec_table}
           {bid_prev_large}
