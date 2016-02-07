@@ -46,7 +46,7 @@ var ListingShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating, id: this.state.listing.user.id},
         success: function (rating) {
-          l_updated = this.state.listing
+          var l_updated = this.state.listing
           l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
           l_updated.user.user_stat.rating_count += 1
           this.setState({
@@ -69,7 +69,7 @@ var ListingShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating},
         success: function (rating) {
-          l_updated = this.state.listing
+          var l_updated = this.state.listing
           l_updated.listing_stat.rating = +((l_updated.listing_stat.rating_sum + rating.rating) / (l_updated.listing_stat.rating_count + 1)).toFixed(1)
           l_updated.listing_stat.rating_count += 1
           this.setState({
@@ -85,12 +85,12 @@ var ListingShowPage = React.createClass({
     }
   },
   _handleWishList: function(id){
-    l_updated = this.state.listing
+    var l_updated = this.state.listing
     l_updated.wish_listed = true
     this.setState({listing: l_updated});
   },
   _handleRevertWishList: function(id){
-    l_updated = this.state.listing
+    var l_updated = this.state.listing
     l_updated.wish_listed = false
     this.setState({listing: l_updated});
   },

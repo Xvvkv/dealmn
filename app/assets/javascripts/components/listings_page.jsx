@@ -1,6 +1,7 @@
 var FreeItemList = require('./free_item_list.jsx');
 var Timeline = require('./timeline.jsx');
 var PubSub = require('pubsub-js');
+var Rating = require('./fixed_star_rate.jsx');
 
 $.urlParam = function(name){
     var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -16,7 +17,7 @@ $.urlParam = function(name){
 var CategorySelector = React.createClass({
   render: function() {
 
-    var selected_cat_top, selected_cat_mid, selected_cat_sub;
+    var selected_cat_top, selected_cat_mid, selected_cat_sub, res;
 
     if(this.props.filters.top_level_cat){
       this.props.categories.forEach(function (category) {
@@ -122,14 +123,9 @@ var ListingsPage = React.createClass({
     return {
       categories: [],
       loaded: false,
-      is_free: false,
-      product_condition: -1,
-      rating: -1,
-      include_closed: false,
+      filters: {},
       price_range_min: '',
-      price_range_max: '',
-      search_text: '',
-      filters: {}
+      price_range_max: ''
     };
   },
   componentWillMount: function(){
@@ -144,8 +140,8 @@ var ListingsPage = React.createClass({
 
     var search_text = $.urlParam('search_text');
     if(search_text){
-      search_text_decoded = decodeURIComponent(search_text);
-      filters = this.state.filters;
+      var search_text_decoded = decodeURIComponent(search_text);
+      var filters = this.state.filters;
       filters['search_text'] = {display_name: search_text_decoded, value: search_text_decoded}
       this.setState({filters: filters});
     }
@@ -173,7 +169,7 @@ var ListingsPage = React.createClass({
   setInitialCategoryFilter: function(){
     this.state.categories.forEach(function (top_category) {
       if(top_category.id == this.state.selectedCat){ // top level menu clicked
-        filters = this.state.filters;
+        var filters = this.state.filters;
         filters['top_level_cat'] = {display_name: top_category.name, value: top_category.id};
         delete filters.mid_level_cat;
         delete filters.sub_level_cat;
@@ -183,7 +179,7 @@ var ListingsPage = React.createClass({
       }
       top_category.children.forEach(function (mid_category) {
         if(mid_category.id == this.state.selectedCat){ // mid level menu clicked
-          filters = this.state.filters;
+          var filters = this.state.filters;
           filters['top_level_cat'] = {display_name: top_category.name, value: top_category.id};
           filters['mid_level_cat'] = {display_name: mid_category.name, value: mid_category.id};
           delete filters.sub_level_cat;
@@ -193,7 +189,7 @@ var ListingsPage = React.createClass({
         }
         mid_category.children.forEach(function (sub_category) {
           if(sub_category.id == this.state.selectedCat){ // sub level menu clicked
-            filters = this.state.filters;
+            var filters = this.state.filters;
             filters['top_level_cat'] = {display_name: top_category.name, value: top_category.id};
             filters['mid_level_cat'] = {display_name: mid_category.name, value: mid_category.id};
             filters['sub_level_cat'] = {display_name: sub_category.name, value: sub_category.id};
@@ -206,7 +202,7 @@ var ListingsPage = React.createClass({
     }.bind(this));
   },
   _handleRemoveFilter: function(filter_type) {
-    filters = this.state.filters;
+    var filters = this.state.filters;
     delete filters[filter_type];
 
     if(filter_type == 'top_level_cat'){
@@ -224,7 +220,7 @@ var ListingsPage = React.createClass({
     this.refs.timeline.filterAgain();
   },
   _handleSelectCat: function(top_level_cat,mid_level_cat,sub_level_cat){
-    filters = this.state.filters;
+    var filters = this.state.filters;
 
     if(!top_level_cat){
       delete filters['top_level_cat'];
@@ -251,7 +247,71 @@ var ListingsPage = React.createClass({
     this.refs.timeline.filterAgain(); 
     
   },
+  _handleSelectCondition: function(condition){
+    var filters = this.state.filters
+    if(filters.product_condition && filters.product_condition.value == condition.id){
+      delete filters.product_condition;
+    }else{
+      filters.product_condition = {display_name: condition.title, value: condition.id}
+    }
+    this.setState({filters: filters});
+    this.refs.timeline.filterAgain();
+  },
+  _handleSelectRating: function(rating){
+    var filters = this.state.filters
+    if(filters.rating && filters.rating.value == rating){
+      delete filters.rating;
+    }else{
+      filters.rating = {display_name: (rating + ' ба түүнээс дээш үнэлгээтэй'), value: rating}
+    }
+    this.setState({filters: filters});
+    this.refs.timeline.filterAgain();
+  },
+  _handleIsFreeCheck: function(){
+    var filters = this.state.filters
+    if(filters.is_free){
+      delete filters.is_free;
+    }else{
+      filters.is_free = {display_name: 'Үнэгүй бараа', value: true}
+    }
+    this.setState({filters: filters});
+    this.refs.timeline.filterAgain();
+  },
+  _handleChangeNumeric: function (e) {
+    var v = parseInt(e.target.value);
+    if((v > 0 && v.toString() == e.target.value) || e.target.value == ''){
+      this.setState({[e.target.name]: v});
+    }
+  },
+  _handleFilterPriceRange: function() {
+    var filters = this.state.filters
+    if(this.state.price_range_min && this.state.price_range_min != ''){
+      delete filters.rating;
+    }else{
+      filters.rating = {display_name: (rating + ' ба түүнээс дээш үнэлгээтэй'), value: rating}
+    }
+    this.setState({filters: filters});
+    this.refs.timeline.filterAgain();
+  },
   render: function() {
+    var condition_selector;
+    if(!this.state.filters.top_level_cat || this.props.service_cat != this.state.filters.top_level_cat.value){
+      condition_selector = (
+        <div>
+          <div className="left-filter-condition">
+            <div className="title4">Төлөв</div>
+            {this.props.p_conditions.map(function(condition,index) {
+              return (
+                <div key={index}>
+                  <a onClick={this._handleSelectCondition.bind(null,condition)} className={this.state.filters.product_condition && this.state.filters.product_condition.value == condition.id ? "active" : ""} href="javascript:;">{condition.title}</a>
+                </div>
+              );
+            }.bind(this))}
+          </div>
+          <div className="hairly-line"></div>
+        </div>
+      );
+    }
     return (
       <div className="main">
         <div className="container">
@@ -262,87 +322,46 @@ var ListingsPage = React.createClass({
                 <div className="hairly-line"></div>
                 
                 <div className="title5">Дэлгэрэнгүй хайлт</div>
-                <div className="left-filter-condition">
-                  <div className="title4">Төлөв</div>
-                  <div>
-                    <a className={this.state.product_condition == -1 ? "active" : ""} href="#">Бүх төлөв</a>
-                  </div>
-                  {this.props.p_conditions.map(function(condition,index) {
-                    return (
-                      <div key={index}>
-                        <a className={condition.id == this.state.product_condition ? "active" : ""} href="#">{condition.title}</a>
-                      </div>
-                    );
-                  }.bind(this))}
-                </div>
-                <div className="hairly-line"></div>
+                {condition_selector}
                 <div className="left-filter-rank">
                   <div className="title4">Үнэлгээ</div>
-                  <a href="#" className="active">
-                    <div className="static-rating">
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                    </div> ба түүнээс дээш
+                  <a href="javascript:;" onClick={this._handleSelectRating.bind(null,5)} className={this.state.filters.rating && this.state.filters.rating.value == 5 ? "active" : ""}>
+                    <Rating rating={5} /> ба түүнээс дээш
                   </a>
                   <br/>                
-                  <a href="#">
-                    <div className="static-rating">
-                      <span>★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                    </div> ба түүнээс дээш
+                  <a href="javascript:;" onClick={this._handleSelectRating.bind(null,4)} className={this.state.filters.rating && this.state.filters.rating.value == 4 ? "active" : ""}>
+                    <Rating rating={4} /> ба түүнээс дээш
                   </a>
                   <br/>
-                  <a href="#">
-                    <div className="static-rating">
-                      <span>★</span>
-                      <span>★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                    </div> ба түүнээс дээш
+                  <a href="javascript:;" onClick={this._handleSelectRating.bind(null,3)} className={this.state.filters.rating && this.state.filters.rating.value == 3 ? "active" : ""}>
+                    <Rating rating={3} /> ба түүнээс дээш
                   </a>
                   <br/>
-                  <a href="#">
-                    <div className="static-rating">
-                      <span>★</span>
-                      <span>★</span>
-                      <span>★</span>
-                      <span className="is-active">★</span>
-                      <span className="is-active">★</span>
-                    </div> ба түүнээс дээш
+                  <a href="javascript:;" onClick={this._handleSelectRating.bind(null,2)} className={this.state.filters.rating && this.state.filters.rating.value == 2 ? "active" : ""}>
+                    <Rating rating={2} /> ба түүнээс дээш
                   </a>
                   <br/>
-                  <a href="#">
-                    <div className="static-rating">
-                      <span>★</span>
-                      <span>★</span>
-                      <span>★</span>
-                      <span>★</span>
-                      <span className="is-active">★</span>
-                    </div> ба түүнээс дээш
+                  <a href="javascript:;" onClick={this._handleSelectRating.bind(null,1)} className={this.state.filters.rating && this.state.filters.rating.value == 1 ? "active" : ""}>
+                    <Rating rating={1} /> ба түүнээс дээш
                   </a>
                 </div>
                 <div className="hairly-line"></div>
                 <div className="left-filter-price">
-                  <div className="title4">Мөнгөн үнэлгээ</div>
-                  <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Доод</label>
-                    <input type="text" className="form-control" id="low-price" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="exampleInputEmail1">Дээд</label>
-                    <input type="text" className="form-control" id="high-price" />
-                  </div>
-                  <div className="clearfix"></div>
+                  {!this.state.filters.is_free && <div>
+                    <div className="title4">Мөнгөн үнэлгээ <a href="#">[?]</a></div>
+                    <a href="javascript:;"><span className="glyphicon glyphicon-menu-left"></span> Бүх үнэлгээ</a>
+                    <div className="price-range">
+                      <span>{"\u20AE"}</span>
+                      <input type="text" className="form-control" name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} />
+                      <span>{" - \u20AE"}</span>
+                      <input type="text" className="form-control" name="price_range_max" value={this.state.price_range_max} onChange={this._handleChangeNumeric} />
+                      <span onClick={this._handleFilterPriceRange} className="glyphicon glyphicon glyphicon-search" />
+                    </div>
+                    <div className="clearfix"></div>
+                  </div>}
                   <div className="checkbox">
                     <label>
-                    <input type="checkbox" /> Үнэгүй
+                      <input type="checkbox" onChange={this._handleIsFreeCheck} checked={this.state.filters.is_free} /> Үнэгүй
                     </label>
                   </div>
                 </div>
@@ -362,7 +381,7 @@ var ListingsPage = React.createClass({
               <img src='/images/banner1.png' />
             </div>
           </div>
-          {this.state.loaded && <Timeline ref='timeline' current_user_id={this.props.current_user_id} filters={this.state.filters} handleRemoveFilter={this._handleRemoveFilter}/>}
+          {this.state.loaded && <Timeline ref='timeline' current_user_id={this.props.current_user_id} filters={this.state.filters} handleRemoveFilter={this._handleRemoveFilter} service_cat={this.props.service_cat} />}
           <div className="main-right">
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>

@@ -190,8 +190,7 @@ var BidEditor = React.createClass({
     }
   },
   _handleChange: function (e) {
-    field = e.target.name;
-    this.setState({ field: e.target.value});
+    this.setState({ [e.target.name]: e.target.value});
   },
   _handleContactItemClick: function (contact) {
     this.setState({phone: contact.phone, email: contact.email});

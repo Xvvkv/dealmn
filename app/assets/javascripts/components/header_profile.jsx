@@ -1,4 +1,4 @@
-ClickOutside = require ('./mixins/click-outside.js')
+var ClickOutside = require ('./mixins/click-outside.js')
 var PubSub = require('pubsub-js');
 
 var HeaderProfile = React.createClass({
@@ -51,11 +51,11 @@ var HeaderProfile = React.createClass({
   _handlePanelChange: function(panel) {
 
     if(panel == 'message'){
-      user = this.state.current_user;
+      var user = this.state.current_user;
       user.user_stat.total_unseen_messages = 0;
       this.setState({current_user: user});
     }else if(panel == 'notification'){
-      user = this.state.current_user;
+      var user = this.state.current_user;
       user.user_stat.total_unseen_notifications = 0;
       this.setState({current_user: user});
     }
@@ -100,25 +100,25 @@ var HeaderProfile = React.createClass({
   },
   _handleWishListCreatedEvent: function(msg, wl) {
     if(this.state.wish_list_items_loaded){
-      wish_list_items = this.state.wish_list_items;
+      var wish_list_items = this.state.wish_list_items;
       wish_list_items.unshift(wl);
-      total_wish_list_items = this.state.total_wish_list_items;
+      var total_wish_list_items = this.state.total_wish_list_items;
       total_wish_list_items +=1;
       this.setState({wish_list_items: wish_list_items.slice(0,5), total_wish_list_items: total_wish_list_items})
     }
     if(this.state.user_loaded){
-      current_user = this.state.current_user;
+      var current_user = this.state.current_user;
       current_user.user_stat.total_wish_list_items += 1;
       this.setState({current_user: current_user});
     }
   },
   _handleMessagesSeenEvent: function () {
-    user = this.state.current_user;
+    var user = this.state.current_user;
     user.user_stat.total_unseen_messages = 0;
     this.setState({current_user: user});
   },
   _handleNotificationsSeenEvent: function () {
-    user = this.state.current_user;
+    var user = this.state.current_user;
     user.user_stat.total_unseen_notifications = 0;
     this.setState({current_user: user});
   },

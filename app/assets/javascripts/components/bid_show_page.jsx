@@ -39,7 +39,7 @@ var BidShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating, id: this.state.bid.user.id},
         success: function (rating) {
-          b_updated = this.state.bid
+          var b_updated = this.state.bid
           b_updated.user.user_stat.rating = +((b_updated.user.user_stat.rating_sum + rating.rating) / (b_updated.user.user_stat.rating_count + 1)).toFixed(1)
           b_updated.user.user_stat.rating_count += 1
           this.setState({
@@ -67,7 +67,7 @@ var BidShowPage = React.createClass({
         type: "put",
         data: {},
         success: function (res) {
-          bid = this.state.bid;
+          var bid = this.state.bid;
           bid.is_accepted = true;
           this.setState({bid: bid});
         }.bind(this),

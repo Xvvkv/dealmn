@@ -243,18 +243,16 @@ var ListingEditor = React.createClass({
     }
   },
   _handleChange: function (e) {
-    field = e.target.name;
-    this.setState({field: e.target.value});
+    this.setState({[e.target.name]: e.target.value});
   },
   _handleChangeNumeric: function (e) {
     var v = parseInt(e.target.value);
     if((v > 0 && v.toString() == e.target.value) || e.target.value == ''){
-      field = e.target.name;
-      this.setState({field: e.target.value});
+      this.setState({[e.target.name]: e.target.value});
     }
   },
   _handleIsFreeCheck: function () {
-    old = this.state.is_free
+    var old = this.state.is_free
     this.setState({is_free: !old})
   },
   _handleSpecChange: function (e) {

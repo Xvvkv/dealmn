@@ -97,7 +97,7 @@ var UserProfileMessageSenderSection = React.createClass({
         dataType: 'json',
         data: {rating: rating, id: this.state.message.participant.id},
         success: function (rating) {
-          message = this.state.message
+          var message = this.state.message
           message.participant.user_stat.rating = +((message.participant.user_stat.rating_sum + rating.rating) / (message.participant.user_stat.rating_count + 1)).toFixed(1)
           message.participant.user_stat.rating_count += 1
           this.setState({
@@ -113,8 +113,7 @@ var UserProfileMessageSenderSection = React.createClass({
     }
   },
   handleChange: function(e) {
-    field = e.target.name;
-    this.setState({field: e.target.value});
+    this.setState({[e.target.name]: e.target.value});
   },
   handleSend: function() {
     if(this.state.new_message && this.state.new_message.length > 0){

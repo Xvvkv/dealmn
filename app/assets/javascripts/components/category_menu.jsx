@@ -1,4 +1,4 @@
-ReactMenuAim = require ('./mixins/react_menu_aim.js')
+var ReactMenuAim = require ('./mixins/react_menu_aim.js')
 
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 

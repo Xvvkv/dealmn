@@ -63,8 +63,8 @@ module Dealmn
     config.assets.paths << "#{Rails}/vendor/assets/images"
     config.assets.paths << "#{Rails}/vendor/assets/sound"
 
-    config.browserify_rails.commandline_options = "--transform reactify --extension=\".jsx\""
-
+    #config.browserify_rails.commandline_options = "--transform reactify --extension=\".jsx\""
+    
     I18n.available_locales = [:mn,:en]
     config.i18n.default_locale = 'mn'
     config.time_zone = 'Asia/Ulaanbaatar'

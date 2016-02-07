@@ -41,7 +41,7 @@ var Timeline = React.createClass({
 
     this.setState({is_loading_ids: true});
 
-    data = {}
+    var data = {}
 
     if(this.state.min_publishment_id != -1){
       data['pid'] = this.state.min_publishment_id;
@@ -66,6 +66,10 @@ var Timeline = React.createClass({
         data[filter_type] = this.props.filters[filter_type].value;
       }
     }.bind(this));
+
+    if(this.props.filters && this.props.filters.top_level_cat && this.props.filters.top_level_cat.value == this.props.service_cat){
+      delete data["product_condition"]
+    }
 
     console.log(data);
 
@@ -99,12 +103,12 @@ var Timeline = React.createClass({
       return;
     }
 
-    slice_size = 10;
+    var slice_size = 10;
     if(this.state.min_publishment_id == -1){
       slice_size = 20;
     }
 
-    ids = this.state.listing_ids.slice(0,slice_size);
+    var ids = this.state.listing_ids.slice(0,slice_size);
 
     this.setState({is_loading: true});
 

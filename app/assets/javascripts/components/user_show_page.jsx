@@ -187,7 +187,7 @@ var UserShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating, id: this.state.user.id},
         success: function (rating) {
-          u_updated = this.state.user
+          var u_updated = this.state.user
           u_updated.user_stat.rating = +((u_updated.user_stat.rating_sum + rating.rating) / (u_updated.user_stat.rating_count + 1)).toFixed(1)
           u_updated.user_stat.rating_count += 1
           this.setState({
@@ -286,7 +286,7 @@ var UserShowPage = React.createClass({
     });
   },
   _handleUserInfoChange: function(attr, e){
-    user = this.state.user
+    var user = this.state.user
     if(attr == 'first_name' || attr == 'last_name'){
       user[attr] = e.target.value;
     }else if(attr == 'email' || attr == 'phone'){
@@ -329,8 +329,8 @@ var UserShowPage = React.createClass({
     reader.readAsDataURL(file);
   },
   _handleMessageClick: function(id){
-    messages = this.state.messages;
-    user = this.state.user  
+    var messages = this.state.messages;
+    var user = this.state.user  
     if(messages[id].unread){
       user.user_stat.total_unread_messages -= 1;
       messages[id].unread = false;
@@ -338,7 +338,7 @@ var UserShowPage = React.createClass({
     this.setState({rightPanel: 'showMessage', message_id: id, messages: messages, user: user});
   },
   _handleMessageUpdate: function(message){
-    messages = this.state.messages
+    var messages = this.state.messages
     if(message.id){
       if(messages[message.id]){
         console.log(messages[message.id]);
@@ -357,9 +357,9 @@ var UserShowPage = React.createClass({
     this.loadMessages();
   },
   _handleMarkAllMessages: function(selected_ids,as_read){
-    messages = this.state.messages;
-    user = this.state.user;
-    unread_diff = 0;
+    var messages = this.state.messages;
+    var user = this.state.user;
+    var unread_diff = 0;
     selected_ids.forEach(function(id) {
       if(messages[id].unread && as_read){
         unread_diff -= 1;
@@ -372,7 +372,7 @@ var UserShowPage = React.createClass({
     this.setState({messages: messages, user: user});
   },
   _handleDeleteMessages: function(selected_ids){
-    messages = this.state.messages;
+    var messages = this.state.messages;
     selected_ids.forEach(function(id) {
       delete messages[id];
     });
