@@ -18,4 +18,9 @@ class Image < ActiveRecord::Base
     #not working
     #File.delete(self.image.path)
   end
+
+  def self.create_image_from_url (image_url)
+    image = Image.create(image: URI.parse(image_url))
+    image
+  end
 end

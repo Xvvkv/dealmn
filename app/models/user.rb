@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :token_authenticatable, :confirmable,
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,  
-    :recoverable, :rememberable, :trackable, :validatable, :confirmable
+    :recoverable, :rememberable, :trackable, :validatable, :confirmable, :omniauthable
         
   attr_accessible :email, :password, :password_confirmation, :remember_me, :first_name, :last_name
   
@@ -138,6 +138,44 @@ class User < ActiveRecord::Base
 
   def send_notification message, url='#', sender=nil
     Notification.create(message: message, url: url, user_id: self.id, sender_id: (sender.try(:id) || 0), status: Notification::STATUS[:unseen])
+  end
+
+  def self.from_omniauth_facebook(auth)
+    where(email: auth.info.email).first_or_create do |user|
+      user.provider = auth.provider
+      user.uid = auth.uid
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[10,20]
+      user.first_name = auth.info.first_name
+      user.last_name = auth.info.last_name
+      user.skip_confirmation!
+    end
+  end
+
+  def self.from_omniauth_twitter(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.provider = auth.provider
+      user.uid = auth.uid
+      user.password = Devise.friendly_token[10,20]
+      user.first_name = auth.info.name
+      puts auth.info.image
+      user.avatar_id = Image.create_image_from_url(auth.info.image.sub("_normal", "")).id
+      user.email = "user.#{user.id}@change_your_email.com"
+      user.skip_confirmation!
+    end
+  end
+
+  def self.from_omniauth_google(auth)
+    where(email: auth.info.email).first_or_create do |user|
+      user.provider = auth.provider
+      user.uid = auth.uid
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[10,20]
+      user.first_name = auth.info.first_name
+      user.last_name = auth.info.last_name
+      user.avatar_id = Image.create_image_from_url(auth.info.image.sub("sz=50", "")).id
+      user.skip_confirmation!
+    end
   end
 
   private
