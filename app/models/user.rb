@@ -56,6 +56,8 @@ class User < ActiveRecord::Base
   has_many :initiated_messages, :class_name => 'Message', :foreign_key => :initiator_id
   has_many :participated_messages, :class_name => 'Message', :foreign_key => :participant_id
 
+  TYPE = {regular: 0, admin: 1, voucher_redeemer: 2}
+
   def display_name
     return "#{self.last_name[0...1].upcase}.#{self.first_name.camelcase}" if self.last_name.present? && self.first_name.present?
     return self.first_name if self.first_name.present?

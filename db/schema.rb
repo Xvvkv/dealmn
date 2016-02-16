@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160129063806) do
+ActiveRecord::Schema.define(:version => 20160216045639) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -130,6 +130,7 @@ ActiveRecord::Schema.define(:version => 20160129063806) do
     t.integer  "price_range_max"
     t.datetime "published_date"
     t.integer  "publishment_id"
+    t.integer  "hit_counter",        :default => 0,     :null => false
   end
 
   add_index "listings", ["published_date"], :name => "index_listings_on_published_date"
@@ -267,6 +268,7 @@ ActiveRecord::Schema.define(:version => 20160129063806) do
     t.string   "uid"
     t.string   "provider"
     t.integer  "avatar_id"
+    t.integer  "user_type",              :default => 0,  :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
