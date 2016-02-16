@@ -2,6 +2,7 @@ var OwnerInfo = require('./owner_info.jsx');
 var ImageViewer = require('./image_viewer.jsx');
 var Rater = require('react-rater');
 var Rating = require('./fixed_star_rate.jsx');
+var Linkify = require('react-linkify');
 
 var BidShowPage = React.createClass({
   getInitialState: function() {
@@ -38,7 +39,7 @@ var BidShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating, id: this.state.bid.user.id},
         success: function (rating) {
-          b_updated = this.state.bid
+          var b_updated = this.state.bid
           b_updated.user.user_stat.rating = +((b_updated.user.user_stat.rating_sum + rating.rating) / (b_updated.user.user_stat.rating_count + 1)).toFixed(1)
           b_updated.user.user_stat.rating_count += 1
           this.setState({
@@ -66,7 +67,7 @@ var BidShowPage = React.createClass({
         type: "put",
         data: {},
         success: function (res) {
-          bid = this.state.bid;
+          var bid = this.state.bid;
           bid.is_accepted = true;
           this.setState({bid: bid});
         }.bind(this),
@@ -170,7 +171,7 @@ var BidDetail = React.createClass({
     this.props.handleBidAccept(e);
   },
   render: function() {
-    var header_info;
+    var header_info, delete_button, edit_button;
 
     if(this.props.loaded){
       if(this.props.bid.user.id == this.props.current_user_id){
@@ -189,11 +190,12 @@ var BidDetail = React.createClass({
         }else{
           header_info = (
             <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
-              <button onClick={this.props.handleDeleteBid} className="btn btn-danger header-info-button">Саналыг устгах</button>
               <h5>Та доорхи тохиролцоонд энэхүү саналыг илгээсэн байна.</h5>
               <p><strong><a href={"/listings/"+this.props.bid.biddable.id}>{this.props.bid.biddable.title}</a></strong></p>
             </div>
           );
+          edit_button = <a className="btn btn-warning" href={'/bids/' + this.props.bid.id + '/edit'}><span className="glyphicon glyphicon-edit" /></a>
+          delete_button = <a className="btn btn-danger" href="javascript:;" onClick={this.props.handleDeleteBid}><span className="glyphicon glyphicon-remove" /></a>
         }
       }else if(this.props.bid.biddable.user_id == this.props.current_user_id){
         if(this.props.bid.is_accepted){
@@ -236,11 +238,17 @@ var BidDetail = React.createClass({
           <div className="full-detail-title">{this.props.bid.title}</div>
           <div className="full-detail-short-information">
             <div className="hairly-line" />
-            <div className="full-detail-short-description-intro">
+            <div className="full-detail-short-description">
               <strong style={{fontSize: 14}}>Тайлбар: <br/></strong>
-              {this.props.bid.description}
+              <Linkify>{this.props.bid.description}</Linkify>
             </div>
             <div className="hairly-line" />
+            <div className="full-detail-deal-buttons">
+              <div>
+                {delete_button}
+                {edit_button}
+              </div>
+            </div>
           </div>
           <div className="clearfix" />
         </div>

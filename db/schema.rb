@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160122100538) do
+ActiveRecord::Schema.define(:version => 20160216045639) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -70,9 +70,9 @@ ActiveRecord::Schema.define(:version => 20160122100538) do
     t.integer  "user_id",                       :null => false
     t.string   "email"
     t.string   "phone"
-    t.boolean  "is_primary", :default => false, :null => false
     t.datetime "created_at",                    :null => false
     t.datetime "updated_at",                    :null => false
+    t.boolean  "is_primary", :default => false, :null => false
   end
 
   add_index "contacts", ["user_id", "email", "phone"], :name => "index_contacts_on_user_id_and_email_and_phone", :unique => true
@@ -130,6 +130,7 @@ ActiveRecord::Schema.define(:version => 20160122100538) do
     t.integer  "price_range_max"
     t.datetime "published_date"
     t.integer  "publishment_id"
+    t.integer  "hit_counter",        :default => 0,     :null => false
   end
 
   add_index "listings", ["published_date"], :name => "index_listings_on_published_date"
@@ -144,23 +145,25 @@ ActiveRecord::Schema.define(:version => 20160122100538) do
   end
 
   create_table "messages", :force => true do |t|
-    t.integer  "initiator_id",                     :null => false
-    t.integer  "participant_id",                   :null => false
-    t.integer  "initiator_status",                 :null => false
-    t.integer  "participant_status",               :null => false
-    t.datetime "last_message_at",                  :null => false
-    t.integer  "last_initiator_deleted_message"
-    t.integer  "last_participant_deleted_message"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.integer  "initiator_id",            :null => false
+    t.integer  "participant_id",          :null => false
+    t.integer  "initiator_status",        :null => false
+    t.integer  "participant_status",      :null => false
+    t.datetime "last_message_at",         :null => false
+    t.integer  "initiator_deletion_id"
+    t.integer  "participant_deletion_id"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "notifications", :force => true do |t|
-    t.integer  "user_id",    :null => false
-    t.text     "message",    :null => false
+    t.integer  "user_id",                   :null => false
+    t.text     "message",                   :null => false
     t.string   "url"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.integer  "sender_id"
+    t.integer  "status",     :default => 0, :null => false
   end
 
   create_table "product_conditions", :force => true do |t|
@@ -265,6 +268,7 @@ ActiveRecord::Schema.define(:version => 20160122100538) do
     t.string   "uid"
     t.string   "provider"
     t.integer  "avatar_id"
+    t.integer  "user_type",              :default => 0,  :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

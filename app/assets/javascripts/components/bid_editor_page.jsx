@@ -13,7 +13,6 @@ var BidEditorPage = React.createClass({
     this.loadDataFromServer();
   },
   loadDataFromServer: function () {
-
     $.ajax({
       url: '/rest/listings.json',
       dataType: 'json',
@@ -64,30 +63,37 @@ var BidEditor = React.createClass({
     this.loadDataFromServer();
   },
   loadDataFromServer: function () {
-
-    $.ajax({
-      url: '/rest/bids/' + this.props.bid_id + '.json',
-      dataType: 'json',
-      success: function (bid) {
-        this.setState({
-          bid: bid,
-          images: bid.images,
-          title: bid.title,
-          description: bid.description,
-          email: (bid.contact || {}).email,
-          phone: (bid.contact || {}).phone
-        });
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.error('/rest/bids.json', status, err.toString());
-      }.bind(this)
-    });
+    if(this.props.edit_mode){
+      $.ajax({
+        url: '/rest/bids/' + this.props.bid_id + '.json',
+        dataType: 'json',
+        success: function (bid) {
+          this.setState({
+            bid: bid,
+            images: bid.images,
+            title: bid.title,
+            description: bid.description,
+            email: (bid.contact || {}).email,
+            phone: (bid.contact || {}).phone
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/bids.json', status, err.toString());
+        }.bind(this)
+      });
+    }
 
     $.ajax({
       url: '/rest/contacts.json',
       dataType: 'json',
-      success: function (contacts) {
-        this.setState({contacts: contacts});
+      success: function (res) {
+        this.setState({contacts: res.latest_contacts});
+        if(!this.props.edit_mode){
+          this.setState({
+            email: (res.primary_contact || {}).email,
+            phone: (res.primary_contact || {}).phone
+          });
+        }
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/contacts.json', status, err.toString());
@@ -128,6 +134,12 @@ var BidEditor = React.createClass({
       return;
     }
 
+    if(this.refs.imageUpload.state.imagePreviewUrl){
+      if (!confirm('warning text for unfinished image uploading. Үргэлжлүүлэх үү?')) {
+        return;
+      }
+    }
+
     if(this.state.updating){
       console.log('not finished yet!!!')
       return;
@@ -155,7 +167,6 @@ var BidEditor = React.createClass({
         }.bind(this),
         complete: function () {
           this.setState({updating: false});
-          window.scrollTo(0,0);
         }.bind(this)
       });
 
@@ -166,7 +177,7 @@ var BidEditor = React.createClass({
         dataType: 'json',
         data: data,
         success: function (bid) {
-          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});  
+          window.location = '/bids/' + this.props.bid_id;
         }.bind(this),
         error: function (xhr, status, err) {
           console.error('/rest/listings', status, err.toString());
@@ -174,7 +185,6 @@ var BidEditor = React.createClass({
         }.bind(this),
         complete: function () {
           this.setState({updating: false});
-          window.scrollTo(0,0);
         }.bind(this)
       });
     }

@@ -7,20 +7,20 @@ mn:
       send_instructions: "You will receive an email with instructions about how to confirm your account in a few minutes."
       send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions about how to confirm your account in a few minutes."
     failure:
-      already_authenticated: "You are already signed in."
+      already_authenticated: "Та нэвтэрсэн байна"
       inactive: "Your account was not activated yet."
-      invalid: "Invalid email or password."
+      invalid: "Нууц үг эсвэл И-Мэйл хаяг буруу байна"
       invalid_token: "Invalid authentication token."
       locked: "Your account is locked."
-      not_found_in_database: "Invalid email or password."
+      not_found_in_database: "Нууц үг эсвэл И-Мэйл хаяг буруу байна"
       timeout: "Your session expired, please sign in again to continue."
       unauthenticated: "Үргэлжлүүлэхийн өмнө бүртгүүлэх эсвэл нэвтэрч орох шаардлагатай."
-      unconfirmed: "You have to confirm your account before continuing."
+      unconfirmed: "Та бүртгүүлсэн И-Мэйл хаяг руугаа нэвтрэн орж бүртгэлээ баталгаажуулна уу"
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        subject: "DEAL.MN >> Бүртгэлээ баталгаажуулах"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "DEAL.MN >> Нууц үгээ шинэчлэх"
       unlock_instructions:
         subject: "Unlock Instructions"
     omniauth_callbacks:
@@ -52,7 +52,7 @@ mn:
       already_confirmed: "was already confirmed, please try signing in"
       confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
       expired: "has expired, please request a new one"
-      not_found: "not found"
+      not_found: "бүртгэгдээгүй байна"
       not_locked: "was not locked"
       not_saved:
         one: "1 error prohibited this %{resource} from being saved:"

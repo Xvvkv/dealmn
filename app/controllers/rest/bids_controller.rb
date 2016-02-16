@@ -47,6 +47,8 @@ class Rest::BidsController < ApplicationController
 
     bid.save
 
+    bid.biddable.user.send_notification(I18n.t('notifications.bid_updated', {listing_name: bid.biddable.title, bid_name: bid.title}), "/bids/#{bid.id}", current_user)
+
     respond_with :rest, bid
   end
 
@@ -61,6 +63,8 @@ class Rest::BidsController < ApplicationController
     user_stat_listing_owner.total_bids_received -= 1
     user_stat_bidder.save
     user_stat_listing_owner.save
+
+    bid.biddable.user.send_notification(I18n.t('notifications.bid_deleted', {listing_name: bid.biddable.title, bid_name: bid.title}), "/listings/#{bid.biddable.id}", current_user)
 
     respond_with :rest, bid
   end
@@ -98,6 +102,8 @@ class Rest::BidsController < ApplicationController
         user_stat_bidder.save
         user_stat_listing_owner.save
 
+        listing.user.send_notification(I18n.t('notifications.bid_received', {listing_name: listing.title, bid_name: bid.title}), "/bids/#{bid.id}", current_user)
+
       end
 
       respond_with :rest, bid
@@ -120,6 +126,8 @@ class Rest::BidsController < ApplicationController
     user_stat_listing_owner.total_accepted_bid += 1
     user_stat_bidder.save
     user_stat_listing_owner.save
+
+    bid.user.send_notification(I18n.t('notifications.bid_accepted', {listing_name: bid.biddable.title, bid_name: bid.title}), "/bids/#{bid.id}", current_user)
 
     render :nothing => true, :status => 200
   end

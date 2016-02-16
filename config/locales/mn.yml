@@ -9,6 +9,7 @@ mn:
         last_name: Овог
         password: Нууц үг
         password_confirmation: Нууц үг /давт/
+        current_password: Одоогийн нууц үг
         email: И-Мэйл хаяг
   view:
     header:
@@ -23,7 +24,14 @@ mn:
       forgot_your_password: Нууц үгээ мартсан
     registration:
       register: Бүртгүүлэх
-
+  notifications:
+    welcome: Deal.mn сайтад тавтай морилно уу
+    bid_received: 'хэрэглэгч таны "%{listing_name}" тохиролцоонд "%{bid_name}" гэсэн санал илгээсэн байна'
+    bid_updated: 'хэрэглэгч таны "%{listing_name}" тохиролцоонд илгээсэн "%{bid_name}" саналдаа өөрчлөлт оруулсан байна'
+    bid_deleted: 'хэрэглэгч таны "%{listing_name}" тохиролцоонд илгээсэн "%{bid_name}" саналаа устгасан байна'
+    bid_accepted: 'хэрэглэгч таны "%{listing_name}" тохиролцоонд илгээсэн "%{bid_name}" саналыг хүлээн авсан байна'
+    listing_updated: 'хэрэглэгч таны "%{bid_name}" санал илгээсэн "%{listing_name}" тохиролцоондоо өөрчлөлт оруулсан байна'
+    listing_closed: 'хэрэглэгч таны "%{bid_name}" санал илгээсэн "%{listing_name}" тохиролцоогоо хаасан байна'
   js_view:
     general:
       category:
@@ -50,6 +58,8 @@ mn:
       index:
         add_spec: Тохиролцоо оруулах
     listings:
+      index:
+        add_spec: Тохиролцоо оруулах
       new:
         title: Тохиролцоо оруулах
         general_info:
@@ -133,7 +143,7 @@ mn:
         save: Хадгалах
       show:
         user_info:
-          title: Cанал оруулсан
+          title: Cанал илгээсэн
     users:
       show:
         user_info:

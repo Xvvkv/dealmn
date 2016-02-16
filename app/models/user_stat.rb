@@ -18,8 +18,8 @@ class UserStat < ActiveRecord::Base
     self.user.unseen_messages.size
   end
 
-  def total_unread_notifications
-    4 # TODO
+  def total_unseen_notifications
+    self.user.notifications.unseen.size
   end
 
   def total_wish_list_items

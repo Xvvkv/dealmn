@@ -18,4 +18,16 @@ class Image < ActiveRecord::Base
     #not working
     #File.delete(self.image.path)
   end
+
+  def self.create_image_from_url (image_url)
+    image = Image.create(image: URI.parse(process_uri(image_url)))
+    image
+  end
+
+  private
+  def self.process_uri(uri)
+   avatar_url = URI.parse(uri)
+   avatar_url.scheme = 'https'
+   avatar_url.to_s
+  end
 end

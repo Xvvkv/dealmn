@@ -104,6 +104,7 @@ body{
 .header-profile{
   float:right;
   width: auto;
+  position: relative;
 }
 .header-profile-img{
   float: left;
@@ -793,17 +794,19 @@ body{
     font-size: 12px;
     margin-bottom: 10px;
   }
-  .full-detail-short-description-intro{
+  .full-detail-short-description{
     margin-top: 5px;
     font-size: 12px;
   }
-  .full-detail-short-description-intro span{
+  .full-detail-short-description > span{
+    line-height: 18px;
+  }
+  .full-detail-short-description.intro > span{
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 18px;
   }
   .full-detaul-bid-item-detail-description{
     display: -webkit-box;
@@ -1345,6 +1348,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   float: right;
   margin-left: 15px;
 }
+.full-width .profile-right{
+  width: 100%;
+}
 .badge{
   float: right;
 }
@@ -1355,6 +1361,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+.full-width .profile-user-deals{
+  width: 24%;
 }
 .profile-user-deals-img img{
   width: 100%;
@@ -1491,6 +1500,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   border: 1px solid #dbdbdb;
   padding:10px 15px;
   width: 100%;
+  margin-bottom: 20px;
 }
 .btn-warning{
   background: #ff9500;
@@ -2212,7 +2222,7 @@ address strong{
   width: 300px;
 }
 .loader{
-  background:#fff;
+  background: #fff;
   height: 50px;
   width: 200px;
   border-radius: 5px;
@@ -2239,22 +2249,26 @@ address strong{
   margin:15px 0;
   border: 1px solid #e5e5e5;
 }
+
+.left-filter-category {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 22px;
+}
+
+.left-filter-category span.selected{
+  font-weight: bold;
+  padding-left: 15px;
+}
+
 .left-filter-category ul{
   list-style: none;
   margin: 0;
   padding: 0;
-  padding-left: 10px;
-}
-.left-filter-category ul li{
-  font-size: 12px;
-  margin: 0;
+  padding-left: 30px;
   line-height: 24px;
-  color:#333;
-  font-weight: bold;
 }
-.left-filter-category ul li ul li a{
-  font-weight: normal;
-}
+
 .title4{
   font-weight: bold;
   font-size: 12px;
@@ -2279,24 +2293,37 @@ address strong{
 .left-filter-category > a:nth-child(1){
   font-size: 12px;
 }
-.left-filter-rank span{
+.left-filter-rank .static-rating span{
   font-size: 18px;
   cursor: pointer;
 }
-.left-filter-price .form-group{
-  float: left;
-  width: 50%;
-  padding: 5px;
-  margin-bottom:0px;
+
+.left-filter-price a {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 22px;
 }
-.left-filter-price .form-group label{
-  font-size: 11px;
-}
-.left-filter-price .form-group input{
+
+.left-filter-price .price-range input{
   font-size: 11px;
   height: 25px;
   padding: 5px;
+  width: 30%;
+  float: left;
+  margin-bottom:0px;
 }
+
+.left-filter-price .price-range span{
+  float: left;
+  margin-bottom:0px;
+  padding: 3px 1px 0 5px;
+}
+
+.left-filter-price .price-range span.glyphicon{
+  padding: 5px;
+  cursor: pointer;
+}
+  
 .left-filter-price .checkbox{
   margin-top: 0px;
 }
@@ -2306,14 +2333,14 @@ address strong{
   margin-top: 5px;
 }
 .left-filter-price .checkbox input{
-  margin-top: 0px;
+  margin-top: 1px;
 }
 .title5{
   font-size: 16px;
   color:#d1d1d1;
   margin: 10px 0;
 }
-.left-filter-category .glyphicon{
+.left-filter-category .glyphicon, .left-filter-price .glyphicon{
   font-size: 11px;
 }
 .left-filter-closed .checkbox input{
@@ -2336,7 +2363,7 @@ address strong{
 .timeline-message-box-items:hover{
   background: #006fdb;
 }
-.timeline-message-box-items span{
+.timeline-message-box-items span.glyphicon{
   font-size: 10px;
   margin-left: 3px;
   padding-left: 5px;

@@ -43,7 +43,7 @@ var UserProfileMessagesSection = React.createClass({
     this.setState({selected_ids: selected_ids});
   },
   _handleSelectAll: function(){
-    selected_ids = this.state.selected_ids;
+    var selected_ids = this.state.selected_ids;
     if(selected_ids.length == Object.keys(this.props.messages).length){
       this.setState({selected_ids: []});
     }else{
@@ -51,7 +51,7 @@ var UserProfileMessagesSection = React.createClass({
     }
   },
   _handleMarkAll: function(as_read){
-    selected_ids = this.state.selected_ids;
+    var selected_ids = this.state.selected_ids;
     $.ajax({
       url: '/rest/users/' + this.props.current_user_id + '/messages/mark',
       type: "post",
@@ -66,7 +66,7 @@ var UserProfileMessagesSection = React.createClass({
     });
   },
   _handleDelete: function(){
-    selected_ids = this.state.selected_ids;
+    var selected_ids = this.state.selected_ids;
     $.ajax({
       url: '/rest/users/' + this.props.current_user_id + '/messages/delete_selected',
       type: "delete",

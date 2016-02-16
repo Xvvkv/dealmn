@@ -7,6 +7,10 @@ class Listing < ActiveRecord::Base
   has_many :bids, :as => :biddable
   belongs_to :item, :polymorphic => true
 
+  belongs_to :product, foreign_key: :item_id, class_name: Product, conditions: {listings: {item_type: Product}}
+  belongs_to :service, foreign_key: :item_id, class_name: Service, conditions: {listings: {item_type: Service}}
+
+  
   #delegate :product_condition_id, :product_condition, :condition_description, to: :item, allow_nil: true
   belongs_to :user
 
@@ -79,6 +83,20 @@ class Listing < ActiveRecord::Base
   def rate rater, rating
     raise "Invalid Request" if self.user.id == rater.id
     ListingRating.create(listing_id: self.id, rater_id: rater.id, rating: rating)
+  end
+
+  def is_wish_listed? user,cookies
+    if user
+      return user.wish_lists.where(listing_id: self.id).present?
+    elsif cookies
+      begin
+        wish_list = JSON.parse(cookies[:wish_list]) if cookies[:wish_list]
+      rescue
+      end
+      return (wish_list && (wish_list.is_a? Array) && wish_list.include?(self.id))
+    else
+      false
+    end
   end
   
   private

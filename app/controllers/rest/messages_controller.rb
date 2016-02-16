@@ -12,7 +12,7 @@ class Rest::MessagesController < ApplicationController
   def show
     if params[:id] == "0"
       user = User.find(params[:message_u_id])
-      message = Message.where(participant_id: current_user.id, initiator_id: user.id)
+      message = Message.where(participant_id: current_user.id, initiator_id: user.id).first
       unless message.present?
         message = Message.where(initiator_id: current_user.id, participant_id: user.id).first_or_initialize
         message.last_message_at ||= Time.now

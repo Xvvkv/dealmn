@@ -7,6 +7,7 @@ var BidPreview = require('./bid_preview.jsx');
 var BidPreviewLarge = require('./bid_preview_large.jsx');
 var WishListButton = require('./wish_list_button.jsx');
 var ListingItemButtons = require('./listing_item_buttons.jsx');
+var Linkify = require('react-linkify');
 
 var ListingShowPage = React.createClass({
   getInitialState: function() {
@@ -45,7 +46,7 @@ var ListingShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating, id: this.state.listing.user.id},
         success: function (rating) {
-          l_updated = this.state.listing
+          var l_updated = this.state.listing
           l_updated.user.user_stat.rating = +((l_updated.user.user_stat.rating_sum + rating.rating) / (l_updated.user.user_stat.rating_count + 1)).toFixed(1)
           l_updated.user.user_stat.rating_count += 1
           this.setState({
@@ -68,7 +69,7 @@ var ListingShowPage = React.createClass({
         dataType: 'json',
         data: {rating: rating},
         success: function (rating) {
-          l_updated = this.state.listing
+          var l_updated = this.state.listing
           l_updated.listing_stat.rating = +((l_updated.listing_stat.rating_sum + rating.rating) / (l_updated.listing_stat.rating_count + 1)).toFixed(1)
           l_updated.listing_stat.rating_count += 1
           this.setState({
@@ -84,12 +85,12 @@ var ListingShowPage = React.createClass({
     }
   },
   _handleWishList: function(id){
-    l_updated = this.state.listing
+    var l_updated = this.state.listing
     l_updated.wish_listed = true
     this.setState({listing: l_updated});
   },
   _handleRevertWishList: function(id){
-    l_updated = this.state.listing
+    var l_updated = this.state.listing
     l_updated.wish_listed = false
     this.setState({listing: l_updated});
   },
@@ -285,9 +286,9 @@ var ListingDetail = React.createClass({
               <div>{this.props.listing.wanted_description}</div>
             </div>
             <div className="hairly-line" />
-            <div className="full-detail-short-description-intro">
-              <strong>Тайлбар: <br /></strong>
-              {this.props.listing.text_description}<br />
+            <div className="full-detail-short-description intro">
+              <strong>Тайлбар: </strong>
+              <Linkify>{this.props.listing.text_description}</Linkify>
               <a href="#listing_info" className="readmore-1">Дэлгэрэнгүй</a>
             </div>
             <div className="hairly-line" />
@@ -310,7 +311,7 @@ var ListingDetail = React.createClass({
           <div className="full-detail-full-title">Барааны мэдээлэл</div>
           <div className="full-detail-description">
             <strong style={{fontSize: 14}}>Тайлбар: <br /></strong>
-            <p>{this.props.listing.text_description}</p>
+            <p style={{whiteSpace: 'pre-line'}}><Linkify>{this.props.listing.text_description && this.props.listing.text_description.trim().replace(/\n\s*\n/g, '\n\n')}</Linkify></p>
           </div>
           {spec_table}
           {bid_prev_large}

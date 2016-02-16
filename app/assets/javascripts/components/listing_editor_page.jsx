@@ -116,8 +116,8 @@ var ListingEditor = React.createClass({
     $.ajax({
       url: '/rest/contacts.json',
       dataType: 'json',
-      success: function (contacts) {
-        this.setState({contacts: contacts});
+      success: function (res) {
+        this.setState({contacts: res.latest_contacts});
       }.bind(this),
       error: function (xhr, status, err) {
         console.error('/rest/contacts.json', status, err.toString());
@@ -167,10 +167,10 @@ var ListingEditor = React.createClass({
       dataType: 'json',
       data: data,
       success: function (listing) {
-        if (mode == 1){
-          window.location = '/listings/' + this.props.listing_id;
+        if (mode == 0){
+          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});
         }else{
-          $.growl.notice({ title: '', message: "Хадгалагдлаа" , location: "br", delayOnHover: true});  
+          window.location = '/listings/' + this.props.listing_id;
         }
       }.bind(this),
       error: function (xhr, status, err) {
@@ -197,6 +197,12 @@ var ListingEditor = React.createClass({
     }
   },
   validate: function() {
+    if(this.refs.imageUpload.state.imagePreviewUrl){
+      if (!confirm('warning text for unfinished image uploading. Үргэлжлүүлэх үү?')) {
+        return false;
+      }
+    }
+
     if(this.state.title == null || this.state.title.trim() == ''){
       $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
       window.scrollTo(0,0);
@@ -237,16 +243,16 @@ var ListingEditor = React.createClass({
     }
   },
   _handleChange: function (e) {
-    this.setState({ [e.target.name]: e.target.value});
+    this.setState({[e.target.name]: e.target.value});
   },
   _handleChangeNumeric: function (e) {
     var v = parseInt(e.target.value);
     if((v > 0 && v.toString() == e.target.value) || e.target.value == ''){
-     this.setState({[e.target.name]: e.target.value});
+      this.setState({[e.target.name]: e.target.value});
     }
   },
   _handleIsFreeCheck: function () {
-    old = this.state.is_free
+    var old = this.state.is_free
     this.setState({is_free: !old})
   },
   _handleSpecChange: function (e) {

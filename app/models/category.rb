@@ -21,6 +21,13 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def bottom_level_categories
+    if children.present?
+      return children.map(&:bottom_level_categories).flatten
+    else
+      return [id]
+    end
+  end
 
 
   def is_bottom_level

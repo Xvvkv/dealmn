@@ -21,7 +21,7 @@ var UserProfileListingsItem = React.createClass({
             {wish_list_button}
           </div>
           {this.props.listing.is_closed && (
-            <div style={{float: 'left'}}>
+            <div className="closed-item-description" style={{float: 'left'}}>
               Хаагдсан тохиролцоо
             </div>
             )}

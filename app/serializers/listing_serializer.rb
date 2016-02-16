@@ -50,15 +50,7 @@ class ListingSerializer < ActiveModel::Serializer
   end
 
   def wish_listed
-    if scope
-      return scope.wish_lists.where(listing_id: object.id).present?
-    else
-      begin
-        wish_list = JSON.parse(cookies[:wish_list]) if cookies[:wish_list]
-      rescue
-      end
-      return (wish_list && (wish_list.is_a? Array) && wish_list.include?(object.id))
-    end
+    object.is_wish_listed? scope, @options[:cookies]
   end
 
 end

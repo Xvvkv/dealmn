@@ -3,18 +3,15 @@ class Rest::ListingsController < ApplicationController
   respond_to :json
 
   before_filter :authenticate_user!
-  skip_before_filter :authenticate_user!, :only => [:show, :index]
+  skip_before_filter :authenticate_user!, :only => [:show, :index, :free_items, :fetch_ids]
 
   def index
-    if params[:pid] #timeline
-      if params[:pid].to_i == -1
-        respond_with Listing.published.order('publishment_id desc').limit(20) 
-      else
-        respond_with Listing.published.where('publishment_id < ?', params[:pid].to_i).order('publishment_id desc').limit(10)
-      end
-    elsif params[:user_id] #user profile page
+    if params[:user_id] #user profile page
       u = User.find(params[:user_id])
       respond_with u.listings.non_draft.order('publishment_id desc')
+    elsif params[:ids] #timeline
+      raise "Invalid Request" unless params[:ids].is_a? Array
+      respond_with Listing.non_draft.where('id in (?)',params[:ids]).order('publishment_id desc').limit(20) # request is consists of either 20 or 10 ids. Just in case of malformed request we're putting additional limit here
     else # bid new page
       respond_with current_user.listings.published.order('publishment_id desc').limit(5)
     end
@@ -28,11 +25,14 @@ class Rest::ListingsController < ApplicationController
     user_stat = listing.user.user_stat
     user_stat.total_active_listing -= 1
     user_stat.save
+    listing.bids.initial.each do |bid|
+      bid.user.send_notification(I18n.t('notifications.listing_closed', {listing_name: listing.title, bid_name: bid.title}), "/listings/#{listing.id}", current_user)
+    end
     respond_with :rest, listing
   end
 
   def show
-    respond_with Listing.find(params[:id]), include_listing_detail: true
+    respond_with Listing.find(params[:id]), include_listing_detail: true, cookies: cookies
   end
 
   def update
@@ -111,11 +111,55 @@ class Rest::ListingsController < ApplicationController
       listing.publish
     elsif params[:mode].to_i == 2
       listing.update_data
+      listing.bids.initial.each do |bid|
+        bid.user.send_notification(I18n.t('notifications.listing_updated', {listing_name: listing.title, bid_name: bid.title}), "/listings/#{listing.id}", current_user)
+      end
     else
       raise "invalid request"
     end
     
     respond_with listing
+  end
+
+  def free_items
+    respond_with Listing.free_item.published.order('publishment_id desc').limit(10) 
+  end
+
+  def fetch_ids
+
+    listings = Listing
+    listings = listings.joins(:product) if params[:product_condition]
+    listings = listings.joins('LEFT JOIN (SELECT ROUND(AVG(rating)) AS rating, listing_id FROM listing_ratings GROUP BY listing_id) avg_ratings ON listings.id = avg_ratings.listing_id') if params[:rating]
+
+    listings = listings.order('publishment_id desc')
+    listings = listings.where('publishment_id < ?', params[:pid].to_i) if params[:pid]
+    if params[:category_id]
+      category = Category.find(params[:category_id])
+      listings = listings.where('category_id in (?)', category.bottom_level_categories)
+    end
+    listings = listings.free_item if params[:is_free] && params[:is_free] == 'true'
+    listings = listings.where(:products => {:product_condition_id => params[:product_condition]}) if params[:product_condition]
+    listings = listings.where('avg_ratings.rating >= ?', params[:rating].to_i) if params[:rating]
+
+    if params[:include_closed] && params[:include_closed] == 'true'
+      listings = listings.non_draft
+    else
+      listings = listings.published
+    end
+
+    listings = listings.where('price_range_max is null or price_range_max >= ?', params[:price_range_min].to_i) if params[:price_range_min]
+    listings = listings.where('price_range_min is null or price_range_min <= ?', params[:price_range_max].to_i) if params[:price_range_max]
+
+    if params[:search_text].present?
+      listings = listings.where('title ILIKE ?', "%#{params[:search_text]}%")
+      # TODO need to search from tags, specs etc
+    end
+
+    listings = listings.limit(200)
+
+    listings = listings.select('listings.id')
+
+    respond_with listings.map(&:id)
   end
 
 end

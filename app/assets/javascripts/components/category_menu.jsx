@@ -1,4 +1,4 @@
-ReactMenuAim = require ('./mixins/react_menu_aim.js')
+var ReactMenuAim = require ('./mixins/react_menu_aim.js')
 
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
@@ -87,7 +87,7 @@ var CategoryMenu = React.createClass({
                 <li className={className} key={index} onMouseEnter={function(){
                       self.handleMouseEnterRow.call(self, index, self.handleSwitchMenuIndex);
                     }}>
-                  <a href="#">{menu.name} <span className="dc-mega-icon"></span></a>
+                  <a href={'/listings?c='+menu.id}>{menu.name} <span className="dc-mega-icon"></span></a>
                 </li>
               );
             })}
@@ -107,11 +107,11 @@ var SubMenuItem = React.createClass({
   render: function() {
     return (
       <ul>
-        <a href="#">{this.props.name}</a>
-        {this.props.children.map(function(child, index){
+        <a href={"/listings?c="+this.props.item.id}>{this.props.item.name}</a>
+        {this.props.item.children.map(function(child, index){
           return (
             <li key={index}>
-              <a href="#">{child.name}</a>
+              <a href={"/listings?c="+child.id}>{child.name}</a>
             </li>
           );
         })}
@@ -125,7 +125,7 @@ var SubMenuColumn = React.createClass({
     return (
       <li>
         {this.props.items.map(function(item, index){
-          return <SubMenuItem key={index} name={item.name} children={item.children} />
+          return <SubMenuItem key={index} item={item} />
         })}
       </li>
     );
