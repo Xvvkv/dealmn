@@ -712,13 +712,26 @@ body{
   }
 
   .hover:hover .tooltip {
-    top:25px;
+    top:0px;
     opacity:1;
     visibility: visible;
   }
-  .hover .tooltip{
-    margin-left: -1px;
+  .text-tooltip{
+    width: 100%;
+    padding: 5px;
+    height: 63px;
+    vertical-align: middle;
+    font-size: 11px;
+    color:#fff;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-wrap:break-word;
   }
+  .hover:hover .text-tooltip{
+  top: -25px;
+  background: rgba(0,129,255,0.9);
+}
   .full-detail-images{
     width: 50%;
     float: left;
@@ -1499,6 +1512,10 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   position: fixed;
   margin-top: 10px;
 }
+.header_mid .hover .tooltip{
+  top:25px;
+  left: -1px;
+}
 .login-page{
   background: #fff;
   padding: 20px 60px;
@@ -1889,8 +1906,45 @@ a.anchor {
   border-color:#04bb00;
   position: relative;
 }
+.accepted-bid-item-little{
+  position: relative;
+}
 .accepted-bid-item-little img{
   border-color:#04bb00;
+}
+.accepted-bid-item-little > span:nth-child(1){
+  position: absolute;
+  font-size: 20px;
+  color:#04bb00;
+  top: 5px;
+  left: 33px;
+  opacity: 0.5;
+  transition:0.5s;
+  border-radius: 50%;
+  background: #fff;
+}
+.accepted-bid-item-little:hover > span:nth-child(1){
+  opacity: 0.8;
+  transition:0.5s;
+}
+.hover .accepted-bid-item-little:hover > span:nth-child(1){
+  top: -19px;
+  left: 42px;
+  opacity: 1;
+}
+.glyphicon-background{
+    border-radius:50%;
+    z-index:2;
+}
+.inner {
+    position:absolute;
+    top:2px;
+    left:2px;
+    right:2px;
+    bottom:2px;
+    border-radius:50%;
+    background-color:white;
+    z-index:-1;
 }
 .header-notification{
   float: left;
@@ -1944,7 +1998,7 @@ a.anchor {
 }
 .notification-dropdown-container{
   background: #fff;
-  border:1px solid #006fdb;
+  border:1px solid #0081ff;
   position: absolute;
   top: 44px;
   width: 350px;
@@ -1959,7 +2013,7 @@ a.anchor {
     height: 0;
     color: #eee;
     border: 10px solid black;
-    border-color: transparent transparent #006fdb;
+    border-color: transparent transparent #0081ff;
     margin-top: -20px;
 }
 .notification-panel:before{
@@ -2158,13 +2212,23 @@ address strong{
   width: 300px;
 }
 .loader{
-  background: image-url('loading1.gif') #fff no-repeat left -190px center;
+  background:#fff;
   height: 50px;
-  width: 137px;
+  width: 200px;
   border-radius: 5px;
-  border: 1px solid #ddd;
   color:#0081ff;
-  padding: 15px 10px 15px 45px;
+  padding: 5px;
+}
+.main-timeline .loader{
+  border:1px solid #ddd;
+}
+.loader img{
+  float: left;
+  border: none;
+  margin-right: 5px;
+}
+.loader > div{
+  margin-top:5px;
 }
 .header-profile-info .dropdown-menu{
   border-radius: 0;
@@ -2278,10 +2342,105 @@ address strong{
   padding-left: 5px;
   border-left: 1px solid white;
 }
-.header-profile-info .dropdown{
-
+.header-profile-info .dropdown .dropdown-toggle span:nth-child(1){
+  max-width: 135px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 15px;
+}
+.header-profile-info .dropdown .dropdown-toggle span.caret{
+  display: -webkit-inline-box;
+  margin-top: -1px;
 }
 .add-deal-page button{
   margin: 0 5px;
 }
+.notification-empty-content{
+  padding: 10px;
+  color:#666;
+  font-size: 12px;
+}
+.notification-content-text{
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.header-profile-info .dropdown-menu{
+  right: 0 !important;
+  left: auto;
+  padding: 5px 0 0 0;
+}
+.header-profile-info .dropdown-menu li a{
+  display: block;
+  color: #666;
+  padding: 10px 20px;
+  text-decoration: none;
+  position: relative;
+  font-size: 12px;
+}
+.header-profile-info .dropdown-menu .divider{
+  margin:0;
+}
+[data-tooltip]:link, [data-tooltip]:visited {
+  position: relative;
+  text-decoration: none;
+}
 
+[data-tooltip]:before {
+  content: "";
+  position: absolute;
+  border-top: 15px solid #0090ff;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  visibility: hidden;
+  top: -18px;
+  left: -20px;
+}
+
+[data-tooltip]:after {
+  content: attr(data-tooltip);
+  position: absolute;
+  color: white;
+  top: -35px;
+  left: -26px;
+  background: #0090ff;
+  padding: 5px 15px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+[data-tooltip]:hover:before, [data-tooltip]:hover:after {
+  visibility: visible;
+  -webkit-transition: visibility 0s linear .3s;
+  -moz-transition: visibility 0s linear .3s;
+  -o-transition: visibility 0s linear .3s;
+  transition: visibility 0s linear .3s;
+}
+.main-timeline .timeline-deal-item-bottom-buttons [data-tooltip]:before {
+  top: -21px;
+  left: -6px;
+}
+.main-timeline .timeline-deal-item-bottom-buttons [data-tooltip]:after {
+  top: -44px;
+  left: -26px;
+}
+@media screen and (max-width:1199px) {
+  body{
+    zoom:91%;
+  }
+}
+@media screen and (max-width:1100px) {
+  body{
+    zoom:85%;
+  }
+}
+.container{
+  width:1170px;
+}

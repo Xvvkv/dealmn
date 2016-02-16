@@ -16,7 +16,7 @@
 .als-viewport {
   position: relative;
   overflow: hidden;
-  margin: 0px auto;
+  margin-left: 25px;
 }
 
 /***************************************************
@@ -24,7 +24,6 @@
  **************************************************/
 
 .als-wrapper {
-  position: relative;
   /* if you are using a list with <ul> <li> */
   list-style: none;
 }
