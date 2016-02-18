@@ -260,6 +260,7 @@ body{
 }
 .timeline-dealer-img img{
   width:58px;
+  height: 58px;
 }
 .timeline-dealer-name{
   font-size: 10px;
@@ -338,9 +339,9 @@ body{
 .timeline-deal-item-info{
   color:#616161;
   font-size: 12px;
-  line-height: 18px;
+  line-height: 17px;
   max-height: 35px;
-  display: block; /* Fallback for non-webkit */
+  display: block;
   display: -webkit-box;
   margin: 0 auto;
   -webkit-line-clamp: 2;
@@ -350,7 +351,7 @@ body{
 }
 .timeline-deal-item-want{
   overflow: hidden;
-  margin-top: 5px;
+  margin-top: 3px;
   word-wrap:break-word;
   max-height: 15px;
   font-size: 12px;
@@ -728,10 +729,11 @@ body{
     opacity:1;
     visibility: visible;
   }
+
   .text-tooltip{
     width: 100%;
     padding: 5px;
-    height: 63px;
+    height: 68px;
     vertical-align: middle;
     font-size: 11px;
     color:#fff;
@@ -742,8 +744,11 @@ body{
   }
   .hover:hover .text-tooltip{
   top: -25px;
-  background: rgba(0,129,255,0.9);
+  background: rgba(0,0,0,0.5);
 }
+.timeline-dealer-info.hover:hover .tooltip{
+    top:15px;
+  }
   .full-detail-images{
     width: 50%;
     float: left;
@@ -1040,6 +1045,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .full-detail-user-info-img img{
   width: 55px;
+  height: 55px;
   border: 1px solid #dbdbdb;
 }
 .full-detail-user-info-name{
@@ -1601,7 +1607,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 .sign-up-page-title{
   color:#0081ff;
   font-size: 38px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   margin-top: 10px;
   text-align: center;
   text-transform: uppercase;
@@ -1705,6 +1711,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .message-from-user img{
   height: 50px;
+  width: 50px;
   border-radius: 2px;
 }
 .message-from-text{
@@ -1841,7 +1848,9 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 }
 .header-login-social-media{
   float: left;
-  margin-right: 10px;
+}
+.header-login .header-profile-info .btn-default{
+  margin-right: 5px;
 }
 .header-profile-logged, .header-profile-notifications{
   float: left;
@@ -2242,7 +2251,7 @@ address strong{
 }
 .loader{
   background: #fff;
-  height: 50px;
+  height: 43px;
   width: 200px;
   border-radius: 5px;
   color:#0081ff;
@@ -2394,11 +2403,11 @@ address strong{
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 15px;
+  height: 18px;
 }
 .header-profile-info .dropdown .dropdown-toggle span.caret{
   display: -webkit-inline-box;
-  margin-top: -1px;
+  margin-top: -6px;
 }
 .add-deal-page button{
   margin: 0 5px;
@@ -2476,6 +2485,66 @@ address strong{
 .main-timeline .timeline-deal-item-bottom-buttons [data-tooltip]:after {
   top: -44px;
   left: -26px;
+}
+.no-content-info{
+  padding: 10px;
+  font-size: 12px;
+  color:#999;
+}
+.header-profile-info .dropdown .btn{
+  padding: 6px 12px 3px 12px;
+}
+.full-detail-deal-item-name{
+  width: 100%;
+  padding-bottom: 5px;
+  border-bottom:1px solid #ddd;
+  margin-bottom: 5px;
+  font-size: 11px;
+}
+.full-detail-deal-item-name div{  
+  max-width: 224px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  margin-right: 3px;
+  max-height: 14px;
+}
+.full-detail-deal-item-name div a{
+  font-weight: bold;
+  color: #333;
+}
+.full-detail-deal-item-name span{
+  color: #666;
+}
+.login-page .alert-warning{
+  font-size: 12px;
+}
+.sign-up-page .alert-warning, .login-page .alert-warning{
+  font-size: 12px;
+  margin-bottom: 5px;
+  padding: 10px;
+}
+.sign-up-page .alert-warning ul, .login-page .alert-warning ul{
+  margin-left: 10px;
+  padding-left: 0;
+}
+.sign-up-page .alert-warning ul li, .login-page .alert-warning ul li{
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  line-height: 22px;
+}
+
+
+
+
+
+
+
+
+a:hover{
+  text-decoration: none;
 }
 @media screen and (max-width:1199px) {
   body{

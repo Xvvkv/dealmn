@@ -6,7 +6,7 @@
 
 			<div class="login-page-title comfirm-page">Баталгаажуулах И-Мэйл дахин илгээх</div>
       <% if resource.errors.full_messages.count > 0 %>
-        <div class="row">
+        <div class="alert alert-warning">
           <ul>
             <%= raw resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join %>
           </ul>
