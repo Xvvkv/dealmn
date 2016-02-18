@@ -1,6 +1,7 @@
 # encoding: utf-8
 class DataGenerator
   def self.run_all
+    SiteStat.create if SiteStat.count == 0
     generate_users
     generate_categories
     generate_product_conditions

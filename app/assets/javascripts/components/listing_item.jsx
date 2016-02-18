@@ -21,7 +21,7 @@ var ListingItem = React.createClass({
     }
     var wish_list_button;
     if(this.props.wish_listed != null){
-      wish_list_button = <WishListButton {...this.props} />;
+      wish_list_button = <WishListButton {...this.props} is_closed={this.props.listing.is_closed}/>;
     }
 
     var bid_prev, bid_prev_button;
@@ -40,29 +40,30 @@ var ListingItem = React.createClass({
         </div>
       );
     }
-    var listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.handleCloseListing} />
+    var listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.handleCloseListing} is_closed={this.props.listing.is_closed}/>
     return (
       <div className="timeline-content">
         <ListingItemUserInfo user={this.props.listing.user} />
         <div className="timeline-cyrcle"></div>
         <div className="timeline-deal-item">
           <div className="timeline-arrow"></div>
-          {this.props.listing.is_free && <div className="timeline-badget free-badget"></div>}
+          {this.props.listing.is_free && <div className="badget free-badget"></div>}
           <div className="timeline-deal-item-container">
             <div className="timeline-deal-item-detail">
               <div className="timeline-deal-item-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].thumb : '/images/no_image.jpg'} /></div>
               <div className="timeline-deal-item-title"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
-              <div className="timeline-deal-item-date">2015-12-11 21:34:12</div>
+              <div className="timeline-deal-item-date">{this.props.listing.published_date}</div>
               <div className="timeline-deal-item-info">{this.props.listing.text_description}</div>
-              <div className="timeline-deal-item-want">
+              {!this.props.listing.is_free && <div className="timeline-deal-item-want">
                 <span>Тохиролцоно:</span> {this.props.listing.wanted_description}
-              </div>
+              </div>}
               <div className="clearfix"></div>
             </div>
             <div className="timeline-deal-item-bottom-buttons">
               <div style={{float: 'left'}}>
+                {this.props.listing.is_closed && <div className="timeline-deal-iteam-closed">Хаагдсан тохиролцоо</div>}
                 {wish_list_button}
-                {bid_prev_button}
+                {!this.props.listing.is_closed && !this.props.listing.is_free && bid_prev_button}
               </div>
               <div>
                 {listing_item_buttons}

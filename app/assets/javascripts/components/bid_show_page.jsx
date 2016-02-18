@@ -1,7 +1,5 @@
 var OwnerInfo = require('./owner_info.jsx');
 var ImageViewer = require('./image_viewer.jsx');
-var Rater = require('react-rater');
-var Rating = require('./fixed_star_rate.jsx');
 var Linkify = require('react-linkify');
 
 var BidShowPage = React.createClass({

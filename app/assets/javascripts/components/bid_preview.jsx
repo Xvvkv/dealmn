@@ -34,6 +34,7 @@ var BidPreview = React.createClass({
               return (
                 <li key={index} className="als-item timeline-deal-item-bids-item">
                   <a className={bid.is_accepted ? "accepted-bid-item-little hover" : "hover"} href={"/bids/" + bid.id}>
+                    {bid.is_accepted && <span className="glyphicon glyphicon-ok-sign glyphicon-background"><span className="inner" /></span>}
                     {bid.images && bid.images.length > 0 ? <img src={bid.images[0].thumb}/> : <img src='/images/no_image.jpg' />}
                     <div className="tooltip text-tooltip">{bid.title}</div>
                   </a>

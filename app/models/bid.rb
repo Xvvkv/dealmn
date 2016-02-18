@@ -1,5 +1,5 @@
 class Bid < ActiveRecord::Base
-  attr_accessible :title, :description, :user_id
+  attr_accessible :title, :description, :user_id, :status, :accepted_date
   belongs_to :biddable, :polymorphic => true
 
   before_create :randomize_id

@@ -157,9 +157,15 @@ var ListingEditor = React.createClass({
     data["category"] = this.state.selectedCat[2];
     data["mode"] = mode
     data["images"] = this.state.images.map(function(image) { return image.id;});
-    ["specs","phone","email","condition_desc","condition_id","wanted_description","text_description","title","is_free","price_range_max","price_range_min"].forEach(function(field) {
+    ["specs","phone","email","condition_desc","condition_id","text_description","title","is_free"].forEach(function(field) {
       data[field] = this.state[field]
     }.bind(this));
+
+    if(!this.state.is_free){
+      ["wanted_description","price_range_max","price_range_min"].forEach(function(field) {
+        data[field] = this.state[field]
+      }.bind(this));
+    }
 
     $.ajax({
       url: '/rest/listings/' + this.props.listing_id,
@@ -296,7 +302,7 @@ var ListingEditor = React.createClass({
       changed_inputs.push($(this.refs.title_input));
     }
 
-    var new_description = item.description + '\n\nhttp://www.deal.mn/bids/' + item.id;
+    var new_description = item.description + '\n\nhttp://deal.mn/bids/' + item.id;
     if(this.state.text_description != new_description){
       changed_inputs.push($(this.refs.desc_input));
     }
@@ -313,6 +319,26 @@ var ListingEditor = React.createClass({
     this.setState({title: item.title, text_description: new_description, images: uniq_images.slice(0,5)});
   },
   render: function() {
+
+    var price_range_section = (
+      <div className="col-md-12" style={{padding: '10px 0 0 0'}}>
+        <span>{"\u20AE"}</span>
+        <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} type="text" className="form-control " />
+        <span>{" - \u20AE"}</span>
+        <input name="price_range_max" value={this.state.price_range_max} onChange={this._handleChangeNumeric} type="text" className="form-control " />
+      </div>
+    );
+    var wanted_section = (
+      <div>
+        <div className="col-md-12">
+          <div className="home-module-title sub-title">{I18n.page.wanted.section_title}</div>
+        </div>
+        <div className="form-group col-md-12">
+          <label>{I18n.page.wanted.title} <a href="#">[?]</a></label>
+          <textarea name="wanted_description" className="form-control" rows="5" value={this.state.wanted_description} onChange={this._handleChange} placeholder={I18n.page.wanted.placeholder} />
+        </div>
+      </div>
+    );
     return (
       <div className="add-deal-page">
         <div className="home-module-title big-title">{I18n.page.title}</div>
@@ -347,6 +373,7 @@ var ListingEditor = React.createClass({
         <div className="col-md-12">
           <div className="home-module-title sub-title">{I18n.page.price.section_title}</div>
         </div>
+        {!this.state.is_free && price_range_section}
         <div className="col-md-12">
           <div className="price-free">
             <label>
@@ -354,23 +381,7 @@ var ListingEditor = React.createClass({
             </label>
           </div>
         </div>
-        <div className="col-md-12" style={{padding: '10px 0 0 0'}}>
-          <div className="form-group col-md-3">
-            <label>{I18n.page.price.min_price_range} <a href="#">[?]</a></label>
-            <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} type="text" className="form-control" />
-          </div>
-          <div className="form-group col-md-3">
-            <label>{I18n.page.price.max_price_range} <a href="#">[?]</a></label>
-            <input name="price_range_max" value={this.state.price_range_max} onChange={this._handleChangeNumeric} type="text" className="form-control " />
-          </div>
-        </div>
-        <div className="col-md-12">
-          <div className="home-module-title sub-title">{I18n.page.wanted.section_title}</div>
-        </div>
-        <div className="form-group col-md-12">
-          <label>{I18n.page.wanted.title} <a href="#">[?]</a></label>
-          <textarea name="wanted_description" className="form-control" rows="5" value={this.state.wanted_description} onChange={this._handleChange} placeholder={I18n.page.wanted.placeholder} />
-        </div>
+        {!this.state.is_free && wanted_section}
         <div className="hairly-line"></div>
         <div className="col-md-12 text-center">
           {!this.props.edit_mode && <button onClick={this._handleSaveDraft} className="btn btn-success">{I18n.page.save}</button>}

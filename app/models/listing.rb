@@ -72,6 +72,10 @@ class Listing < ActiveRecord::Base
     user_stat.total_active_listing += 1
     user_stat.save
 
+    site_stat = SiteStat.first
+    site_stat.total_listing += 1
+    site_stat.save
+    
     #TODO catch uniq publishment_id constraint exception & generate id again
   end
 

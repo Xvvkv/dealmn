@@ -86,8 +86,6 @@ var Timeline = React.createClass({
       delete data["price_range_max"]
     }
 
-    console.log(data);
-
     $.ajax({
       url: '/rest/listings/fetch_ids.json',
       data: data,

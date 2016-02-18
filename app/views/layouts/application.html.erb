@@ -11,9 +11,7 @@
   <body>
     <div class="header_top">
       <div class="container">
-        <div class="header_top_stat">
-          <%= t('view.header.top_stat', {listing_total: 10, listing_today: 5}).html_safe %>
-        </div>
+        <%= react_component("HeaderInfoBar", site_stat: SiteStat.first) %>
         <div class="header_top_menu">
           <ul class="nav navbar-nav navbar-right">
             <li>

@@ -9,7 +9,7 @@ class BidsController < ApplicationController
 
   def new
     @listing = Listing.find(params[:listing_id])
-    redirect_to root_path and return unless (@listing.is_active? && @listing.user.id != current_user.id)
+    redirect_to root_path and return unless (@listing.is_active? && !@listing.is_free && @listing.user.id != current_user.id)
   end
 
   def edit

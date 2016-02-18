@@ -3,7 +3,7 @@ var FreeItem = React.createClass({
     return (
       <div className="item-list-item">
         <div className="item-list-item-img">
-          <div className="item-list-item-badget"></div>
+          <div className="mini-badget free-badget"></div>
           <img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].url : '/images/no_image.jpg'} />
         </div>
         <div className="title-1"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>

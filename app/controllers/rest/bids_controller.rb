@@ -2,7 +2,7 @@ class Rest::BidsController < ApplicationController
   respond_to :json
 
   before_filter :authenticate_user!
-  skip_before_filter :authenticate_user!, :only => [:show, :index]
+  skip_before_filter :authenticate_user!, :only => [:show, :index, :latest_accepted_bids]
 
   def index
     if params[:listing_id]
@@ -118,7 +118,7 @@ class Rest::BidsController < ApplicationController
     bid = Bid.find(params[:id])
     raise "Invalid Request" unless bid.is_active? && bid.biddable.user_id == current_user.id && bid.biddable.is_active?
 
-    bid.update_attribute(:status, Bid::STATUS[:accepted])
+    bid.update_attributes(:status => Bid::STATUS[:accepted], :accepted_date => Time.now)
 
     user_stat_bidder = bid.user.user_stat
     user_stat_listing_owner = current_user.user_stat
@@ -127,9 +127,17 @@ class Rest::BidsController < ApplicationController
     user_stat_bidder.save
     user_stat_listing_owner.save
 
+    site_stat = SiteStat.first
+    site_stat.total_accepted_bid += 1
+    site_stat.save
+
     bid.user.send_notification(I18n.t('notifications.bid_accepted', {listing_name: bid.biddable.title, bid_name: bid.title}), "/bids/#{bid.id}", current_user)
 
     render :nothing => true, :status => 200
+  end
+
+  def latest_accepted_bids
+    respond_with Bid.accepted.last(3), include_user: true, include_biddable: true
   end
 
 end
