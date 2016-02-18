@@ -28,10 +28,19 @@ body{
   color:#333;
   background: #fff;
 }
-.header_top_stat{
+.header_info_bar{
   font-size: 12px;
   float:left;
   padding:8px 0 5px 0;
+  height: 30px;
+  overflow-y: hidden;
+}
+.header_info_bar a{
+  color: black;
+  font-weight: bold;
+}
+.header_info_bar a:hover{
+  text-decoration: none;
 }
 .header_top_menu{
   float:right;
@@ -369,18 +378,28 @@ body{
 .special .timeline-arrow{
   background: image-url('special_arrow.png') no-repeat center center;
 }
-.timeline-badget{
+.badget{
   height: 77px;
   width: 77px;
   position: absolute;
   right: -7px;
   top:-7px;  
 }
+.mini-badget{
+  height: 45px;
+  width: 45px;
+  position: absolute;
+  right: -3px;
+  top: -3px;
+}
 .special-badget{
   background: image-url('special_badget.png') no-repeat center center;
 }
 .free-badget{
-  background: image-url('free-badget-mini.png') no-repeat center center;
+  background: image-url('free-badget-big.png') no-repeat center center;
+}
+.mini-badget.free-badget{
+ background: image-url('free-badget-mini.png') no-repeat center center; 
 }
 .accepted-badget{
   background: image-url('accepted.png') no-repeat center center;
@@ -559,14 +578,6 @@ body{
     position: relative;
     float: left;
     margin-right: 10px;
-  }
-  .item-list-item-img .item-list-item-badget{
-    position: absolute;
-    height: 45px;
-    width: 45px;
-    background: image-url('free-badget-mini.png') center center no-repeat;
-    right: -3px;
-    top: -3px;
   }
   .item-list-item-img img{
     height: 60px;
@@ -837,6 +848,11 @@ body{
     float: left;
   }
 
+  .full-detail-short-deals-intro .accepted-bid-item-little > span:nth-child(1){
+    top: -18px;
+    left: 36px;
+  }
+
   .timeline-deal-item-bottom-bids-button {
     font-size: 11px !important;
   }
@@ -868,12 +884,9 @@ body{
     height: 23px;
     width: 25px;
   }
-  .profile-user-deals-buttons .btn-primary{
+  .profile-user-deals-buttons .btn{
     float: right;
     margin-left: 5px;
-  }
-  .profile-user-deals-buttons .btn-success{
-    float: right;
   }
   .full-detail-deal-buttons a.btn {
     float: right;
@@ -1367,6 +1380,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   float: left;
   margin-right: 10px;
   margin-bottom: 10px;
+  position: relative;
 }
 .full-width .profile-user-deals{
   width: 24%;
@@ -1775,6 +1789,24 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   transition: all 300ms ease-out;
 }
 
+.slider-enter {
+  margin-top: -30px;
+}
+
+.slider-enter.slider-enter-active {
+  margin-top: 0px;
+  transition: all 300ms ease;
+}
+
+.slider-leave {
+  visibility: hidden;
+  margin-top: 0px;
+}
+
+.slider-leave.slider-leave-active {
+  margin-top: 30px;
+  transition: all 1ms ease;
+}
 
 .static-rating {
   direction: rtl;
@@ -1936,7 +1968,7 @@ a.anchor {
   font-size: 20px;
   color:#04bb00;
   top: -19px;
-  left: 42px;;
+  left: 42px;
 }
 .glyphicon-background{
     border-radius:50%;

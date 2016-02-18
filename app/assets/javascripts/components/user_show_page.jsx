@@ -458,7 +458,7 @@ var ProfileViewer = React.createClass({
   render: function(){
     var rater
     if(this.props.loaded){
-      if(this.props.user.id != this.props.current_user_id){
+      if(this.props.user.id != this.props.current_user_id && this.props.current_user_id){
         rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
       }else{
         rater = <Rating rating={Math.round(this.props.user.user_stat.rating)} />
@@ -466,7 +466,7 @@ var ProfileViewer = React.createClass({
     }
 
     var links
-    if(this.props.user.id == this.props.current_user_id){
+    if(this.props.loaded && this.props.user.id == this.props.current_user_id){
       links = (
         <div>
           <ul className="nav nav-pills nav-stacked">
@@ -507,7 +507,8 @@ var ProfileViewer = React.createClass({
           <div className="full-detail-user-info-deals-email"><span className="glyphicon glyphicon-envelope"></span> {I18n.page.user_info.email}: {this.props.user.primary_contact ? this.props.user.primary_contact.email : ''}</div>
           <div className="hairly-line" />
           <div className="text-center">
-            {this.props.user.id == this.props.current_user_id && <div onClick={this.props.handleEdit} className="btn btn-warning" style={{width: '50%'}}>{I18n.page.user_info.edit}</div>}
+            {this.props.loaded && this.props.user.id == this.props.current_user_id && <div onClick={this.props.handleEdit} className="btn btn-warning" style={{width: '50%'}}>{I18n.page.user_info.edit}</div>}
+            {this.props.loaded && this.props.user.id != this.props.current_user_id && <a className="btn btn-success" href={'/users/' + this.props.current_user_id + '?p=send_msg&u=' + this.props.user.id} style={{width: '50%'}}>{I18n.user_info.send_pm}</a>}
           </div>
         </div>
       </div>

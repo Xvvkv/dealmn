@@ -217,7 +217,7 @@ var BidEditor = React.createClass({
     item.specs.forEach(function(spec) {
       new_description += ('\n' + spec.name + ': ' + spec.value);
     });
-    new_description += ('\n\nhttp://www.deal.mn/listings/' + item.id);
+    new_description += ('\n\nhttp://deal.mn/listings/' + item.id);
 
     if(this.state.description != new_description){
       changed_inputs.push($(this.refs.desc_input));
@@ -235,9 +235,16 @@ var BidEditor = React.createClass({
   
   },
   render: function() {
+    var header_info = (
+          <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
+            <h5>Та доорхи тохиролцоонд энэхүү саналыг илгээх гэж байна.</h5>
+            <p><strong><a href={"/listings/" + this.props.listing_id}>{this.props.listing_name}</a></strong></p>
+          </div>
+        );
     return (
       <div className="add-deal-page">
-        <div className="home-module-title big-title">{I18n.page.title}</div>
+        {<div className="home-module-title big-title">{I18n.page.title}</div>}
+        {!this.props.edit_mode && header_info}
         <div className="form-group col-md-12">
           <label>{I18n.page.general_info.title} <a href="#">[?]</a> </label>
           <input name="title" ref="title_input" type="text" className="form-control" onChange={this._handleChange} value={this.state.title} /> 

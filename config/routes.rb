@@ -16,12 +16,20 @@ Dealmn::Application.routes.draw do
       end
     end
     resources :bids, only: [:index, :show, :update, :destroy] do
+      collection do
+        get :latest_accepted_bids
+      end
       member do
         put :accept
       end
     end
     resources :images
     resources :contacts
+    resources :site_stats, only: [] do
+      collection do
+        get :get_stat
+      end
+    end
     resources :wish_lists, only: [:index, :create, :destroy]
     resources :user_ratings
     resources :users, only: [:show, :update] do

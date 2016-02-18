@@ -1,5 +1,5 @@
 class ListingSerializer < ActiveModel::Serializer
-  attributes :breadcrumb, :title, :text_description, :wanted_description, :is_free, :price_range_min, :price_range_max, :id, :published_date, :publishment_id, :listing_stat, :is_product, :wish_listed, :is_closed?
+  attributes :breadcrumb, :title, :text_description, :wanted_description, :is_free, :price_range_min, :price_range_max, :id, :published_date, :publishment_id, :listing_stat, :is_product, :wish_listed, :is_closed?, :hit_counter
   has_many :images
   has_many :specs
   has_one :user
@@ -12,7 +12,7 @@ class ListingSerializer < ActiveModel::Serializer
   end
 
   def published_date
-    object.published_date.utc.strftime('%Y-%m-%d %H:%M:%S.%N') if object.published_date
+    object.published_date.in_time_zone("Asia/Ulaanbaatar").strftime('%Y-%m-%d %H:%M:%S') if object.published_date
   end
 
   def include_breadcrumb?

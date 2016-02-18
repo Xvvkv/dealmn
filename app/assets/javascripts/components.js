@@ -3,6 +3,7 @@ React = require('react');
 
 SearchBar = require('./components/search_bar.jsx')
 HeaderProfile = require('./components/header_profile.jsx')
+HeaderInfoBar = require('./components/header_info_bar.jsx')
 CategoryMenu = require('./components/category_menu.jsx')
 Timeline = require('./components/timeline.jsx')
 ListingEditorPage = require('./components/listing_editor_page.jsx')

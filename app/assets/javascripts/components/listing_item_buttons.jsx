@@ -45,8 +45,8 @@ var ListingItemButtons = React.createClass({
     }
     return (
       <div>
-        {!this.props.is_closed && bid_button}
         {pm_button}
+        {!this.props.is_closed && !this.props.listing.is_free && bid_button}
         {!this.props.is_closed && close_button}
         {!this.props.is_closed && edit_button}
       </div>

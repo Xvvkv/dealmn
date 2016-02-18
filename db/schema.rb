@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160216045639) do
+ActiveRecord::Schema.define(:version => 20160217060637) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -183,6 +183,13 @@ ActiveRecord::Schema.define(:version => 20160216045639) do
   create_table "services", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "site_stats", :force => true do |t|
+    t.integer  "total_listing",      :default => 0, :null => false
+    t.integer  "total_accepted_bid", :default => 0, :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
   end
 
   create_table "spec_suggestions", :force => true do |t|

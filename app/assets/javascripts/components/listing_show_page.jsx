@@ -128,7 +128,7 @@ var ListingDetail = React.createClass({
   render: function() {
     var rater
     if(this.props.loaded){
-      if(this.props.listing.user.id != this.props.current_user_id){
+      if(this.props.listing.user.id != this.props.current_user_id && this.props.current_user_id){
         rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
       }else{
         rater = <Rating rating={Math.round(this.props.listing.listing_stat.rating)} />
@@ -197,7 +197,20 @@ var ListingDetail = React.createClass({
 
     var header_info;
     
-    if(this.props.loaded && this.props.listing.user.id == this.props.current_user_id){
+    if(this.props.loaded && this.props.listing.is_free){
+      if(this.props.listing.user.id != this.props.current_user_id && this.props.listing.contact){
+        header_info = (
+          <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
+            <h5>TODO Free item header info.</h5>
+            <address>
+              <strong>Холбоо барих</strong><br />
+              Утас: {this.props.listing.contact ? this.props.listing.contact.phone : 'N\\A'}<br />
+              И-Мэйл хаяг: {this.props.listing.contact ? this.props.listing.contact.email : 'N\\A'}<br />
+            </address>
+          </div>
+        );
+      }
+    }else if(this.props.loaded && this.props.listing.user.id == this.props.current_user_id){
       if(this.props.listing.bids && this.props.listing.bids.length > 0){
         var accepted_bids = []
         this.props.listing.bids.forEach(function(bid) {
@@ -272,20 +285,21 @@ var ListingDetail = React.createClass({
         <div className="full-detail-short-info">
           <div className="full-detail-title">{this.props.listing.title}</div>
           <div className="full-detail-watchers">
-            <span>Үзсэн: N/A</span>
+            <span>Үзсэн: {this.props.listing.hit_counter}</span>
             <div className="full-detail-rate">
               {rater} <span>{(this.props.listing.listing_stat && this.props.listing.listing_stat.rating) ? ('(' + this.props.listing.listing_stat.rating + ')') : ''}</span> <span>Үнэлсэн: {this.props.listing.listing_stat ? this.props.listing.listing_stat.rating_count : ''}</span>
             </div>
           </div>
           <div className="full-detail-short-information">
-            {this.props.is_closed && <div className="full-detail-short-closed">Хаагдсан тохиролцоо. Та санал илгээх боломжгүй</div>}
+            {this.props.is_closed && this.props.listing.user.id == this.props.current_user_id && <div className="full-detail-short-closed">Хаагдсан тохиролцоо</div>}
+            {this.props.is_closed && this.props.listing.user.id != this.props.current_user_id && <div className="full-detail-short-closed">Хаагдсан тохиролцоо. Та санал илгээх боломжгүй</div>}
             {this.props.is_closed && <div className="hairly-line"></div>}
             {p_condition}
-            <div className="full-detail-short-wanted">
+            {!this.props.listing.is_free && <div className="full-detail-short-wanted">
               <strong>Хүсэж буй: </strong>
               <div>{this.props.listing.wanted_description}</div>
-            </div>
-            <div className="hairly-line" />
+            </div>}
+            {!this.props.listing.is_free && <div className="hairly-line" />}
             <div className="full-detail-short-description intro">
               <strong>Тайлбар: </strong>
               <Linkify>{this.props.listing.text_description}</Linkify>

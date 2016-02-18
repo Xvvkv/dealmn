@@ -5,7 +5,7 @@ var OwnerInfo = React.createClass({
   render: function() {
     var rater
     if(this.props.loaded){
-      if(this.props.user.id != this.props.current_user_id){
+      if(this.props.user.id != this.props.current_user_id && this.props.current_user_id){
         rater = this.props.rating ? <Rating rating={Math.round(this.props.rating)}/> : <Rater onRate={this.props.handleRate}/>;
       }else{
         rater = <Rating rating={Math.round(this.props.user.user_stat.rating)} />

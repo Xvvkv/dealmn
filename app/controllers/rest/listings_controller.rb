@@ -13,7 +13,7 @@ class Rest::ListingsController < ApplicationController
       raise "Invalid Request" unless params[:ids].is_a? Array
       respond_with Listing.non_draft.where('id in (?)',params[:ids]).order('publishment_id desc').limit(20) # request is consists of either 20 or 10 ids. Just in case of malformed request we're putting additional limit here
     else # bid new page
-      respond_with current_user.listings.published.order('publishment_id desc').limit(5)
+      respond_with current_user.listings.non_draft.order('publishment_id desc').limit(5)
     end
   end
 
@@ -32,7 +32,9 @@ class Rest::ListingsController < ApplicationController
   end
 
   def show
-    respond_with Listing.find(params[:id]), include_listing_detail: true, cookies: cookies
+    l = Listing.find(params[:id])
+    l.update_attribute(:hit_counter, l.hit_counter + 1)
+    respond_with l, include_listing_detail: true, cookies: cookies
   end
 
   def update
