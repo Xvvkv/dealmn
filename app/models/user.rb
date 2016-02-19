@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
       user.first_name = auth.info.name
       puts auth.info.image
       user.avatar_id = Image.create_image_from_url(auth.info.image.sub("_normal", "")).id
-      user.email = "user.#{self.id}.#{SecureRandom.random_number(100_000_000)}@change_your_email.com"
+      user.email = "user.#{SecureRandom.random_number(100_000_000)}.#{SecureRandom.random_number(100_000_000)}@change_your_email.com"
       user.skip_confirmation!
     end
   end
