@@ -14,12 +14,30 @@
     }
     h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
   </style>
+  <script type="text/javascript">
+    (function () {
+        var timeLeft = 5,
+            cinterval;
+
+        var timeDec = function (){
+            timeLeft--;
+            document.getElementById('countdown').innerHTML = timeLeft;
+            if(timeLeft === 0){
+              clearInterval(cinterval);
+              window.location = "/";
+            }
+        };
+
+        cinterval = setInterval(timeDec, 1000);
+    })();
+  </script>
 </head>
 
 <body>
   <!-- This file lives in public/500.html -->
   <div class="dialog">
     <h1>We're sorry, but something went wrong.</h1>
+    <p>Redirecting in <span id="countdown">5</span></p>
   </div>
 </body>
 </html>

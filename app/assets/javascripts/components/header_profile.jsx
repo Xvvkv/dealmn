@@ -397,11 +397,11 @@ var HeaderUserProfile = React.createClass({
             {this.props.user.display_name} <span className="caret"></span>
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenu1">
-              <li><a href={'/users/' + this.props.user.id}>Хувийн булан</a></li>
+              <li><a href={'/users/' + this.props.user.id}>Оруулсан тохиролцоо</a></li>
               <li><a href={'/users/' + this.props.user.id + '?p=bids_received'}>Ирсэн саналууд</a></li>
               <li><a href={'/users/' + this.props.user.id + '?p=bids_sent'}>Илгээсэн саналууд</a></li>
               <li role="separator" className="divider"></li>
-              <li><a href='/edit'>Нууц үг солих </a></li>
+              <li><a href='/edit'>Нэвтрэх мэдээллээ өөрчлөх</a></li>
               <li><a href="/logout" data-method="delete" rel="nofollow">Гарах</a></li>
             </ul>
           </div>

@@ -1,4 +1,5 @@
 var FreeItemList = require('./free_item_list.jsx');
+var LatestDealList = require('./latest_deal_list.jsx');
 var Timeline = require('./timeline.jsx');
 var PubSub = require('pubsub-js');
 var Rating = require('./fixed_star_rate.jsx');
@@ -145,6 +146,13 @@ var ListingsPage = React.createClass({
       filters['search_text'] = {display_name: search_text_decoded, value: search_text_decoded}
       this.setState({filters: filters});
     }
+
+    var is_free = $.urlParam('free_items');
+    if(is_free == 'true'){
+      var filters = this.state.filters;
+      filters['is_free'] = {display_name: 'Үнэгүй бараа', value: true}
+      this.setState({filters: filters});
+    }
   },
   componentDidMount: function() {
     this.loadDataFromServer();
@@ -218,6 +226,8 @@ var ListingsPage = React.createClass({
     this.setState({filters: filters});
 
     this.refs.timeline.filterAgain();
+
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
   },
   _handleSelectCat: function(top_level_cat,mid_level_cat,sub_level_cat){
     var filters = this.state.filters;
@@ -244,7 +254,8 @@ var ListingsPage = React.createClass({
     }
 
     this.setState({filters: filters});
-    this.refs.timeline.filterAgain(); 
+    this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
     
   },
   _handleSelectCondition: function(condition){
@@ -256,6 +267,7 @@ var ListingsPage = React.createClass({
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
   },
   _handleSelectRating: function(rating){
     var filters = this.state.filters
@@ -266,6 +278,7 @@ var ListingsPage = React.createClass({
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
   },
   _handleIsFreeCheck: function(){
     var filters = this.state.filters
@@ -277,6 +290,7 @@ var ListingsPage = React.createClass({
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
   },
   _handleIncludeClosedCheck: function(){
     var filters = this.state.filters
@@ -287,6 +301,7 @@ var ListingsPage = React.createClass({
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
   },
   _handleChangeNumeric: function (e) {
     var v = parseInt(e.target.value);
@@ -316,6 +331,7 @@ var ListingsPage = React.createClass({
     }
     this.setState({filters: filters});
     this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
   },
   render: function() {
     var condition_selector;
@@ -414,6 +430,7 @@ var ListingsPage = React.createClass({
             <div className="right-banner">
               <a href="#"><img src='/images/bobby_banner.jpg' /></a>
             </div>
+            <LatestDealList />
           </div>
         </div>
       </div>

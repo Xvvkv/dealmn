@@ -25,11 +25,12 @@ class BidSerializer < ActiveModel::Serializer
   end
 
   def biddable
+    biddable = {id: object.biddable.id, title: object.biddable.title, user_id: object.biddable.user_id, user_name: object.biddable.user.display_name, is_closed: object.biddable.is_closed?, images: ActiveModel::ArraySerializer.new(object.biddable.images, each_serializer: ImageSerializer)}
     if object.status == Bid::STATUS[:accepted]
-      {id: object.biddable.id, title: object.biddable.title, user_id: object.biddable.user_id, user_name: object.biddable.user.display_name, contact: object.biddable.contact, is_closed: object.biddable.is_closed?}
-    else
-      {id: object.biddable.id, title: object.biddable.title, user_id: object.biddable.user_id, user_name: object.biddable.user.display_name, is_closed: object.biddable.is_closed?}
+      biddable[:contact] = object.biddable.contact
     end
+
+    biddable
   end
 
   def is_accepted

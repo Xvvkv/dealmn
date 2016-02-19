@@ -3,6 +3,7 @@ var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var ImageUpload = require('./image_upload.jsx');
 var ContactInfo = require('./contact_info.jsx');
 var FreeItemList = require('./free_item_list.jsx');
+var LatestDealList = require('./latest_deal_list.jsx');
 var ItemSelector = require('./item_selector.jsx');
 
 var ListingEditorPage = React.createClass({
@@ -17,7 +18,7 @@ var ListingEditorPage = React.createClass({
   loadDataFromServer: function () {
 
     $.ajax({
-      url: '/rest/bids.json',
+      url: '/rest/bids.json?limit=5',
       dataType: 'json',
       success: function (bids) {
         this.setState({
@@ -46,6 +47,10 @@ var ListingEditorPage = React.createClass({
           <div className="main-right">
             {bid_selector}
             <FreeItemList />
+            <div className="right-banner">
+              <a href="#"><img src='/images/bobby_banner.jpg' /></a>
+            </div>
+            <LatestDealList />
           </div>
         </div>
       </div>
@@ -321,7 +326,7 @@ var ListingEditor = React.createClass({
   render: function() {
 
     var price_range_section = (
-      <div className="col-md-12" style={{padding: '10px 0 0 0'}}>
+      <div className="col-md-12 add-deal-price-range" style={{padding: '10px 0 0 0'}}>
         <span>{"\u20AE"}</span>
         <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} type="text" className="form-control " />
         <span>{" - \u20AE"}</span>

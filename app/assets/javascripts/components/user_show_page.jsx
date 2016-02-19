@@ -30,9 +30,9 @@ var UserShowPage = React.createClass({
       wish_list: null, // used in listing page (viewing someone else's profile)
       wish_list_items: {}, // used in wish list page (viewing own profile)
       wish_list_items_loaded: false,
-      bids_received: [],
+      bids_received: {},
       bids_received_loaded: false,
-      bids_sent: [],
+      bids_sent: {},
       bids_sent_loaded: false,
       messages: {},
       messages_loaded: false,
@@ -179,6 +179,44 @@ var UserShowPage = React.createClass({
       }.bind(this)
     });
   },
+  loadReceivedBids: function() {
+    console.log('loadReceivedBids called');
+    if(!this.state.bids_received_loaded){
+      console.log('loading...');
+      $.ajax({
+        url: '/rest/bids.json',
+        dataType: 'json',
+        success: function (bids) {
+          this.setState({
+            bids_received: bids.reduce(function(bids, bid) { bids[bid.id] = bid; return bids; }, {}),
+            bids_received_loaded: true
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/bids_received.json', status, err.toString());
+        }.bind(this)
+      });
+    }
+  },
+  loadSentBids: function() {
+    console.log('loadSentBids called');
+    if(!this.state.bids_sent_loaded){
+      console.log('loading...');
+      $.ajax({
+        url: '/rest/bids.json?is_sent_bid=true',
+        dataType: 'json',
+        success: function (bids) {
+          this.setState({
+            bids_sent: bids.reduce(function(bids, bid) { bids[bid.id] = bid; return bids; }, {}),
+            bids_sent_loaded: true
+          });
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.error('/rest/bids_sent.json', status, err.toString());
+        }.bind(this)
+      });
+    }
+  },
   _handleUserRate: function(rating, last_rating){
     if(this.state.user_loaded && this.state.user.id != this.props.current_user_id){
       $.ajax({
@@ -233,6 +271,13 @@ var UserShowPage = React.createClass({
     var user = this.state.user
     user.user_stat.total_wish_list_items -= 1;
     this.setState({wish_list_items: items, user: user});
+  },
+  _handleDeleteBid: function(id){
+    var bids = this.state.bids_sent;
+    delete bids[id]
+    var user = this.state.user
+    user.user_stat.total_bids_sent -= 1;
+    this.setState({bids_sent: bids, user: user});
   },
   _handleEdit: function(){
     this.setState({edit_mode: true});
@@ -383,9 +428,9 @@ var UserShowPage = React.createClass({
     if(this.props.user_id != this.props.current_user_id || this.state.rightPanel == 'listing'){
       right_panel = <UserProfileListingsSection {...this.props} loadData={this.loadListings} loaded={this.state.listings_loaded} listings={this.state.listings} wish_list={this.state.wish_list} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} handleCloseListing={this._handleCloseListing}/>
     }else if(this.state.rightPanel == 'bids_received'){
-      right_panel = <UserProfileBidsSection />
+      right_panel = <UserProfileBidsSection key={'bids_received'} loadData={this.loadReceivedBids} loaded={this.state.bids_received_loaded} bids={this.state.bids_received} is_sent_bid={false}/>
     }else if(this.state.rightPanel == 'bids_sent'){
-      right_panel = <UserProfileBidsSection />
+      right_panel = <UserProfileBidsSection key={'bids_sent'} loadData={this.loadSentBids} loaded={this.state.bids_sent_loaded} bids={this.state.bids_sent} handleDeleteBid={this._handleDeleteBid} is_sent_bid={true}/>
     }else if(this.state.rightPanel == 'wishlist'){
       right_panel = <UserProfileWishListSection loadData={this.loadWishListItems} loaded={this.state.wish_list_items_loaded} wish_list={this.state.wish_list_items} handleDeleteWishListItem={this._handleDeleteWishListItem}/>
     }else if(this.state.rightPanel == 'message'){

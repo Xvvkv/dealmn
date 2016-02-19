@@ -42,6 +42,9 @@ var BidEditorPage = React.createClass({
           <BidEditor ref="editor" {...this.props} />
           <div className="main-right">
             {listing_selector}
+            <div className="right-banner">
+              <a href="#"><img src='/images/banner1.png' /></a>
+            </div>
             <FreeItemList />
           </div>
         </div>

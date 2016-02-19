@@ -10,6 +10,10 @@
           <div class="alert alert-warning" role="alert"><%= flash[:alert] %></div>
       <% end %>
 
+      <% if flash[:notice] %>
+          <div class="alert alert-warning" role="alert"><%= flash[:notice] %></div>
+      <% end %>
+
 			<div class="login-page-other-acc-use">
 
 				<a href="/auth/facebook" style="margin-right:5px;"><%= image_tag('login-with-fb.jpg')%></a><a href="/auth/twitter" style="margin-right:5px;"><%= image_tag('login-with-tw.jpg')%></a><a href="/auth/google_oauth2"><%= image_tag('login-with-gp.jpg')%></a>

@@ -40,7 +40,7 @@ var HeaderInfoBar = React.createClass({
   },
   loadLatestAcceptedBids: function () {
     $.ajax({
-      url: '/rest/bids/latest_accepted_bids.json',
+      url: '/rest/bids/latest_deals.json?limit=3',
       dataType: 'json',
       success: function (bids) {
         var info_items = this.state.info_items;

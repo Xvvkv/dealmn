@@ -56,8 +56,8 @@ var FreeItemList = React.createClass({
     }
     return (
       <div className="item-list-items">
-        <div className="home-module-title">Үнэгүй бараа</div>
-        <div style={{maxHeight: 400, overflowY: 'scroll', paddingTop: 5}}>
+        <div className="home-module-title"><a href="/listings?free_items=true">Үнэгүй бараа</a></div>
+        <div style={{maxHeight: 400, overflowY: 'auto', paddingTop: 5}}>
           {content}
         </div>
       </div>

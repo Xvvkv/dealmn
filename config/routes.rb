@@ -1,7 +1,7 @@
 Dealmn::Application.routes.draw do
   devise_for :users, :path => '',
         :path_names => {:sign_in => 'login', :sign_up => 'signup', :sign_out => 'logout'},
-        :controllers => { :omniauth_callbacks => "users/omniauth_callbacks"}
+        :controllers => { :omniauth_callbacks => "users/omniauth_callbacks", :registrations => "users/registrations"}
 
   root :to => 'home#index'
 
@@ -17,7 +17,7 @@ Dealmn::Application.routes.draw do
     end
     resources :bids, only: [:index, :show, :update, :destroy] do
       collection do
-        get :latest_accepted_bids
+        get :latest_deals
       end
       member do
         put :accept

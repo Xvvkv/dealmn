@@ -25,13 +25,13 @@ var WishListButton = React.createClass({
     if(this.props.current_user_id != this.props.listing.user.id && !this.props.is_closed){
       if(!this.props.wish_listed){
         wish_list_button = (
-          <div onClick={this.handleWishList.bind(null,this.props.listing.id)} className="wish-list">
+          <a data-tooltip="Тохиролцоог дугуйлах" href="javascript:;" onClick={this.handleWishList.bind(null,this.props.listing.id)} className="wish-list">
             <span className="glyphicon glyphicon-ok-circle" />
-          </div>
+          </a>
         );
       }else{
         wish_list_button = (
-          <div className="wish-list wish-listed"><span className="glyphicon glyphicon-ok-circle" /></div>
+          <a data-tooltip="Тохиролцоо дугуйлагдсан" href="javascript:;" className="wish-list wish-listed"><span className="glyphicon glyphicon-ok-circle" /></a>
         ); 
       }
     }
