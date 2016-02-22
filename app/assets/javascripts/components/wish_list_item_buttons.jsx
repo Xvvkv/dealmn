@@ -29,7 +29,7 @@ var WishListItemButtons = React.createClass({
   },
   render: function(){
     var bid_button = <a className="btn btn-primary" href={'/listings/' + this.props.item.listing.id + '/bids/new'}>Санал илгээх</a>
-    var delete_button = <a className="btn btn-danger" href="javascript:;" onClick={this.handleDelete}>Устгах</a>
+    var delete_button = <a data-tooltip="Устгах" className="btn btn-danger" href="javascript:;" onClick={this.handleDelete}><span className="glyphicon glyphicon-remove" /></a>
     return (
       <div>
         {!this.props.item.listing.is_closed && bid_button}

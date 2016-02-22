@@ -2,6 +2,9 @@ class Bid < ActiveRecord::Base
   attr_accessible :title, :description, :user_id, :status, :accepted_date
   belongs_to :biddable, :polymorphic => true
 
+  belongs_to :listing, foreign_key: :biddable_id, class_name: Listing, conditions: {bids: {biddable_type: Listing}}
+  
+
   before_create :randomize_id
 
   has_many :bid_images, dependent: :destroy
@@ -17,7 +20,7 @@ class Bid < ActiveRecord::Base
   scope :accepted, where(status: STATUS[:accepted])
   scope :deleted, where(status: STATUS[:deleted])
 
-  scope :active, where('status <> ?', STATUS[:deleted])
+  scope :active, where('bids.status <> ?', STATUS[:deleted])
 
   def is_active?
     !self.is_deleted?

@@ -104,7 +104,6 @@ var ListingShowPage = React.createClass({
         <div className="container">
           <div className="deal-full-detail-page-container">
             <ListingDetail handleRate={this._handleListingRate} rating={this.state.listing_rating} listing={this.state.listing} current_user_id={this.props.current_user_id} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} handleCloseListing={this._handleCloseListing} loaded={this.state.loaded} is_closed={this.state.is_closed} />
-            <RelatedItems />
           </div>
           <div className="main-right">
             <OwnerInfo handleRate={this._handleUserRate} rating={this.state.user_rating} current_user_id={this.props.current_user_id} user={this.state.listing.user || {}} loaded={this.state.loaded} title={I18n.page.user_info.title} />

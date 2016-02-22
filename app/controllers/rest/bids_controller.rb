@@ -2,7 +2,7 @@ class Rest::BidsController < ApplicationController
   respond_to :json
 
   before_filter :authenticate_user!
-  skip_before_filter :authenticate_user!, :only => [:show, :index, :latest_accepted_bids]
+  skip_before_filter :authenticate_user!, :only => [:show, :index, :latest_deals]
 
   def index
     if params[:listing_id]
@@ -10,7 +10,13 @@ class Rest::BidsController < ApplicationController
       raise "not implemented yet"
     else
       if current_user
-        respond_with :rest, current_user.bids.order('id desc').limit(5);
+        if params[:limit] && params[:limit] == "5"
+          respond_with :rest, current_user.bids.active.order('id desc').limit(5)
+        elsif params[:is_sent_bid]
+          respond_with :rest, current_user.bids.active.order('id desc'), include_biddable: true
+        else
+          respond_with :rest, Bid.active.joins(:listing).where(:listings => {:user_id => current_user.id}).order('bids.id desc'), include_biddable: true
+        end
       else
         raise "unauthorized request"
       end
@@ -136,8 +142,9 @@ class Rest::BidsController < ApplicationController
     render :nothing => true, :status => 200
   end
 
-  def latest_accepted_bids
-    respond_with Bid.accepted.last(3), include_user: true, include_biddable: true
+  def latest_deals
+    raise "Invalid Request" unless params[:limit] && (params[:limit].to_i == 3 || params[:limit].to_i == 10)
+    respond_with Bid.accepted.order('accepted_date desc').last(params[:limit].to_i), include_user: true, include_biddable: true
   end
 
 end

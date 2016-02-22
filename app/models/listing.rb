@@ -33,6 +33,24 @@ class Listing < ActiveRecord::Base
 
   scope :free_item, where(is_free: true)
 
+  validates :title,
+    presence: true,
+    length: {maximum: 70 }
+  
+  validates :text_description,
+    length: {maximum: 5000}
+
+  validates :wanted_description,
+    length: {maximum: 256}
+
+  validates :price_range_min, :price_range_max, :inclusion => 0..2000000000, :allow_nil => true
+
+  validates :images, :length => { :maximum => 5}
+
+  validates :specs, :length => { :maximum => 30}
+
+
+
   def self.get_draft user
     Listing.create_draft(user) if user.listings.draft.blank?
     user.listings.draft.first

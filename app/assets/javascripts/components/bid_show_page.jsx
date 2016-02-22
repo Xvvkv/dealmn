@@ -192,8 +192,8 @@ var BidDetail = React.createClass({
               <p><strong><a href={"/listings/"+this.props.bid.biddable.id}>{this.props.bid.biddable.title}</a></strong></p>
             </div>
           );
-          edit_button = <a className="btn btn-warning" href={'/bids/' + this.props.bid.id + '/edit'}><span className="glyphicon glyphicon-edit" /></a>
-          delete_button = <a className="btn btn-danger" href="javascript:;" onClick={this.props.handleDeleteBid}><span className="glyphicon glyphicon-remove" /></a>
+          edit_button = <a data-tooltip="Саналыг засах" className="btn btn-warning" href={'/bids/' + this.props.bid.id + '/edit'}><span className="glyphicon glyphicon-edit" /></a>
+          delete_button = <a data-tooltip="Саналыг устгах" className="btn btn-danger" href="javascript:;" onClick={this.props.handleDeleteBid}><span className="glyphicon glyphicon-remove" /></a>
         }
       }else if(this.props.bid.biddable.user_id == this.props.current_user_id){
         if(this.props.bid.is_accepted){
