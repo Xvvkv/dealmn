@@ -20,6 +20,11 @@
             <li>
               <%= link_to t('view.header.terms_of_use'), '#' %>
             </li>
+          <% unless user_signed_in? %>
+            <li>
+              <%= link_to t('view.registration.register'), new_registration_path('user') %>
+            </li>
+          <% end %>
             <li class="header_top_menu_last">
               <%= link_to tag(:span, class: ["glyphicon","glyphicon-question-sign"]), '#', style: "font-size:14px;" %>
             </li>
