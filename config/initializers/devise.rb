@@ -224,6 +224,7 @@ Devise.setup do |config|
   config.omniauth :twitter, "TLK8kY3ur9StYIXl5l2QB7vWX", "EgWhXEaGa8xQRC70czvIyvThSI7Aciw7C8k85AuTrh2ThdkMS0"
   config.omniauth :google_oauth2, "985528826768-uj3fecc9agbn9ju7vv1m92s26mn4bong.apps.googleusercontent.com", "PoUhJNb5K1nOihO11GfcXQen", image_aspect_ratio: "square"
 
+  config.secret_key = '6500fea2d179c24e1f30253733c0931de5c93dfeb25296c525deb96fb858b026a3aa47a46b891106d85f83f856936caee499cc02fb3a7ee41318d20c99f5de78'
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
