@@ -88,7 +88,7 @@ mn:
           section_title: Сонирхож буй
           title: Сонирхож буй бараа бүтээгдэхүүн
           tooltip: test_tooltip
-          placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
+          placeholder: ""
         save: Хадгалах
         publish: Нэмэх
       edit:

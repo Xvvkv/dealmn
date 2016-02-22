@@ -12,7 +12,7 @@ var UserProfileNotificationItem = React.createClass({
       }
       name = <strong>{this.props.item.sender.name}</strong>;
     }else{
-      avatar = '/images/no_avatar.png' // System Avatar
+      avatar = '/images/logo-mini.jpg' // System Avatar
     }
     return (
       <a href={this.props.item.url}>

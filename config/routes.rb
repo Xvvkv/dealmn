@@ -74,4 +74,8 @@ Dealmn::Application.routes.draw do
   match 'test18' => 'home#page18', via: :get
   match 'test19' => 'home#page19', via: :get
   match 'test20' => 'home#page20', via: :get
+
+  match "/404", :to => "errors#render404"
+  match "/422", :to => "errors#render422"
+  match "/500", :to => "errors#render500"
 end

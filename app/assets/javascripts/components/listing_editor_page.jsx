@@ -61,6 +61,14 @@ var ListingEditorPage = React.createClass({
 var ListingEditor = React.createClass({
   getDefaultProps: function() {
     return {
+      validation_rules: {
+        'title' : {max: 10, min: 3, presence: true},
+        'text_description' : {max: 50},
+        'wanted_description' : {max: 25},
+        'condition_desc' : {max: 25},
+        'email' : {max: 5},
+        'phone' : {max: 5}
+      }
       //listingId: null,
     };
   },
@@ -74,7 +82,8 @@ var ListingEditor = React.createClass({
       spec_suggestions: {},
       specs: {},
       contacts: [],
-      updating: false
+      updating: false,
+      validation_errors: {}
     };
   },
   componentDidMount: function() {
@@ -254,7 +263,11 @@ var ListingEditor = React.createClass({
     }
   },
   _handleChange: function (e) {
-    this.setState({[e.target.name]: e.target.value});
+    var value = e.target.value;
+    if(this.props.validation_rules[e.target.name] && this.props.validation_rules[e.target.name].max && this.props.validation_rules[e.target.name].max < value.length){
+      value = value.slice(0,this.props.validation_rules[e.target.name].max);
+    }
+    this.setState({[e.target.name]: value});
   },
   _handleChangeNumeric: function (e) {
     var v = parseInt(e.target.value);

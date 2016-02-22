@@ -228,7 +228,7 @@ var HeaderUserProfileNotificationPanel = React.createClass({
               }
               name = <strong>{notification.sender.name}</strong>;
             }else{
-              avatar = '/images/no_avatar.png' // System Avatar
+              avatar = '/images/logo-mini.jpg' // System Avatar
             }
             return (
               <a key={index} href={notification.url}>
