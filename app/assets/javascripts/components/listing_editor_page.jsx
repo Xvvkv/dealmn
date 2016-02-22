@@ -339,7 +339,7 @@ var ListingEditor = React.createClass({
   render: function() {
 
     var price_range_section = (
-      <div className="col-md-12 add-deal-price-range" style={{padding: '10px 0 0 0'}}>
+      <div className="col-md-12 add-deal-price-range">
         <span>{"\u20AE"}</span>
         <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} type="text" className="form-control " />
         <span>{" - \u20AE"}</span>
