@@ -44,7 +44,7 @@ mn:
         phone: Холбоо барих утас
         phone_short: Утас
         phone_placeholder: '99999999, 88888888'
-        email: Имэйл
+        email: И-Мэйл
         email_placeholder: 'example@gmail.com, example@yahoo.com'
       user_info:
         rating_count: Үнэлсэн
@@ -63,29 +63,29 @@ mn:
         title: Тохиролцоо оруулах
         general_info:
           section_title: Ерөнхий мэдээлэл
-          title: Гарчиг
+          title: Бүтээгдэхүүн үйлчилгээний нэр
           category: Ангилал
-          choose_category: Сонго
+          choose_category: Сонгох
           condition: Барааны төлөв
           condition_desc: Барааны төлөв /Нэмэлт тайлбар/
         detailed_info:
           section_title: Дэлгэрэнгүй мэдээлэл
-          image: Зураг
-          description: Барааны тайлбар
+          image: Зураг оруулах
+          description: Барааны тухай
           add_spec:
-            title: Мэдээлэл нэмэх
-            name: Нэр
+            title: Үзүүлэлт оруулах
+            name: Үзүүлэлт
             value: Утга
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
         price:
-          section_title: Үнэлгээ
+          section_title: Солилцооны мэдээлэл
           is_free_item: Үнэгүй
           min_price_range: Доод /₮/
           max_price_range: Дээд /₮/
         wanted:
-          section_title: Сонирхож буй
+          section_title: Тохиролцооны мэдээлэл
           title: Сонирхож буй бараа бүтээгдэхүүн
           tooltip: test_tooltip
           placeholder: ""
@@ -95,24 +95,24 @@ mn:
         title: Тохиролцоо засах
         general_info:
           section_title: Ерөнхий мэдээлэл
-          title: Гарчиг
+          title: Бүтээгдэхүүн үйлчилгээний нэр
           category: Ангилал
-          choose_category: Сонго
+          choose_category: Сонгох
           condition: Барааны төлөв
           condition_desc: Барааны төлөв /Нэмэлт тайлбар/
         detailed_info:
           section_title: Дэлгэрэнгүй мэдээлэл
-          image: Зураг
-          description: Барааны тайлбар
+          image: Зураг оруулах
+          description: Барааны тухай
           add_spec:
-            title: Мэдээлэл нэмэх
-            name: Нэр
+            title: Үзүүлэлт оруулах
+            name: Үзүүлэлт
             value: Утга
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
         price:
-          section_title: Үнэлгээ
+          section_title: Мөнгөн үнэлгээ
           is_free_item: Үнэгүй
           min_price_range: Доод /₮/
           max_price_range: Дээд /₮/

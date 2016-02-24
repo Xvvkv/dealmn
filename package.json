@@ -11,6 +11,7 @@
     "babelify": "^7.2.0",
     "browserify": "^10.2.4",
     "browserify-incremental": "^3.0.1",
+    "exif-js": "^2.1.1",
     "pubsub-js": "^1.5.3",
     "react": "^0.14.3",
     "react-addons-css-transition-group": "^0.14.3",

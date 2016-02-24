@@ -1,5 +1,17 @@
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var Crop = require('./react_crop.js')
+var EXIF = require('exif-js')
+
+function base64ToArrayBuffer (base64) {
+    base64 = base64.replace(/^data\:([^\;]+)\;base64,/gmi, '');
+    var binary_string = window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
 
 var ImageUpload = React.createClass({
   getDefaultProps: function() {
@@ -7,7 +19,7 @@ var ImageUpload = React.createClass({
       jcrop_options: {
         allowSelect: false,
         aspectRatio: 1,
-        minSize: [100,100]
+        minSize: [200,200]
       },
       //additionalData: {},
       images: [],
@@ -19,6 +31,7 @@ var ImageUpload = React.createClass({
       file: '',
       imagePreviewUrl: '',
       originalWidth: 1,
+      exifOrientation: 1,
       loading: false
     };
   },
@@ -52,10 +65,6 @@ var ImageUpload = React.createClass({
     data.append("crop_y",$(this.refs.crop_y).val() * ratio)
     data.append("crop_w",$(this.refs.crop_w).val() * ratio)
     data.append("crop_h",$(this.refs.crop_h).val() * ratio)
-
-//    for(var key in this.props.additionalData){
-//      data.append(key,this.props.additionalData[key]);
-//    }
     
     $.ajax({
       url: this.props.url,
@@ -93,12 +102,17 @@ var ImageUpload = React.createClass({
     var image = new Image();
     var err = false;
     reader.onload = function(_file) {
-      image.src    = _file.target.result;              // url.createObjectURL(file);
+      //var exif = EXIF.readFromBinaryFile(base64ToArrayBuffer(_file.target.result));
+      //if(exif && exif.Orientation){
+      //  this.setState({exifOrientation : exif.Orientation})  
+      //}
+
+      image.src    = _file.target.result;
       image.onload = function() {
         var w = image.width, h = image.height, s = file.size;
-        if (w < 200 || h < 200 || s > 20*1024*1024){
+        if (w < 200 || h < 200 || s > 10*1024*1024){
           // TODO handle error...
-          $.growl.error({ title: '', message: "Зургийн хэмжээ 200х200 пиксэлээс багагүй, файлын хэмжээ 20МВ-аас ихгүй байх хэрэгтэй" , location: "br", delayOnHover: true});
+          $.growl.error({ title: '', message: "Зургийн хэмжээ 200х200 пиксэлээс багагүй, файлын хэмжээ 10МВ-аас ихгүй байх хэрэгтэй" , location: "br", delayOnHover: true});
           this.setState({ loading: false});
         }else{
           this.setState({

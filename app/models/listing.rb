@@ -34,14 +34,13 @@ class Listing < ActiveRecord::Base
   scope :free_item, where(is_free: true)
 
   validates :title,
-    presence: true,
     length: {maximum: 70 }
   
   validates :text_description,
     length: {maximum: 5000}
 
   validates :wanted_description,
-    length: {maximum: 256}
+    length: {maximum: 255}
 
   validates :price_range_min, :price_range_max, :inclusion => 0..2000000000, :allow_nil => true
 
@@ -58,7 +57,7 @@ class Listing < ActiveRecord::Base
 
   def self.create_draft user
     return unless user.listings.draft.blank?
-    Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new, contact_id: user.primary_contact.try(:id))
+    Listing.create!(user_id: user.id, status: STATUS[:draft], item: Product.new, contact_id: user.primary_contact.try(:id))
   end
 
   def is_product

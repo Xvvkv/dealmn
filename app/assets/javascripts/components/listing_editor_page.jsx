@@ -62,12 +62,14 @@ var ListingEditor = React.createClass({
   getDefaultProps: function() {
     return {
       validation_rules: {
-        'title' : {max: 10, min: 3, presence: true},
-        'text_description' : {max: 50},
-        'wanted_description' : {max: 25},
-        'condition_desc' : {max: 25},
-        'email' : {max: 5},
-        'phone' : {max: 5}
+        'title' : {max: 70, min: 3, presence: true},
+        'text_description' : {max: 5000},
+        'wanted_description' : {max: 255},
+        'condition_desc' : {max: 255},
+        'email' : {max: 50},
+        'phone' : {max: 50},
+        'addSpecName' : {max: 50},
+        'addSpecValue' : {max: 50}
       }
       //listingId: null,
     };
