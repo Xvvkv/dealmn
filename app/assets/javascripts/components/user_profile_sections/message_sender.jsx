@@ -113,7 +113,11 @@ var UserProfileMessageSenderSection = React.createClass({
     }
   },
   handleChange: function(e) {
-    this.setState({[e.target.name]: e.target.value});
+    var value = e.target.value;
+    if(2000 < value.length){
+      value = value.slice(0,2000);
+    }
+    this.setState({[e.target.name]: value});
   },
   handleSend: function() {
     if(this.state.new_message && this.state.new_message.length > 0){

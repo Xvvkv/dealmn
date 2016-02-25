@@ -82,7 +82,7 @@ class Listing < ActiveRecord::Base
     self.status = STATUS[:published]
     self.publishment_id = next_publishment_seq
     self.published_date = Time.now
-    self.save
+    self.save!
 
     user_stat = self.user.user_stat
     user_stat.total_listing += 1
@@ -98,7 +98,7 @@ class Listing < ActiveRecord::Base
 
   def update_data
     raise 'Validation Failed' unless (self.status == STATUS[:published] && self.title.present? && self.category.is_bottom_level)
-    self.save
+    self.save!
   end
 
   def rate rater, rating

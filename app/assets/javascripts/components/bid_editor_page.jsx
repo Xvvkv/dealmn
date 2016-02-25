@@ -58,7 +58,7 @@ var BidEditor = React.createClass({
     return {
       validation_rules: {
         'title' : {max: 70, min: 3, presence: true},
-        'text_description' : {max: 5000},
+        'description' : {max: 5000},
         'email' : {max: 50},
         'phone' : {max: 50}
       }

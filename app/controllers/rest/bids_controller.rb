@@ -51,7 +51,7 @@ class Rest::BidsController < ApplicationController
       bid.contact = nil
     end
 
-    bid.save
+    bid.save!
 
     bid.biddable.user.send_notification(I18n.t('notifications.bid_updated', {listing_name: bid.biddable.title, bid_name: bid.title}), "/bids/#{bid.id}", current_user)
 
@@ -99,7 +99,7 @@ class Rest::BidsController < ApplicationController
           bid.contact = contact
         end
 
-        bid.save
+        bid.save!
 
         user_stat_bidder = current_user.user_stat
         user_stat_listing_owner = listing.user.user_stat

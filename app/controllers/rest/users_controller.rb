@@ -34,7 +34,7 @@ class Rest::UsersController < ActionController::Base
     
     user.last_name = params[:last_name].strip
     user.first_name = params[:first_name].strip
-    user.save
+    user.save!
 
     #respond_with :rest, user
     render json: user # put request was sending 204 no content response.

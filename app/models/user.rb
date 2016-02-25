@@ -13,16 +13,15 @@ class User < ActiveRecord::Base
       message: I18n.t('user.validations.name')
     },
     presence: true,
-    length: { minimum:2, maximum: 100 },
+    length: { minimum:2, maximum: 50 },
     if: "!provider"
   
   validates :last_name,
     format: {
-      with: /[[:alpha:] -]+$/,
+      with: /[[:alpha:] -]*$/,
       message: I18n.t('user.validations.name')
     },
-    presence: true,
-    length: { minimum:1, maximum: 100 },
+    length: { maximum: 50 },
     if: "!provider"
   
 

@@ -70,7 +70,7 @@ class Rest::ListingsController < ApplicationController
           listing.item = listing.item || Product.new
           listing.item.product_condition_id = params[:condition_id] 
           listing.item.condition_description = params[:condition_desc].strip
-          listing.item.save
+          listing.item.save!
         end
       end  
     end
@@ -108,7 +108,7 @@ class Rest::ListingsController < ApplicationController
     
     params[:mode] ||= 0
     if params[:mode].to_i == 0
-      listing.save
+      listing.save!
     elsif params[:mode].to_i == 1
       listing.publish
     elsif params[:mode].to_i == 2
