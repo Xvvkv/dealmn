@@ -42,9 +42,9 @@ class Rest::ListingsController < ApplicationController
 
     raise "invalid request" unless listing.user_id == current_user.id
 
-    listing.title = params[:title]
-    listing.text_description = params[:text_description]
-    listing.wanted_description = params[:wanted_description]
+    listing.title = params[:title].strip
+    listing.text_description = params[:text_description].strip
+    listing.wanted_description = params[:wanted_description].strip
 
     listing.is_free = (params[:is_free] == 'true')
 
@@ -69,7 +69,7 @@ class Rest::ListingsController < ApplicationController
           end
           listing.item = listing.item || Product.new
           listing.item.product_condition_id = params[:condition_id] 
-          listing.item.condition_description = params[:condition_desc]
+          listing.item.condition_description = params[:condition_desc].strip
           listing.item.save
         end
       end  
@@ -87,9 +87,9 @@ class Rest::ListingsController < ApplicationController
     specs = []
     if params[:specs] && (params[:specs].is_a? Hash)
       params[:specs].each do |name, s|
-        spec = Spec.where(listing_id: listing.id, name: name).first_or_initialize
+        spec = Spec.where(listing_id: listing.id, name: name.strip).first_or_initialize
         if s[:value].present?
-          spec.value = s[:value]
+          spec.value = s[:value].strip
           spec.save
           specs << spec
         else
@@ -100,7 +100,7 @@ class Rest::ListingsController < ApplicationController
     listing.specs = specs
 
     if(params[:phone].present? || params[:email].present?)
-      contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_create
+      contact = Contact.where(user_id:current_user.id, phone: (params[:phone].present? ? params[:phone].strip : nil), email: (params[:email].present? ? params[:email].strip : nil)).first_or_create
       listing.contact = contact
     else
       listing.contact = nil

@@ -54,7 +54,7 @@ var ListingItem = React.createClass({
               <div className="timeline-deal-item-title"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
               <div className="timeline-deal-item-date">{this.props.listing.published_date}</div>
               <div className="timeline-deal-item-info">{this.props.listing.text_description}</div>
-              {!this.props.listing.is_free && <div className="timeline-deal-item-want">
+              {!this.props.listing.is_free && this.props.listing.wanted_description.trim().length > 0 && <div className="timeline-deal-item-want">
                 <span>Тохиролцоно:</span> {this.props.listing.wanted_description}
               </div>}
               <div className="clearfix"></div>

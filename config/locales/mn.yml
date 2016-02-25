@@ -61,6 +61,7 @@ mn:
         add_spec: Тохиролцоо оруулах
       new:
         title: Тохиролцоо оруулах
+        validation_error: улаанаар тэмдэглэсэн алдаануудыг засна уу
         general_info:
           section_title: Ерөнхий мэдээлэл
           title: Бүтээгдэхүүн үйлчилгээний нэр
@@ -79,20 +80,22 @@ mn:
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
-        price:
-          section_title: Солилцооны мэдээлэл
-          is_free_item: Үнэгүй
-          min_price_range: Доод /₮/
-          max_price_range: Дээд /₮/
         wanted:
-          section_title: Тохиролцооны мэдээлэл
-          title: Сонирхож буй бараа бүтээгдэхүүн
-          tooltip: test_tooltip
-          placeholder: ""
+          section_title: Солилцооны мэдээлэл
+          free_item: Үнэгүй хэлбэрээр байршуулах
+          free_item_tooltip: Та өөрт хэрэгцээ багатай бараа бүтээгдэхүүнээ үнэгүй хэмээн байршуулснаар хэрэг болох нэгэн нь тантай холбогдон авах боломжтой юм
+          for_donation: Deal.MN сангийн тусламжийн бараанд хандивлах
+          for_donation_tooltip: TODO
+          price_range: Мөнгөн үнэлгээ
+          price_range_tooltip: TODO
+          wanted_product: Сонирхож буй бараа бүтээгдэхүүн
+          wanted_product_tooltip: TODO
+          wanted_product_placeholder: ""
         save: Хадгалах
         publish: Нэмэх
       edit:
         title: Тохиролцоо засах
+        validation_error: улаанаар тэмдэглэсэн алдаануудыг засна уу
         general_info:
           section_title: Ерөнхий мэдээлэл
           title: Бүтээгдэхүүн үйлчилгээний нэр
@@ -111,16 +114,17 @@ mn:
             cancel: Буцах
             add: Нэмэх
           remove_spec: хасах
-        price:
-          section_title: Мөнгөн үнэлгээ
-          is_free_item: Үнэгүй
-          min_price_range: Доод /₮/
-          max_price_range: Дээд /₮/
         wanted:
-          section_title: Сонирхож буй
-          title: Сонирхож буй бараа бүтээгдэхүүн
-          tooltip: test_tooltip
-          placeholder: "Та өөрийн хүсэж буй барааны нэрийг # тэмдэгт ашиглан бичвэл хайлтанд илрэх илэрцэнд илүү үр дүнтэй. Жишээ нь: #SamsungGalaxyS6 #SamsungGalaxyS5"
+          section_title: Солилцооны мэдээлэл
+          free_item: Үнэгүй хэлбэрээр байршуулах
+          free_item_tooltip: Та өөрт хэрэгцээ багатай бараа бүтээгдэхүүнээ үнэгүй хэмээн байршуулснаар хэрэг болох нэгэн нь тантай холбогдон авах боломжтой юм
+          for_donation: Deal.MN сангийн тусламжийн бараанд хандивлах
+          for_donation_tooltip: TODO
+          price_range: Мөнгөн үнэлгээ
+          price_range_tooltip: TODO
+          wanted_product: Сонирхож буй бараа бүтээгдэхүүн
+          wanted_product_tooltip: TODO
+          wanted_product_placeholder: ""
         save: Хадгалах
       show:
         user_info:
@@ -128,17 +132,19 @@ mn:
     bids:
       new:
         title: Санал илгээх
+        validation_error: улаанаар тэмдэглэсэн алдаануудыг засна уу
         general_info:
-          title: Гарчиг
-          image: Зураг
-          description: Барааны тайлбар
+          title: Санал болгох бүтээгдэхүүн үйлчилгээний нэр
+          image: Зураг оруулах
+          description: Саналын тухай нэмэлт тайлбар
         bid:  Санал илгээх
       edit:
         title: Санал засах
+        validation_error: улаанаар тэмдэглэсэн алдаануудыг засна уу
         general_info:
-          title: Гарчиг
-          image: Зураг
-          description: Барааны тайлбар
+          title: Санал болгох бүтээгдэхүүн үйлчилгээний нэр
+          image: Зураг оруулах
+          description: Саналын тухай нэмэлт тайлбар
         save: Хадгалах
       show:
         user_info:

@@ -31,8 +31,8 @@ class Rest::BidsController < ApplicationController
     bid = Bid.find(params[:id])
     raise "invalid request" unless bid.user_id == current_user.id
 
-    bid.title = params[:title]
-    bid.description = params[:description]
+    bid.title = params[:title].try(:strip)
+    bid.description = params[:description].try(:strip)
 
     images = []
     if params[:images] && (params[:images].is_a? Array)
@@ -45,7 +45,7 @@ class Rest::BidsController < ApplicationController
 
     if(params[:phone].present? || params[:email].present?)
       #TODO check user id
-      contact = Contact.where(user_id: current_user.id, phone: params[:phone], email: params[:email]).first_or_create
+      contact = Contact.where(user_id: current_user.id, phone: (params[:phone].present? ? params[:phone].strip : nil), email: (params[:email].present? ? params[:email].strip : nil)).first_or_create
       bid.contact = contact
     else
       bid.contact = nil
@@ -82,7 +82,7 @@ class Rest::BidsController < ApplicationController
       raise "Self bidding isn't allowed" if listing.user_id == current_user.id
       
       if listing
-        bid = Bid.new(title: params[:title], description: params[:description], user_id: current_user.id)
+        bid = Bid.new(title: params[:title].try(:strip), description: params[:description].try(:strip), user_id: current_user.id)
         bid.biddable = listing
 
         images = []
@@ -95,7 +95,7 @@ class Rest::BidsController < ApplicationController
         bid.images = images
 
         if(params[:phone].present? || params[:email].present?)
-          contact = Contact.where(user_id: current_user.id, phone: params[:phone], email: params[:email]).first_or_create
+          contact = Contact.where(user_id: current_user.id, phone: (params[:phone].present? ? params[:phone].strip : nil), email: (params[:email].present? ? params[:email].strip : nil)).first_or_create
           bid.contact = contact
         end
 

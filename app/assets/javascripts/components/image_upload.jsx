@@ -32,14 +32,9 @@ var ImageUpload = React.createClass({
       imagePreviewUrl: '',
       originalWidth: 1,
       exifOrientation: 1,
-      loading: false
+      loading: false,
+      uploading: false
     };
-  },
-  updateCrop: function(coords) {
-    $(this.refs.crop_x).val(coords.x);
-    $(this.refs.crop_y).val(coords.y);
-    $(this.refs.crop_w).val(coords.w);
-    $(this.refs.crop_h).val(coords.h);
   },
   _handleImageAdd: function(image) {
     this.props.onImageAdd(image);
@@ -47,24 +42,37 @@ var ImageUpload = React.createClass({
   _handleImageDelete: function(image) {
     this.props.onImageDelete(image);
   },
-  _handleErrorMessage: function(message) {
-    this.props.onErrorMessage(message);
+  _handleCancelCrop: function() {
+    this.setState({
+      file: '',
+      imagePreviewUrl: '',
+      originalWidth: 1
+    });
+    this.props.onClearValidationError();
   },
   _handleSubmit: function(e) {
-    e.preventDefault();
-    this.setState({ loading: true});
+    
+    if(this.state.uploading){
+      console.log('not finished yet!!!')
+      return;
+    }
+    this.setState({uploading: true})
+
+    var $btn = $(e.target)
+    $btn.button('loading');;
+
 
     var data = new FormData();
     data.append("image",this.state.file);
 
-    this.updateCrop(this.refs.crop.tellSelect());
-
     var ratio = this.state.originalWidth / Math.min(this.state.originalWidth,750);
 
-    data.append("crop_x",$(this.refs.crop_x).val() * ratio)
-    data.append("crop_y",$(this.refs.crop_y).val() * ratio)
-    data.append("crop_w",$(this.refs.crop_w).val() * ratio)
-    data.append("crop_h",$(this.refs.crop_h).val() * ratio)
+    var coords = this.refs.crop.tellSelect();
+
+    data.append("crop_x",coords.x * ratio)
+    data.append("crop_y",coords.y * ratio)
+    data.append("crop_w",coords.w * ratio)
+    data.append("crop_h",coords.h * ratio)
     
     $.ajax({
       url: this.props.url,
@@ -82,25 +90,32 @@ var ImageUpload = React.createClass({
         this._handleImageAdd(image);
       }.bind(this),
       error: function (xhr, status, err) {
-        //TODO handle error...
+        $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
         console.error(this.props.url, status, err.toString());
       }.bind(this),
       complete: function () {
-        this.setState({ loading: false});
+        this.setState({ uploading: false});
+        this.props.onClearValidationError();
+        $btn.button('reset');
       }.bind(this)
     });
   },
   _handleCropLoad: function() {
     this.setState({ loading: false});
+    this.props.onClearValidationError();
   },
   _handleImageChange: function(e) {
     e.preventDefault();
+
+    if(this.state.loading){
+      console.log('not finished yet!!!')
+      return;
+    }
     this.setState({ loading: true});
 
     var reader = new FileReader();
     var file = e.target.files[0];
     var image = new Image();
-    var err = false;
     reader.onload = function(_file) {
       //var exif = EXIF.readFromBinaryFile(base64ToArrayBuffer(_file.target.result));
       //if(exif && exif.Orientation){
@@ -110,9 +125,8 @@ var ImageUpload = React.createClass({
       image.src    = _file.target.result;
       image.onload = function() {
         var w = image.width, h = image.height, s = file.size;
-        if (w < 200 || h < 200 || s > 10*1024*1024){
-          // TODO handle error...
-          $.growl.error({ title: '', message: "Зургийн хэмжээ 200х200 пиксэлээс багагүй, файлын хэмжээ 10МВ-аас ихгүй байх хэрэгтэй" , location: "br", delayOnHover: true});
+        if (w < 200 || h < 200 || s > 5*1024*1024){
+          this.props.onValidationError('Зургийн хэмжээ 200х200 пиксэлээс багагүй, файлын хэмжээ 5МВ-аас ихгүй байх хэрэгтэй');
           this.setState({ loading: false});
         }else{
           this.setState({
@@ -123,14 +137,14 @@ var ImageUpload = React.createClass({
         }
       }.bind(this);
       image.onerror= function() {
-        err = true;
         this.setState({ loading: false});
-        // TODO handle error...
+        this.props.onValidationError('Та зургийн файл оруулна уу');
         console.log('Invalid file type: '+ file.type);
-      };
+      }.bind(this);
     }.bind(this);
 
     reader.onerror = function() {
+      $.growl.error({ title: '', message: "Алдаа гарлаа" , location: "br", delayOnHover: true});
       this.setState({loading: false});
     }.bind(this);
 
@@ -138,11 +152,22 @@ var ImageUpload = React.createClass({
   },
   render: function() {
     var imagePreviewUrl = this.state.imagePreviewUrl;
-    var imagePreview = null;
-    var addImage = null;
+    var imagePreview, addImage, images;
 
     if (imagePreviewUrl){
-      imagePreview = (<Crop _handleImageLoad={this._handleCropLoad} src={ imagePreviewUrl } options={ this.props.jcrop_options } ref="crop" />);
+      imagePreview = (
+        <div>
+          <div className="pic-upload-buttons">
+            <button onClick={this._handleCancelCrop} className="btn btn-default">Цуцлах</button>
+            <button data-loading-text="Уншиж байна..." onClick={this._handleSubmit} type="button" className="btn btn-primary">Зураг байршуулах</button>
+          </div>
+          <Crop _handleImageLoad={this._handleCropLoad} src={ imagePreviewUrl } options={ this.props.jcrop_options } ref="crop" />
+          <div className="pic-upload-buttons">
+            <button onClick={this._handleCancelCrop} className="btn btn-default">Цуцлах</button>
+            <button data-loading-text="Уншиж байна..." onClick={this._handleSubmit} type="button" className="btn btn-primary">Зураг байршуулах</button>
+          </div>
+        </div>
+      );
     }
 
     if(this.state.loading == true){
@@ -150,43 +175,33 @@ var ImageUpload = React.createClass({
         <div className="progress-photo" />
       );
     }else{
-      if (imagePreviewUrl) {
+      if(this.props.images.length < this.props.maxImages){
         addImage = (
-          <div className="add-photo">
-            <form onSubmit={this._handleSubmit}>
-              <input type="hidden" name="crop_x" ref="crop_x"/>
-              <input type="hidden" name="crop_y" ref="crop_y"/>
-              <input type="hidden" name="crop_w" ref="crop_w"/>
-              <input type="hidden" name="crop_h" ref="crop_h"/>
-              <input type="submit" onClick={this._handleSubmit} />
-            </form>
-          </div>);
-      } else {
-        if(this.props.images.length < this.props.maxImages){
-          addImage = (
-          <a href="#">
-            <div className="upload-photo">
-              <input type="file" onChange={this._handleImageChange} />
-            </div>
-          </a>);  
-        }
+        <a href="#">
+          <div className="upload-photo">
+            <input type="file" onChange={this._handleImageChange} />
+          </div>
+        </a>);  
       }
     }
     
+    images = (
+      <ReactCSSTransitionGroup transitionName="fadeInOut" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
+        {this.props.images.map(function(image, index){
+          return (
+            <div key={index} className="added-picture" >
+              <div onClick={this._handleImageDelete.bind(null,image)} className="delete-button-img"><span className="glyphicon glyphicon-remove"></span></div>
+              <img src={image.thumb} />
+            </div>
+          );
+        }.bind(this))}
+      </ReactCSSTransitionGroup>
+    );
 
     return (
       <div ref="mainDiv" className="add-deal-add-pictures">
-        <ReactCSSTransitionGroup transitionName="fadeInOut" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
-          {this.props.images.map(function(image, index){
-            return (
-              <div key={index} className="added-picture" >
-                <div onClick={this._handleImageDelete.bind(null,image)} className="delete-button-img"><span className="glyphicon glyphicon-remove"></span></div>
-                <img src={image.thumb} />
-              </div>
-            );
-          }.bind(this))}
-        </ReactCSSTransitionGroup>
-        {addImage}
+        {!imagePreviewUrl && images}
+        {!imagePreviewUrl && addImage}
         <div className="clearfix"></div>
         <div className="crop-pic">
           {imagePreview}

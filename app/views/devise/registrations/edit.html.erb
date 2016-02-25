@@ -6,31 +6,31 @@
 
 
       <div class="sign-up-page-title">Нэвтрэх мэдээллээ өөрчлөх</div>
-      <% if resource.errors.full_messages.count > 0 %>
+      <% if resource.errors.full_messages.count > 0 || devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div class="alert alert-warning">
           <ul>
             <%= raw resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join %>
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+              <li>И-Мэйл хаягаа баталгаажуулна уу: <%= resource.unconfirmed_email %></li>
+            <% end %>
           </ul>
         </div>
       <% end %>
 
-      <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
-        <%= devise_error_messages! %>
+      
 
-        <div  class="sign-up-page-input"><%= f.label :email %><br />
+      <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+        
+        <div  class="sign-up-page-input"><%= f.label :email %>
         <%= f.email_field :email, :autofocus => true %></div>
 
-        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-          <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-        <% end %>
-
-        <div  class="sign-up-page-input"><%= f.label :password %> <i>(Нууц үгээ солихыг хүсэхгүй бол хоосон орхино уу.)</i><br />
+        <div  class="sign-up-page-input"><%= f.label :password %> <i>(Нууц үгээ солихыг хүсэхгүй бол хоосон орхино уу.)</i>
         <%= f.password_field :password, :autocomplete => "off" %></div>
 
-        <div  class="sign-up-page-input"><%= f.label :password_confirmation %><br />
+        <div  class="sign-up-page-input"><%= f.label :password_confirmation %>
         <%= f.password_field :password_confirmation %></div>
 
-        <div  class="sign-up-page-input"><%= f.label :current_password %> <i>(Одоогийн нууц үгээ оруулна уу.)</i><br />
+        <div  class="sign-up-page-input"><%= f.label :current_password %> <i>(Одоогийн нууц үгээ оруулна уу.)</i>
         <%= f.password_field :current_password %></div>
 
         <div  class="sign-up-page-button"><%= f.submit "Хадгалах" %></div>

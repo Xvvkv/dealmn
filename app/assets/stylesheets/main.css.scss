@@ -414,7 +414,9 @@ body{
   padding:10px;
 }
 
-
+.has-error{
+  color: #a94442;
+}
 .has-error-span{
   font-size: 12px;
   color: #a94442;
@@ -2580,7 +2582,7 @@ address strong{
   float: left;
   width: 120px;
 }
-.price-free span{
+.free-item-checkbox span{
   font-weight: normal
 }
 

@@ -401,7 +401,7 @@ var HeaderUserProfile = React.createClass({
               <li><a href={'/users/' + this.props.user.id + '?p=bids_received'}>Ирсэн саналууд</a></li>
               <li><a href={'/users/' + this.props.user.id + '?p=bids_sent'}>Илгээсэн саналууд</a></li>
               <li role="separator" className="divider"></li>
-              <li><a href='/edit'>Нэвтрэх мэдээллээ өөрчлөх</a></li>
+              {!this.props.user.social_user && <li><a href='/edit'>Нэвтрэх мэдээллээ өөрчлөх</a></li>}
               <li><a href="/logout" data-method="delete" rel="nofollow">Гарах</a></li>
             </ul>
           </div>
