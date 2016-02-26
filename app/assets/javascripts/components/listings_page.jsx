@@ -359,6 +359,7 @@ var ListingsPage = React.createClass({
             <div className="left-container">
               <div>
                 {this.state.loaded && <CategorySelector categories={this.state.categories} filters={this.state.filters} handleSelectCat={this._handleSelectCat} />}
+                {!this.state.loaded && <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>}
                 <div className="hairly-line"></div>
                 
                 <div className="title5">Дэлгэрэнгүй хайлт</div>
