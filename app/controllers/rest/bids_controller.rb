@@ -144,7 +144,7 @@ class Rest::BidsController < ApplicationController
 
   def latest_deals
     raise "Invalid Request" unless params[:limit] && (params[:limit].to_i == 3 || params[:limit].to_i == 10)
-    respond_with Bid.accepted.order('accepted_date desc').last(params[:limit].to_i), include_user: true, include_biddable: true
+    respond_with Bid.accepted.order('accepted_date desc').first(params[:limit].to_i), include_user: true, include_biddable: true
   end
 
 end

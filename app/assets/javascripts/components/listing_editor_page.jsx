@@ -412,15 +412,15 @@ var ListingEditor = React.createClass({
 
     var free_item_section = (
       <div className="free-item-section col-md-12">
-        <div className="free-item-checkbox">
-          <label>
-            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,false)} checked={this.state.is_free && !this.state.is_for_donation}/> {I18n.page.wanted.free_item} <a href="#" data-tooltip={I18n.page.wanted.free_item_tooltip}>[?]</a>
-          </label>
-        </div>
-        <div className="free-item-checkbox">
-          <label>
-            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,true)} checked={this.state.is_free && this.state.is_for_donation}/> {I18n.page.wanted.for_donation} <a href="#" data-tooltip={I18n.page.wanted.for_donation_tooltip}>[?]</a>
-          </label>
+        <div className="price-free">
+          <div className="col-md-6">
+              <input id="free_item" type="checkbox" onChange={this._handleIsFreeCheck.bind(null,false)} checked={this.state.is_free && !this.state.is_for_donation}/>
+              <label htmlFor="free_item">{I18n.page.wanted.free_item}</label>
+          </div>
+          <div className="col-md-6">
+              <input id="for_donation" type="checkbox" onChange={this._handleIsFreeCheck.bind(null,true)} checked={this.state.is_free && this.state.is_for_donation}/>
+              <label htmlFor="for_donation">{I18n.page.wanted.for_donation}</label>
+          </div>
         </div>
       </div>
     );
