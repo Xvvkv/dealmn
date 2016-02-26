@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160217060637) do
+ActiveRecord::Schema.define(:version => 20160226053622) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -131,6 +131,8 @@ ActiveRecord::Schema.define(:version => 20160217060637) do
     t.datetime "published_date"
     t.integer  "publishment_id"
     t.integer  "hit_counter",        :default => 0,     :null => false
+    t.boolean  "is_for_donation",    :default => false, :null => false
+    t.datetime "donated_at"
   end
 
   add_index "listings", ["published_date"], :name => "index_listings_on_published_date"

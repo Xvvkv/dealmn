@@ -47,14 +47,15 @@ var ListingItem = React.createClass({
         <div className="timeline-cyrcle"></div>
         <div className="timeline-deal-item">
           <div className="timeline-arrow"></div>
-          {this.props.listing.is_free && <div className="badget free-badget"></div>}
+          {this.props.listing.is_free && this.props.listing.is_for_donation && <div className="badget donation-badget"></div>}
+          {this.props.listing.is_free && !this.props.listing.is_for_donation && <div className="badget free-badget"></div>}
           <div className="timeline-deal-item-container">
             <div className="timeline-deal-item-detail">
               <div className="timeline-deal-item-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].thumb : '/images/no_image.jpg'} /></div>
               <div className="timeline-deal-item-title"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
               <div className="timeline-deal-item-date">{this.props.listing.published_date}</div>
               <div className="timeline-deal-item-info">{this.props.listing.text_description}</div>
-              {!this.props.listing.is_free && this.props.listing.wanted_description.trim().length > 0 && <div className="timeline-deal-item-want">
+              {!this.props.listing.is_free && this.props.listing.wanted_description && this.props.listing.wanted_description.trim().length > 0 && <div className="timeline-deal-item-want">
                 <span>Тохиролцоно:</span> {this.props.listing.wanted_description}
               </div>}
               <div className="clearfix"></div>

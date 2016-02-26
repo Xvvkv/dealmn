@@ -99,6 +99,19 @@ class Listing < ActiveRecord::Base
   def update_data
     raise 'Validation Failed' unless (self.status == STATUS[:published] && self.title.present? && self.category.is_bottom_level)
     self.save!
+
+    if self.is_free && self.bids.present?
+      bids.each do |bid|
+        bid.update_attribute(:status, Bid::STATUS[:deleted])
+        user_stat_bidder = bid.user.user_stat
+        user_stat_listing_owner = self.user.user_stat
+        user_stat_bidder.total_bids_sent -= 1
+        user_stat_listing_owner.total_bids_received -= 1
+        user_stat_bidder.save
+        user_stat_listing_owner.save
+        bid.user.send_notification(I18n.t('notifications.bid_deleted_because_of_listing_update', {listing_name: self.title, bid_name: bid.title}), "/listings/#{self.id}", self.user)
+      end
+    end
   end
 
   def rate rater, rating

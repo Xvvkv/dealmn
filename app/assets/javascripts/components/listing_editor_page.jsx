@@ -82,6 +82,7 @@ var ListingEditor = React.createClass({
       selectedCat: [-1,-1,-1],
       condition_id: 1,
       listing: {},
+      is_free_original_value: false,
       spec_suggestions: {},
       specs: {},
       contacts: [],
@@ -110,6 +111,8 @@ var ListingEditor = React.createClass({
           email: (listing.contact || {}).email,
           phone: (listing.contact || {}).phone,
           is_free: listing.is_free,
+          is_for_donation: listing.is_for_donation,
+          is_free_original_value: listing.is_free,
           price_range_min: (listing.price_range_min || ''),
           price_range_max: (listing.price_range_max || '')
         });
@@ -181,7 +184,7 @@ var ListingEditor = React.createClass({
     data["category"] = this.state.selectedCat[2];
     data["mode"] = mode
     data["images"] = this.state.images.map(function(image) { return image.id;});
-    ["specs","phone","email","condition_desc","condition_id","text_description","title","is_free"].forEach(function(field) {
+    ["specs","phone","email","condition_desc","condition_id","text_description","title","is_free","is_for_donation"].forEach(function(field) {
       data[field] = this.state[field]
     }.bind(this));
 
@@ -223,7 +226,13 @@ var ListingEditor = React.createClass({
   },
   _handleUpdate: function () {
     if(this.validate()){
-      this.updateListing(2);
+      if (this.state.is_free_original_value === false && this.state.is_free){
+        if (confirm('Та тохиролцоог ' + (this.state.is_for_donation ? 'сайн үйлсийн аян хандивлах' : 'бусдад үнэгүй өгөх') + ' болгож өөрчлөх гэж байна. Өөрчлөлтөөс өмнө ирсэн саналууд устах болно. Үргэлжлүүлэх үү?')) {
+          this.updateListing(2);
+        }
+      }else{
+        this.updateListing(2);
+      }
     }
   },
   validate: function() {
@@ -332,9 +341,15 @@ var ListingEditor = React.createClass({
       }
     }
   },
-  _handleIsFreeCheck: function () {
-    var old = this.state.is_free
-    this.setState({is_free: !old})
+  _handleIsFreeCheck: function (is_for_donation) {
+    console.log(is_for_donation)
+    if(is_for_donation){
+      var old = this.state.is_for_donation;
+      this.setState({is_free: !old, is_for_donation: !old})
+    }else{
+      var old = this.state.is_free && !this.state.is_for_donation;
+      this.setState({is_free: !old, is_for_donation: false})
+    }
   },
   _handleSpecChange: function (e) {
     var specs = this.state.specs;
@@ -399,12 +414,12 @@ var ListingEditor = React.createClass({
       <div className="free-item-section col-md-12">
         <div className="free-item-checkbox">
           <label>
-            <input type="checkbox" onChange={this._handleIsFreeCheck} checked={this.state.is_free}/> {I18n.page.wanted.free_item} <a href="#" data-tooltip={I18n.page.wanted.free_item_tooltip}>[?]</a>
+            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,false)} checked={this.state.is_free && !this.state.is_for_donation}/> {I18n.page.wanted.free_item} <a href="#" data-tooltip={I18n.page.wanted.free_item_tooltip}>[?]</a>
           </label>
         </div>
         <div className="free-item-checkbox">
           <label>
-            <input type="checkbox" onChange={this._handleIsFreeCheck} checked={this.state.is_free}/> {I18n.page.wanted.for_donation} <a href="#" data-tooltip={I18n.page.wanted.for_donation_tooltip}>[?]</a>
+            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,true)} checked={this.state.is_free && this.state.is_for_donation}/> {I18n.page.wanted.for_donation} <a href="#" data-tooltip={I18n.page.wanted.for_donation_tooltip}>[?]</a>
           </label>
         </div>
       </div>

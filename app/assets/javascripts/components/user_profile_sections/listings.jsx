@@ -12,7 +12,8 @@ var UserProfileListingsItem = React.createClass({
     
     return (
       <div className={this.props.listing.is_closed ? "profile-user-deals closed-item" : "profile-user-deals"}>
-        {this.props.listing.is_free && <div className="badget free-badget"></div>}
+        {this.props.listing.is_free && this.props.listing.is_for_donation && <div className="badget donation-badget"></div>}
+        {this.props.listing.is_free && !this.props.listing.is_for_donation && <div className="badget free-badget"></div>}
         <div className="profile-user-deals-img"><img src={this.props.listing.images && this.props.listing.images.length > 0 ? this.props.listing.images[0].url : '/images/no_image_large.jpg'} /></div>
         <div className="profile-user-deals-name"><a href={'/listings/' + this.props.listing.id}>{this.props.listing.title}</a></div>
         <div className="profile-user-deals-information">{this.props.listing.text_description}</div>

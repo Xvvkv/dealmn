@@ -197,10 +197,23 @@ var ListingDetail = React.createClass({
     var header_info;
     
     if(this.props.loaded && this.props.listing.is_free){
-      if(this.props.listing.user.id != this.props.current_user_id && this.props.listing.contact){
+      if(this.props.listing.is_for_donation){
         header_info = (
           <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
-            <h5>TODO Free item header info.</h5>
+            <h5>{this.props.listing.user.id == this.props.current_user_id ? "Та энэхүү тохиролцоог сайн үйлсийн аянд хандивлах хэлбэрээр байршуулсан байна. Бид тантай доорхи холбоо барих мэдээллийн тань дагуу холбогдох болно." : "Энэхүү тохиролцоог сайн үйлсийн аянд хандивлахаар байршуулсан байна."}</h5>
+            {this.props.listing.user.id == this.props.current_user_id &&
+              <address>
+                <strong>Холбоо барих</strong><br />
+                Утас: {this.props.listing.contact ? this.props.listing.contact.phone : 'N\\A'}<br />
+                И-Мэйл хаяг: {this.props.listing.contact ? this.props.listing.contact.email : 'N\\A'}<br />
+              </address>
+            }
+          </div>
+        );
+      }else{
+        header_info = (
+          <div className="bs-callout bs-callout-info" id="callout-helper-context-color-specificity">
+            <h5>{this.props.listing.user.id == this.props.current_user_id ? "Та энэхүү тохиролцоог үнэгүй хэлбэрээр байршуулсан байна. Бусад хэрэглэгчид тантай доорхи холбоо барих мэдээллээр тань холбогдох болно." : "Энэхүү тохиролцоог үнэгүй хэлбэрээр байршуулсан байна. Та доорх холбоо барих мэдээллийн дагуу тохиролцоо оруулсан хүнтэй холбогдох боломжтой."}</h5>
             <address>
               <strong>Холбоо барих</strong><br />
               Утас: {this.props.listing.contact ? this.props.listing.contact.phone : 'N\\A'}<br />
@@ -279,6 +292,8 @@ var ListingDetail = React.createClass({
 
     return (
       <div className="deal-full-detail-page">
+        {this.props.listing.is_free && this.props.listing.is_for_donation && <div className="badget donation-badget"></div>}
+        {this.props.listing.is_free && !this.props.listing.is_for_donation && <div className="badget free-badget"></div>}
         {header_info}
         <ImageViewer images={this.props.listing.images}/>
         <div className="full-detail-short-info">

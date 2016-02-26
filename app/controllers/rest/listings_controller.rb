@@ -42,11 +42,12 @@ class Rest::ListingsController < ApplicationController
 
     raise "invalid request" unless listing.user_id == current_user.id
 
-    listing.title = params[:title].strip
-    listing.text_description = params[:text_description].strip
-    listing.wanted_description = params[:wanted_description].strip
+    listing.title = params[:title].try(:strip)
+    listing.text_description = params[:text_description].try(:strip)
+    listing.wanted_description = params[:wanted_description].try(:strip)
 
     listing.is_free = (params[:is_free] == 'true')
+    listing.is_for_donation = (params[:is_for_donation] == 'true')
 
     listing.price_range_min = params[:price_range_min] if params[:price_range_min] && is_non_negative_integer(params[:price_range_min])
     listing.price_range_max = params[:price_range_max] if params[:price_range_max] && is_non_negative_integer(params[:price_range_max])
@@ -69,7 +70,7 @@ class Rest::ListingsController < ApplicationController
           end
           listing.item = listing.item || Product.new
           listing.item.product_condition_id = params[:condition_id] 
-          listing.item.condition_description = params[:condition_desc].strip
+          listing.item.condition_description = params[:condition_desc].try(:strip)
           listing.item.save!
         end
       end  
@@ -87,9 +88,9 @@ class Rest::ListingsController < ApplicationController
     specs = []
     if params[:specs] && (params[:specs].is_a? Hash)
       params[:specs].each do |name, s|
-        spec = Spec.where(listing_id: listing.id, name: name.strip).first_or_initialize
+        spec = Spec.where(listing_id: listing.id, name: name.try(:strip)).first_or_initialize
         if s[:value].present?
-          spec.value = s[:value].strip
+          spec.value = s[:value].try(:strip)
           spec.save
           specs << spec
         else
@@ -113,7 +114,7 @@ class Rest::ListingsController < ApplicationController
       listing.publish
     elsif params[:mode].to_i == 2
       listing.update_data
-      listing.bids.initial.each do |bid|
+      listing.bids.active.each do |bid|
         bid.user.send_notification(I18n.t('notifications.listing_updated', {listing_name: listing.title, bid_name: bid.title}), "/listings/#{listing.id}", current_user)
       end
     else
