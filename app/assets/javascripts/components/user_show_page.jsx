@@ -332,17 +332,19 @@ var UserShowPage = React.createClass({
   },
   _handleUserInfoChange: function(attr, e){
     var value = e.target.value;
-    if(e.target.value.length > 50){
-      value = value.slice(0,50);
-    }
-
+    
     var user = this.state.user
     if(attr == 'first_name' || attr == 'last_name'){
-      var regex = /^[a-zA-ZА-Яа-яӨөҮү](?:[a-zA-ZА-Яа-яӨөҮү\- ]*)?$/;
-      if(value == '' || regex.test(value)){
-        user[attr] = value;
+      value = value.replace(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/g,'')
+
+      if(value.length > 50){
+        value = value.slice(0,50);
       }
+      user[attr] = value;
     }else if(attr == 'email' || attr == 'phone'){
+      if(value.length > 50){
+        value = value.slice(0,50);
+      }
       user.primary_contact = user.primary_contact || {}
       user.primary_contact[attr] = value;
     }
