@@ -7,4 +7,8 @@ class MessageText < ActiveRecord::Base
   scope :i2p, where(direction: DIRECTION[:i2p])
   scope :p2i, where(direction: DIRECTION[:p2i])
 
+  validates :message_text,
+    presence: true,
+    length: {maximum: 2000}
+
 end

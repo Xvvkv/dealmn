@@ -34,14 +34,13 @@ class Listing < ActiveRecord::Base
   scope :free_item, where(is_free: true)
 
   validates :title,
-    presence: true,
     length: {maximum: 70 }
   
   validates :text_description,
     length: {maximum: 5000}
 
   validates :wanted_description,
-    length: {maximum: 256}
+    length: {maximum: 255}
 
   validates :price_range_min, :price_range_max, :inclusion => 0..2000000000, :allow_nil => true
 
@@ -58,7 +57,7 @@ class Listing < ActiveRecord::Base
 
   def self.create_draft user
     return unless user.listings.draft.blank?
-    Listing.create(user_id: user.id, status: STATUS[:draft], item: Product.new, contact_id: user.primary_contact.try(:id))
+    Listing.create!(user_id: user.id, status: STATUS[:draft], item: Product.new, contact_id: user.primary_contact.try(:id))
   end
 
   def is_product
@@ -83,7 +82,7 @@ class Listing < ActiveRecord::Base
     self.status = STATUS[:published]
     self.publishment_id = next_publishment_seq
     self.published_date = Time.now
-    self.save
+    self.save!
 
     user_stat = self.user.user_stat
     user_stat.total_listing += 1
@@ -99,7 +98,20 @@ class Listing < ActiveRecord::Base
 
   def update_data
     raise 'Validation Failed' unless (self.status == STATUS[:published] && self.title.present? && self.category.is_bottom_level)
-    self.save
+    self.save!
+
+    if self.is_free && self.bids.present?
+      bids.each do |bid|
+        bid.update_attribute(:status, Bid::STATUS[:deleted])
+        user_stat_bidder = bid.user.user_stat
+        user_stat_listing_owner = self.user.user_stat
+        user_stat_bidder.total_bids_sent -= 1
+        user_stat_listing_owner.total_bids_received -= 1
+        user_stat_bidder.save
+        user_stat_listing_owner.save
+        bid.user.send_notification(I18n.t('notifications.bid_deleted_because_of_listing_update', {listing_name: self.title, bid_name: bid.title}), "/listings/#{self.id}", self.user)
+      end
+    end
   end
 
   def rate rater, rating

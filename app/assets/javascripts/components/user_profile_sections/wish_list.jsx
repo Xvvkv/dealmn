@@ -6,7 +6,8 @@ var UserProfileWishListItem = React.createClass({
     var wish_list_item_buttons = <WishListItemButtons item={this.props.item} handleDeleteWishListItem={this.props.handleDeleteWishListItem.bind(null,this.props.item.id)}/>
     return (
       <div className={this.props.item.listing.is_closed ? "profile-user-deals closed-item" : "profile-user-deals"}>
-        {this.props.item.listing.is_free && <div className="badget free-badget"></div>}
+        {this.props.item.listing.is_free && this.props.item.listing.is_for_donation && <div className="badget free-badget"></div>}
+        {this.props.item.listing.is_free && !this.props.item.listing.is_for_donation && <div className="badget donation-badget"></div>}
         <div className="profile-user-deals-img"><img src={this.props.item.listing.image ? this.props.item.listing.image.url : '/images/no_image_large.jpg'} /></div>
         <div className="profile-user-deals-name"><a href={'/listings/' + this.props.item.listing.id}>{this.props.item.listing.title}</a></div>
         <div className="profile-user-deals-information">{this.props.item.listing.text_description}</div>

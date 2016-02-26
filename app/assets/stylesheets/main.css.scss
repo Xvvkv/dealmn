@@ -2,6 +2,9 @@
 /* CSS Document */
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&subset=latin,cyrillic);
 
+*{
+  word-break: break-all;
+}
 
 html{
   height: 100%;
@@ -384,7 +387,8 @@ body{
   width: 77px;
   position: absolute;
   right: -7px;
-  top:-7px;  
+  top:-7px;
+  z-index: 999; 
 }
 .mini-badget{
   height: 45px;
@@ -392,6 +396,7 @@ body{
   position: absolute;
   right: -3px;
   top: -3px;
+  z-index: 999;
 }
 .special-badget{
   background: image-url('special_badget.png') no-repeat center center;
@@ -401,6 +406,12 @@ body{
 }
 .mini-badget.free-badget{
  background: image-url('free-badget-mini.png') no-repeat center center; 
+}
+.donation-badget{
+  background: image-url('donation-badget-big.png') no-repeat center center;
+}
+.mini-badget.donation-badget{
+ background: image-url('donation-badget-mini.png') no-repeat center center; 
 }
 .accepted-badget{
   background: image-url('accepted.png') no-repeat center center;
@@ -415,9 +426,15 @@ body{
   padding:10px;
 }
 
-
-
-
+.has-error{
+  color: #a94442;
+}
+.has-error-span{
+  font-size: 12px;
+  color: #a94442;
+  font-weight: normal;
+  font-style: italic;
+}
 
   .timeline-user-info-tooltip{
     position: absolute;
@@ -625,6 +642,7 @@ body{
     padding:10px;
     margin-top: 15px;
     margin-bottom: 10px;
+    position: relative;
   }
   .deal-full-detail-page-container{
     width: calc(100% - 315px);
@@ -2589,7 +2607,7 @@ address strong{
   float: left;
   width: 120px;
 }
-.price-free span{
+.free-item-checkbox span{
   font-weight: normal
 }
 .page-not-found{

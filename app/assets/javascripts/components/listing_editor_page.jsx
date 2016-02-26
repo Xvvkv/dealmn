@@ -62,14 +62,17 @@ var ListingEditor = React.createClass({
   getDefaultProps: function() {
     return {
       validation_rules: {
-        'title' : {max: 10, min: 3, presence: true},
-        'text_description' : {max: 50},
-        'wanted_description' : {max: 25},
-        'condition_desc' : {max: 25},
-        'email' : {max: 5},
-        'phone' : {max: 5}
+        'title' : {max: 70, min: 3, presence: true},
+        'text_description' : {max: 5000},
+        'wanted_description' : {max: 255},
+        'condition_desc' : {max: 255},
+        'email' : {max: 50},
+        'phone' : {max: 50},
+        'addSpecName' : {max: 50},
+        'addSpecValue' : {max: 50},
+        'price_range_min' : {max: 2000000000},
+        'price_range_max' : {max: 2000000000}
       }
-      //listingId: null,
     };
   },
   getInitialState: function() {
@@ -79,6 +82,7 @@ var ListingEditor = React.createClass({
       selectedCat: [-1,-1,-1],
       condition_id: 1,
       listing: {},
+      is_free_original_value: false,
       spec_suggestions: {},
       specs: {},
       contacts: [],
@@ -107,6 +111,8 @@ var ListingEditor = React.createClass({
           email: (listing.contact || {}).email,
           phone: (listing.contact || {}).phone,
           is_free: listing.is_free,
+          is_for_donation: listing.is_for_donation,
+          is_free_original_value: listing.is_free,
           price_range_min: (listing.price_range_min || ''),
           price_range_max: (listing.price_range_max || '')
         });
@@ -155,9 +161,16 @@ var ListingEditor = React.createClass({
     });
 
   },
-  _handleErrorMessage: function (message) {
-    // TODO change this
-    console.log(message);
+  _handleImageValidationError: function (error_message) {
+    var validation_errors = this.state.validation_errors;
+    validation_errors['image_preview'] = error_message
+    this.setState({validation_errors: validation_errors})
+    console.log(error_message);
+  },
+  _clearImageValidationError: function () {
+    var validation_errors = this.state.validation_errors;
+    delete validation_errors['image_preview']
+    this.setState({validation_errors: validation_errors})
   },
   updateListing: function (mode) {
 
@@ -171,7 +184,7 @@ var ListingEditor = React.createClass({
     data["category"] = this.state.selectedCat[2];
     data["mode"] = mode
     data["images"] = this.state.images.map(function(image) { return image.id;});
-    ["specs","phone","email","condition_desc","condition_id","text_description","title","is_free"].forEach(function(field) {
+    ["specs","phone","email","condition_desc","condition_id","text_description","title","is_free","is_for_donation"].forEach(function(field) {
       data[field] = this.state[field]
     }.bind(this));
 
@@ -213,26 +226,43 @@ var ListingEditor = React.createClass({
   },
   _handleUpdate: function () {
     if(this.validate()){
-      this.updateListing(2);
+      if (this.state.is_free_original_value === false && this.state.is_free){
+        if (confirm('Та тохиролцоог ' + (this.state.is_for_donation ? 'сайн үйлсийн аян хандивлах' : 'бусдад үнэгүй өгөх') + ' болгож өөрчлөх гэж байна. Өөрчлөлтөөс өмнө ирсэн саналууд устах болно. Үргэлжлүүлэх үү?')) {
+          this.updateListing(2);
+        }
+      }else{
+        this.updateListing(2);
+      }
     }
   },
   validate: function() {
+    var validation_errors = {};
+
     if(this.refs.imageUpload.state.imagePreviewUrl){
-      if (!confirm('warning text for unfinished image uploading. Үргэлжлүүлэх үү?')) {
-        return false;
+      validation_errors['image_preview'] = 'та зураг байршуулах товчийг дарж оруулна уу'
+    }
+
+    if(!this.state.is_free && this.state.price_range_max !== '' && this.state.price_range_min !== ''){
+      if(this.state.price_range_min > this.state.price_range_max){
+        validation_errors['price_range'] = 'доод үнэлгээний хэмжээ дээд үнэлгээний хэмжээнээс их байж болохгүй'
       }
     }
 
-    if(this.state.title == null || this.state.title.trim() == ''){
-      $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
+    if(this.state.title == null || this.state.title.trim().length < 3){
+      validation_errors['title'] = 'оруулна уу. Хамгийн багадаа 3 тэмдэгт'
+    }
+
+    if(this.state.selectedCat[2] <= 0){
+      validation_errors['category'] = 'сонгоно уу';
+    }
+
+    if(Object.keys(validation_errors).length > 0){
+      this.setState({validation_errors : validation_errors});
       window.scrollTo(0,0);
-    }else if(this.state.selectedCat[2] <= 0){
-      $.growl.error({ title: '', message: "Ангилал сонгоно уу" , location: "br", delayOnHover: true});
-      window.scrollTo(0,0);
+      return false;
     }else{
       return true;
     }
-    return false;
   },
   _handleSelectCategory: function (level, e) {
     if(level == 1){
@@ -260,6 +290,12 @@ var ListingEditor = React.createClass({
       this.setState({
         selectedCat: [tmp[0],tmp[1],e.target.value]
       });
+
+      var validation_errors = this.state.validation_errors;
+      if(validation_errors['category'] && e.target.value > -1){
+        delete validation_errors['category']
+        this.setState({validation_errors: validation_errors})
+      }
     }
   },
   _handleChange: function (e) {
@@ -268,16 +304,52 @@ var ListingEditor = React.createClass({
       value = value.slice(0,this.props.validation_rules[e.target.name].max);
     }
     this.setState({[e.target.name]: value});
-  },
-  _handleChangeNumeric: function (e) {
-    var v = parseInt(e.target.value);
-    if((v > 0 && v.toString() == e.target.value) || e.target.value == ''){
-      this.setState({[e.target.name]: e.target.value});
+
+    if(e.target.name == 'title'){
+      var validation_errors = this.state.validation_errors;
+      if(validation_errors['title'] && value && value.trim().length >= 3){
+        delete validation_errors['title']
+        this.setState({validation_errors: validation_errors})
+      }
     }
   },
-  _handleIsFreeCheck: function () {
-    var old = this.state.is_free
-    this.setState({is_free: !old})
+  _handleChangePriceRange: function (e) {
+    var v = '';
+    if(e.target.value == ''){
+      this.setState({[e.target.name]: e.target.value});
+    }else{
+      v = parseInt(e.target.value);
+      
+      if(v.toString() == e.target.value && v >=0 &&
+        (!this.props.validation_rules[e.target.name] || !this.props.validation_rules[e.target.name].max || this.props.validation_rules[e.target.name].max >= v)){
+        this.setState({[e.target.name]: v});
+      }
+    }
+
+    var validation_errors = this.state.validation_errors;
+    if(validation_errors['price_range']){
+      if(e.target.name == 'price_range_min'){
+        if(this.state.is_free || this.state.price_range_max === '' || v === '' || v <= this.state.price_range_max){
+          delete validation_errors['price_range']
+          this.setState({validation_errors: validation_errors})
+        }
+      }else {
+        if(this.state.is_free || v === '' || this.state.price_range_min === '' || this.state.price_range_min <= v){
+          delete validation_errors['price_range']
+          this.setState({validation_errors: validation_errors})
+        }
+      }
+    }
+  },
+  _handleIsFreeCheck: function (is_for_donation) {
+    console.log(is_for_donation)
+    if(is_for_donation){
+      var old = this.state.is_for_donation;
+      this.setState({is_free: !old, is_for_donation: !old})
+    }else{
+      var old = this.state.is_free && !this.state.is_for_donation;
+      this.setState({is_free: !old, is_for_donation: false})
+    }
   },
   _handleSpecChange: function (e) {
     var specs = this.state.specs;
@@ -338,48 +410,66 @@ var ListingEditor = React.createClass({
   },
   render: function() {
 
+    var free_item_section = (
+      <div className="free-item-section col-md-12">
+        <div className="free-item-checkbox">
+          <label>
+            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,false)} checked={this.state.is_free && !this.state.is_for_donation}/> {I18n.page.wanted.free_item} <a href="#" data-tooltip={I18n.page.wanted.free_item_tooltip}>[?]</a>
+          </label>
+        </div>
+        <div className="free-item-checkbox">
+          <label>
+            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,true)} checked={this.state.is_free && this.state.is_for_donation}/> {I18n.page.wanted.for_donation} <a href="#" data-tooltip={I18n.page.wanted.for_donation_tooltip}>[?]</a>
+          </label>
+        </div>
+      </div>
+    );
+
     var price_range_section = (
-      <div className="col-md-12 add-deal-price-range">
-        <span>{"\u20AE"}</span>
-        <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} type="text" className="form-control " />
-        <span>{" - \u20AE"}</span>
-        <input name="price_range_max" value={this.state.price_range_max} onChange={this._handleChangeNumeric} type="text" className="form-control " />
+      <div className={this.state.validation_errors['price_range'] ? "form-group col-md-12 has-error" : "form-group col-md-12"}>
+        <label className="control-label">{I18n.page.wanted.price_range} <a href="#" data-tooltip={I18n.page.wanted.price_range_tooltip}>[?]</a></label>
+        {this.state.validation_errors['price_range'] && <span className="has-error-span"> {this.state.validation_errors['price_range']}</span>}
+        <div className="col-md-12 add-deal-price-range">
+          <span>{"\u20AE"}</span>
+          <input name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangePriceRange} type="text" className="form-control " />
+          <span>{" - \u20AE"}</span>
+          <input name="price_range_max" value={this.state.price_range_max} onChange={this._handleChangePriceRange} type="text" className="form-control " />
+        </div>
       </div>
     );
     var wanted_section = (
-      <div>
-        <div className="col-md-12">
-          <div className="home-module-title sub-title">{I18n.page.wanted.section_title}</div>
-        </div>
-        <div className="form-group col-md-12">
-          <label>{I18n.page.wanted.title} <a href="#">[?]</a></label>
-          <textarea name="wanted_description" className="form-control" rows="5" value={this.state.wanted_description} onChange={this._handleChange} placeholder={I18n.page.wanted.placeholder} />
-        </div>
+      <div className="form-group col-md-12">
+        <label>{I18n.page.wanted.wanted_product} <a href="#" data-tooltip={I18n.page.wanted.wanted_product_tooltip}>[?]</a></label>
+        <textarea name="wanted_description" className="form-control" rows="5" value={this.state.wanted_description} onChange={this._handleChange} placeholder={I18n.page.wanted.wanted_product_placeholder} />
       </div>
     );
     return (
       <div className="add-deal-page">
         <div className="home-module-title big-title">{I18n.page.title}</div>
+        {this.state.validation_errors && Object.keys(this.state.validation_errors).length > 0 && <div className="alert alert-danger" role="alert">{I18n.page.validation_error}</div>}
         <div className="col-md-12">
           <div className="home-module-title sub-title">{I18n.page.general_info.section_title}</div>
         </div>
-        <div className="form-group col-md-12">
-          <label>{I18n.page.general_info.title}</label>
+        <div className={this.state.validation_errors['title'] ? "form-group col-md-12 has-error" : "form-group col-md-12"}>
+          <label className='control-label'>{I18n.page.general_info.title}</label>
+          {this.state.validation_errors['title'] && <span className='has-error-span'> {this.state.validation_errors['title']}</span>}
           <input name="title" ref="title_input" type="text" className="form-control" onChange={this._handleChange} value={this.state.title} />
         </div>
-        <CategorySelector selectedCat={this.state.selectedCat} onSelectCategory={this._handleSelectCategory} categories={this.state.categories}/>
+        <CategorySelector selectedCat={this.state.selectedCat} onSelectCategory={this._handleSelectCategory} categories={this.state.categories} validation_error={this.state.validation_errors['category']}/>
         {this.props.service_cat != this.state.selectedCat[0]
           && <ConditionSelector p_conditions={this.props.p_conditions} changeHandler={this._handleChange} condition_id={this.state.condition_id} condition_desc={this.state.condition_desc} />
         }
         <div className="col-md-12">
           <div className="home-module-title sub-title">{I18n.page.detailed_info.section_title}</div>
         </div>
-        <div className="col-md-12">
-          <label>{I18n.page.detailed_info.image} <a href="#">[?]</a></label>
+        <div className={this.state.validation_errors['image_preview'] ? "form-group col-md-12 has-error" : "form-group col-md-12"}>
+          <label className='control-label'>{I18n.page.detailed_info.image}</label>
+          {this.state.validation_errors['image_preview'] && <span className='has-error-span'> {this.state.validation_errors['image_preview']}</span>}
           <ImageUpload ref="imageUpload" url="/rest/images" images={this.state.images}
                 onImageAdd={this._handleImageAdd}
                 onImageDelete={this._handleImageDelete}
-                onErrorMessage={this._handleErrorMessage} />
+                onValidationError={this._handleImageValidationError}
+                onClearValidationError={this._clearImageValidationError} />
         </div>
         <div className="clearfix"></div>
         <div className="form-group col-md-12">
@@ -389,16 +479,10 @@ var ListingEditor = React.createClass({
         <SpecEditor items={$.extend({},this.state.spec_suggestions,this.state.specs)} changeHandler={this._handleSpecChange} addSpecChangeHandler={this._handleChange} addSpecName={this.state.addSpecName} addSpecValue={this.state.addSpecValue} removeHandler={this._handleSpecRemove} addHandler={this._handleSpecAdd} />
         <ContactInfo changeHandler={this._handleChange} phone={this.state.phone} email={this.state.email} contacts={this.state.contacts} handleContactItemClick={this._handleContactItemClick} />
         <div className="col-md-12">
-          <div className="home-module-title sub-title">{I18n.page.price.section_title}</div>
+          <div className="home-module-title sub-title">{I18n.page.wanted.section_title}</div>
         </div>
+        {free_item_section}
         {!this.state.is_free && price_range_section}
-        <div className="col-md-12">
-          <div className="price-free">
-            <label>
-              <input type="checkbox" onChange={this._handleIsFreeCheck} checked={this.state.is_free}/> {I18n.page.price.is_free_item}
-            </label>
-          </div>
-        </div>
         {!this.state.is_free && wanted_section}
         <div className="hairly-line"></div>
         <div className="col-md-12 text-center">
@@ -457,7 +541,7 @@ var CategorySelector = React.createClass({
 
     if (this.props.categories.length > 0){
       leftItems = this.props.categories;
-      leftCategory = <CategorySelectorItem level={1} onSelectCategory={this.selectHandler} className="col-md-4 padding_left_delete" header={I18n.page.general_info.category} items={leftItems} selected={this.props.selectedCat[0]}/>;
+      leftCategory = <CategorySelectorItem level={1} onSelectCategory={this.selectHandler} className={this.props.validation_error && this.props.selectedCat[0] == -1 ? "col-md-4 padding_left_delete has-error" : "col-md-4 padding_left_delete"} items={leftItems} selected={this.props.selectedCat[0]} validation_error={this.props.validation_error} />;
     }
 
     if (leftItems.length > 0 && this.props.selectedCat[0] > -1){
@@ -466,7 +550,7 @@ var CategorySelector = React.createClass({
           midItems = category.children;
         } 
       }.bind(this));
-      midCategory = <CategorySelectorItem level={2} onSelectCategory={this.selectHandler} className="col-md-4" items={midItems} selected={this.props.selectedCat[1]}/>;
+      midCategory = <CategorySelectorItem level={2} onSelectCategory={this.selectHandler} className={this.props.validation_error && this.props.selectedCat[1] == -1 ? "col-md-4 has-error" : "col-md-4"} items={midItems} selected={this.props.selectedCat[1]}/>;
     }
 
     if (midItems.length > 0 && this.props.selectedCat[1] > -1){
@@ -475,16 +559,22 @@ var CategorySelector = React.createClass({
           rightItems = category.children;
         } 
       }.bind(this));
-      rightCategory = <CategorySelectorItem level={3} onSelectCategory={this.selectHandler} className="col-md-4 padding_right_delete" items={rightItems} selected={this.props.selectedCat[2]} />;
+      rightCategory = <CategorySelectorItem level={3} onSelectCategory={this.selectHandler} className={this.props.validation_error && this.props.selectedCat[2] == -1 ? "col-md-4 padding_right_delete has-error" : "col-md-4 padding_right_delete"} items={rightItems} selected={this.props.selectedCat[2]} />;
     }
 
     return (
       <div className="form-group col-md-12">
+        <div className={this.props.validation_error ? "has-error" : ""}>
+          <label className='control-label'>{I18n.page.general_info.category}</label>
+          {this.props.validation_error && <span className='has-error-span'> {this.props.validation_error}</span>}
+        </div>
+        <div>
           {leftCategory} 
         <ReactCSSTransitionGroup transitionName="slideleft" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
           {midCategory}
           {rightCategory}
         </ReactCSSTransitionGroup>
+        </div>
       </div>
     );
   }
@@ -497,7 +587,6 @@ var CategorySelectorItem = React.createClass({
   render: function() {
     return (
       <div className={this.props.className}>
-        <label>{this.props.header || "\u00a0"}</label>
         <select value={this.props.selected} onChange={this.changeHandler} className="form-control">
           <option value={-1} key={-1}>{I18n.page.general_info.choose_category}</option>
           {this.props.items.map(function(item,index) {
@@ -513,6 +602,20 @@ var CategorySelectorItem = React.createClass({
 
 
 var SpecEditor = React.createClass({
+  getInitialState: function() {
+    return {
+      validation_error: null
+    };
+  },
+  addHandler: function() {
+    if(this.props.addSpecName && this.props.addSpecName.trim() !== ''){
+      $('#addSpecModal').modal('hide');
+      this.setState({validation_error: null})
+      this.props.addHandler();
+    }else{
+      this.setState({validation_error: 'утга оруулна уу'})
+    }
+  },
   render: function() {
     var items = Object.keys(this.props.items).map(function(name,index) {
         return (
@@ -534,19 +637,20 @@ var SpecEditor = React.createClass({
                   <h4 className="modal-title" id="myModalLabel">{I18n.page.detailed_info.add_spec.title}</h4>
                 </div>
                 <div className="modal-body">
-                  <div className="form-group col-md-6">
-                    <label htmlFor="addSpecName" className="control-label">{I18n.page.detailed_info.add_spec.name}:</label>
+                  <div className={this.state.validation_error ? "form-group col-md-6 has-error" : "form-group col-md-6"}>
+                    <label htmlFor="addSpecName" className="control-label">{I18n.page.detailed_info.add_spec.name}</label>
+                    {this.state.validation_error && <span className="has-error-span"> {this.state.validation_error}</span>}
                     <input id="addSpecName" name="addSpecName" type="text" className="form-control" value={this.props.addSpecName} onChange={this.props.addSpecChangeHandler} />
                   </div>
                   <div className="form-group col-md-6">
-                    <label htmlFor="addSpecValue" className="control-label">{I18n.page.detailed_info.add_spec.value}:</label>
+                    <label htmlFor="addSpecValue" className="control-label">{I18n.page.detailed_info.add_spec.value}</label>
                     <input id="addSpecValue" name="addSpecValue" type="text" className="form-control" value={this.props.addSpecValue} onChange={this.props.addSpecChangeHandler} />
                   </div>
                   <div className="clearfix"></div>
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-default" data-dismiss="modal">{I18n.page.detailed_info.add_spec.cancel}</button>
-                  <button type="button" className="btn btn-primary" data-dismiss="modal" onClick={this.props.addHandler}>{I18n.page.detailed_info.add_spec.add}</button>
+                  <button type="button" className="btn btn-primary" onClick={this.addHandler}>{I18n.page.detailed_info.add_spec.add}</button>
                 </div>
               </div>
             </div>

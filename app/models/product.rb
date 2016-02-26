@@ -4,5 +4,5 @@ class Product < ActiveRecord::Base
   belongs_to :product_condition
 
   validates :condition_description,
-    length: {maximum: 256}
+    length: {maximum: 255}
 end

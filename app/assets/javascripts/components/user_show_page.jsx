@@ -331,12 +331,22 @@ var UserShowPage = React.createClass({
     });
   },
   _handleUserInfoChange: function(attr, e){
+    var value = e.target.value;
+    
     var user = this.state.user
     if(attr == 'first_name' || attr == 'last_name'){
-      user[attr] = e.target.value;
+      value = value.replace(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/g,'')
+
+      if(value.length > 50){
+        value = value.slice(0,50);
+      }
+      user[attr] = value;
     }else if(attr == 'email' || attr == 'phone'){
+      if(value.length > 50){
+        value = value.slice(0,50);
+      }
       user.primary_contact = user.primary_contact || {}
-      user.primary_contact[attr] = e.target.value;
+      user.primary_contact[attr] = value;
     }
     this.setState({user: user});
   },
@@ -453,6 +463,18 @@ var UserShowPage = React.createClass({
 })
 
 var ProfileEditor = React.createClass({
+  getInitialState: function() {
+    return {
+      validation_errors: {}
+    };
+  },
+  handleUpdate: function() {
+    if(this.props.user.first_name == null || this.props.user.first_name.trim().length < 2){
+      this.setState({validation_errors: {'first_name': 'оруулна уу. Багадаа 2 тэмдэгт'}})
+    }else{
+      this.props.handleUpdate();
+    }
+  },
   render: function(){
     var img, img_class;
     if(this.props.avatarPreview){
@@ -477,8 +499,9 @@ var ProfileEditor = React.createClass({
             <label htmlFor="lastName">Овог</label>
             <input id="lastName" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'last_name')} value={this.props.user.last_name} />
           </div>
-          <div className="form-group">
-            <label htmlFor="firstName">Нэр</label>
+          <div className={this.state.validation_errors['first_name'] ? "form-group has-error" : "form-group"}>
+            <label className="control-label" htmlFor="firstName">Нэр</label>
+            {this.state.validation_errors['first_name'] && <span className='has-error-span'> {this.state.validation_errors['first_name']}</span>}
             <input id="firstName" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'first_name')} value={this.props.user.first_name}/>
           </div>
           <div className="form-group">
@@ -486,12 +509,12 @@ var ProfileEditor = React.createClass({
             <input id="phone" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'phone')} value={this.props.user.primary_contact ? this.props.user.primary_contact.phone : ''} />
           </div>
           <div className="form-group">
-            <label htmlFor="email">И-Мэйл <a href="#">[?]</a></label>
+            <label htmlFor="email">И-Мэйл <a data-tooltip="Энэхүү И-Мэйл хаяг нь таныг сайтад нэвтрэхдээ ашиглах И-Мэйлээс тусдаа бөгөөд тохиролцоо оруулах, санал илгээх үед автоматаар холбоо барих мэдээллийг бөглөхөд ашиглах юм" href="#">[?]</a></label>
             <input id="email" type="text" className="form-control" onChange={this.props.handleUserInfoChange.bind(null,'email')} value={this.props.user.primary_contact ? this.props.user.primary_contact.email : ''} />
           </div>
           <div className="hairly-line" />
           <div className="text-center">
-            {this.props.loaded && <div onClick={this.props.handleUpdate} className="btn btn-success" style={{width: '50%'}}>Хадгалах</div>}
+            {this.props.loaded && <div onClick={this.handleUpdate} className="btn btn-success" style={{width: '50%'}}>Хадгалах</div>}
           </div>
         </div>
       </div>

@@ -12,7 +12,8 @@ var CategoryMenu = React.createClass({
   getInitialState: function() {
     return {
       activeMenuIndex: -1,
-      items: []
+      items: [],
+      loaded: false
     };
   },
   componentWillMount: function() {
@@ -31,7 +32,7 @@ var CategoryMenu = React.createClass({
       url: this.props.url,
       dataType: 'json',
       success: function (categories) {
-        this.setState({items: categories});
+        this.setState({items: categories, loaded: true});
       }.bind(this),
       error: function (xhr, status, err) {
         console.error(this.props.url, status, err.toString());
@@ -50,9 +51,9 @@ var CategoryMenu = React.createClass({
   },
   render: function() {
     var self = this;
-    var sub;
+    var sub, main;
 
-    if(this.state.items.length > 0 && this.state.activeMenuIndex >= 0){
+    if(this.state.loaded && this.state.activeMenuIndex >= 0){
       var columns = [];
     
       this.state.items[self.state.activeMenuIndex].children.forEach(function(child) {
@@ -70,13 +71,9 @@ var CategoryMenu = React.createClass({
               </ul>
             </div>;
     }
-    
-    return (
-      <div className="menu-container" onMouseLeave={function(){
-                      self.handleMouseLeaveMenu.call(self, self.handleLeaveMenu);
-                    }}>
-        <div className="main-menu">
-          {this.props.include_header && <div className="main-menu-header">{I18n.category.header}</div>}
+
+    if(this.state.loaded){
+      main = (
           <ul className="menu" onMouseLeave={this.handleMouseLeaveMenu}>
             {this.state.items.map(function(menu, index) {
               var className = 'menu-item';
@@ -92,6 +89,18 @@ var CategoryMenu = React.createClass({
               );
             })}
           </ul>
+      );
+    }else{
+      main = <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>
+    }
+    
+    return (
+      <div className="menu-container" onMouseLeave={function(){
+                      self.handleMouseLeaveMenu.call(self, self.handleLeaveMenu);
+                    }}>
+        <div className="main-menu">
+          {this.props.include_header && <div className="main-menu-header">{I18n.category.header}</div>}
+          {main}
         </div>
         <ReactCSSTransitionGroup transitionName="slideleft" transitionEnterTimeout={300} transitionLeaveTimeout={200}>
           {sub}

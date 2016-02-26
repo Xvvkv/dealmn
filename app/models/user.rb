@@ -13,16 +13,15 @@ class User < ActiveRecord::Base
       message: I18n.t('user.validations.name')
     },
     presence: true,
-    length: { minimum:2, maximum: 100 },
+    length: { minimum:2, maximum: 50 },
     if: "!provider"
   
   validates :last_name,
     format: {
-      with: /[[:alpha:] -]+$/,
+      with: /[[:alpha:] -]*$/,
       message: I18n.t('user.validations.name')
     },
-    presence: true,
-    length: { minimum:1, maximum: 100 },
+    length: { maximum: 50 },
     if: "!provider"
   
 
@@ -149,8 +148,8 @@ class User < ActiveRecord::Base
       user.uid = auth.uid
       user.email = auth.info.email
       user.password = Devise.friendly_token[10,20]
-      user.first_name = auth.info.first_name
-      user.last_name = auth.info.last_name
+      user.first_name = (auth.info.first_name || '').gsub!(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/, '').strip[0...50]
+      user.last_name = (auth.info.last_name || '').gsub!(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/, '').strip[0...50]
       user.avatar_id = Image.create_image_from_url("#{auth.info.image}?type=large").id
       user.skip_confirmation!
     end
@@ -161,7 +160,7 @@ class User < ActiveRecord::Base
       user.provider = auth.provider
       user.uid = auth.uid
       user.password = Devise.friendly_token[10,20]
-      user.first_name = auth.info.name
+      user.first_name = (auth.info.name || '').gsub!(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/, '').strip[0...50]
       puts auth.info.image
       user.avatar_id = Image.create_image_from_url(auth.info.image.sub("_normal", "")).id
       user.email = "user.#{SecureRandom.random_number(100_000_000)}.#{SecureRandom.random_number(100_000_000)}@change_your_email.com"
@@ -175,8 +174,8 @@ class User < ActiveRecord::Base
       user.uid = auth.uid
       user.email = auth.info.email
       user.password = Devise.friendly_token[10,20]
-      user.first_name = auth.info.first_name
-      user.last_name = auth.info.last_name
+      user.first_name = (auth.info.first_name || '').gsub!(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/, '').strip[0...50]
+      user.last_name = (auth.info.last_name || '').gsub!(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/, '').strip[0...50]
       user.avatar_id = Image.create_image_from_url(auth.info.image.sub("sz=50", "")).id
       user.skip_confirmation!
     end

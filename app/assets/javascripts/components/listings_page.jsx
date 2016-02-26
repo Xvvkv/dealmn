@@ -309,6 +309,13 @@ var ListingsPage = React.createClass({
       this.setState({[e.target.name]: e.target.value});
     }
   },
+  _handleClearPriceRange: function() {
+    var filters = this.state.filters
+    delete filters.price_range
+    this.setState({filters: filters, price_range_min: '', price_range_max: ''})
+    this.refs.timeline.filterAgain();
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+  },
   _handleFilterPriceRange: function() {
     var filters = this.state.filters
     var existing_price_range = filters.price_range
@@ -359,6 +366,7 @@ var ListingsPage = React.createClass({
             <div className="left-container">
               <div>
                 {this.state.loaded && <CategorySelector categories={this.state.categories} filters={this.state.filters} handleSelectCat={this._handleSelectCat} />}
+                {!this.state.loaded && <div className="loader"><img src='/images/loader.gif' /> <div>Уншиж байна ...</div></div>}
                 <div className="hairly-line"></div>
                 
                 <div className="title5">Дэлгэрэнгүй хайлт</div>
@@ -389,7 +397,7 @@ var ListingsPage = React.createClass({
                 <div className="left-filter-price">
                   {!this.state.filters.is_free && <div>
                     <div className="title4">Мөнгөн үнэлгээ <a href="#">[?]</a></div>
-                    <a href="javascript:;"><span className="glyphicon glyphicon-menu-left"></span> Бүх үнэлгээ</a>
+                    {this.state.filters.price_range && <a href="javascript:;" onClick={this._handleClearPriceRange}><span className="glyphicon glyphicon-menu-left"></span> Бүх үнэлгээ</a>}
                     <div className="price-range">
                       <span>{"\u20AE"}</span>
                       <input type="text" className="form-control" name="price_range_min" value={this.state.price_range_min} onChange={this._handleChangeNumeric} />

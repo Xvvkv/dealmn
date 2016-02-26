@@ -54,12 +54,23 @@ var BidEditorPage = React.createClass({
 });
 
 var BidEditor = React.createClass({
+  getDefaultProps: function() {
+    return {
+      validation_rules: {
+        'title' : {max: 70, min: 3, presence: true},
+        'description' : {max: 5000},
+        'email' : {max: 50},
+        'phone' : {max: 50}
+      }
+    };
+  },
   getInitialState: function() {
     return {
       images: [],
       bid: {},
       contacts: [],
-      updating: false
+      updating: false,
+      validation_errors: {}
     };
   },
   componentDidMount: function() {
@@ -119,30 +130,47 @@ var BidEditor = React.createClass({
     });
 
   },
-  _handleErrorMessage: function (message) {
-    // TODO change this
-    console.log(message);
+  _handleImageValidationError: function (error_message) {
+    var validation_errors = this.state.validation_errors;
+    validation_errors['image_preview'] = error_message
+    this.setState({validation_errors: validation_errors})
+    console.log(error_message);
+  },
+  _clearImageValidationError: function () {
+    var validation_errors = this.state.validation_errors;
+    delete validation_errors['image_preview']
+    this.setState({validation_errors: validation_errors})
   },
   _handleBid: function(){
-    this._handleSubmit(0);
+    if(this.validate()){
+      this._handleSubmit(0);
+    }
   },
   _handleSave: function(){
-    this._handleSubmit(1);
-  },
-  _handleSubmit: function (mode) {
-
-    if(this.state.title == null || this.state.title.trim() == ''){
-      $.growl.error({ title: '', message: "Гарчиг өгнө үү" , location: "br", delayOnHover: true});
-      window.scrollTo(0,0);
-      return;
+    if(this.validate()){
+      this._handleSubmit(1);
     }
+  },
+  validate: function() {
+    var validation_errors = {};
 
     if(this.refs.imageUpload.state.imagePreviewUrl){
-      if (!confirm('warning text for unfinished image uploading. Үргэлжлүүлэх үү?')) {
-        return;
-      }
+      validation_errors['image_preview'] = 'та зураг байршуулах товчийг дарж оруулна уу'
     }
 
+    if(this.state.title == null || this.state.title.trim().length < 3){
+      validation_errors['title'] = 'оруулна уу. Хамгийн багадаа 3 тэмдэгт'
+    }
+
+    if(Object.keys(validation_errors).length > 0){
+      this.setState({validation_errors : validation_errors});
+      window.scrollTo(0,0);
+      return false;
+    }else{
+      return true;
+    }
+  },
+  _handleSubmit: function (mode) {
     if(this.state.updating){
       console.log('not finished yet!!!')
       return;
@@ -193,7 +221,19 @@ var BidEditor = React.createClass({
     }
   },
   _handleChange: function (e) {
-    this.setState({ [e.target.name]: e.target.value});
+    var value = e.target.value;
+    if(this.props.validation_rules[e.target.name] && this.props.validation_rules[e.target.name].max && this.props.validation_rules[e.target.name].max < value.length){
+      value = value.slice(0,this.props.validation_rules[e.target.name].max);
+    }
+    this.setState({[e.target.name]: value});
+
+    if(e.target.name == 'title'){
+      var validation_errors = this.state.validation_errors;
+      if(validation_errors['title'] && value && value.trim().length >= 3){
+        delete validation_errors['title']
+        this.setState({validation_errors: validation_errors})
+      }
+    }
   },
   _handleContactItemClick: function (contact) {
     this.setState({phone: contact.phone, email: contact.email});
@@ -248,16 +288,20 @@ var BidEditor = React.createClass({
       <div className="add-deal-page">
         {<div className="home-module-title big-title">{I18n.page.title}</div>}
         {!this.props.edit_mode && header_info}
-        <div className="form-group col-md-12">
-          <label>{I18n.page.general_info.title} <a href="#">[?]</a> </label>
+        {this.state.validation_errors && Object.keys(this.state.validation_errors).length > 0 && <div className="alert alert-danger" role="alert">{I18n.page.validation_error}</div>}
+        <div className={this.state.validation_errors['title'] ? "form-group col-md-12 has-error" : "form-group col-md-12"}>
+          <label className='control-label'>{I18n.page.general_info.title}</label>
+          {this.state.validation_errors['title'] && <span className='has-error-span'> {this.state.validation_errors['title']}</span>}
           <input name="title" ref="title_input" type="text" className="form-control" onChange={this._handleChange} value={this.state.title} /> 
         </div>
-        <div className="col-md-12">
-          <label>{I18n.page.general_info.image} <a href="#">[?]</a></label>
+        <div className={this.state.validation_errors['image_preview'] ? "form-group col-md-12 has-error" : "form-group col-md-12"}>
+          <label className='control-label'>{I18n.page.general_info.image}</label>
+          {this.state.validation_errors['image_preview'] && <span className='has-error-span'> {this.state.validation_errors['image_preview']}</span>}
           <ImageUpload ref="imageUpload" url="/rest/images" images={this.state.images}
                 onImageAdd={this._handleImageAdd}
                 onImageDelete={this._handleImageDelete}
-                onErrorMessage={this._handleErrorMessage} />
+                onValidationError={this._handleImageValidationError}
+                onClearValidationError={this._clearImageValidationError} />
         </div>
         <div className="clearfix"></div>
         <div className="form-group col-md-12">

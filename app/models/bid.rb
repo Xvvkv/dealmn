@@ -22,6 +22,15 @@ class Bid < ActiveRecord::Base
 
   scope :active, where('bids.status <> ?', STATUS[:deleted])
 
+  validates :title,
+    presence: true,
+    length: {maximum: 70 }
+  
+  validates :description,
+    length: {maximum: 5000}
+
+  validates :images, :length => { :maximum => 5}
+
   def is_active?
     !self.is_deleted?
   end

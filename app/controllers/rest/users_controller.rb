@@ -27,14 +27,14 @@ class Rest::UsersController < ActionController::Base
     
     user.contacts.update_all(is_primary: false)
     if(params[:phone].present? || params[:email].present?)
-      contact = Contact.where(user_id:current_user.id, phone: params[:phone], email: params[:email]).first_or_initialize
+      contact = Contact.where(user_id:current_user.id, phone: (params[:phone].present? ? params[:phone].strip : nil), email: (params[:email].present? ? params[:email].strip : nil)).first_or_initialize
       contact.is_primary = true
       contact.save
     end
     
-    user.last_name = params[:last_name]
-    user.first_name = params[:first_name]
-    user.save
+    user.last_name = params[:last_name].strip
+    user.first_name = params[:first_name].strip
+    user.save!
 
     #respond_with :rest, user
     render json: user # put request was sending 204 no content response.
