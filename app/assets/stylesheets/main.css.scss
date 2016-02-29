@@ -1564,6 +1564,14 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 .modal-dialog{
   margin-top: 80px;
 }
+.modal{background: rgba(0,0,0,0.3);}
+#tosModal .modal-dialog{
+  width: 1000px;
+}
+#tosModal .modal-body {
+  max-height: 550px;
+  overflow-y: auto;
+}
 
 .no-item-here{
   background: #fff;
@@ -2687,7 +2695,7 @@ address strong{
   padding: 10px 20px;
   color: #666;
 }
-.full-left .btn{
+.btn-space .btn{
   margin-right: 10px;
 }
 

@@ -76,6 +76,9 @@ class Rest::BidsController < ApplicationController
   end
 
   def create
+
+    raise "invalid request. TOS must be agreed" unless current_user.tos_agreed_at.present?
+
     if params[:listing_id]
       listing = Listing.find(params[:listing_id])
 

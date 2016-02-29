@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160226053622) do
+ActiveRecord::Schema.define(:version => 20160226103259) do
 
   create_table "banner_items", :force => true do |t|
     t.integer  "banner_id"
@@ -278,6 +278,7 @@ ActiveRecord::Schema.define(:version => 20160226053622) do
     t.string   "provider"
     t.integer  "avatar_id"
     t.integer  "user_type",              :default => 0,  :null => false
+    t.datetime "tos_agreed_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

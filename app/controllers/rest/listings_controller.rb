@@ -40,13 +40,13 @@ class Rest::ListingsController < ApplicationController
   def update
     listing = Listing.find(params[:id])
 
-    raise "invalid request" unless listing.user_id == current_user.id
+    raise "invalid request" unless listing.user_id == current_user.id && current_user.tos_agreed_at.present?
 
     listing.title = params[:title].try(:strip)
     listing.text_description = params[:text_description].try(:strip)
     listing.wanted_description = params[:wanted_description].try(:strip)
 
-    listing.is_free = (params[:is_free] == 'true')
+    listing.is_free = (params[:is_free] == 'true' || params[:is_for_donation] == 'true')
     listing.is_for_donation = (params[:is_for_donation] == 'true')
 
     listing.price_range_min = params[:price_range_min] if params[:price_range_min] && is_non_negative_integer(params[:price_range_min])

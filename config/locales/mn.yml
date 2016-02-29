@@ -54,6 +54,8 @@ mn:
         total_active_listing: Идэвхитэй тохиролцоо
         total_accepted_bid: Тохиролцсон
         send_pm: Холбогдох
+      tos:
+        title: Deal.MN сайтын үйлчилгээний нөхцөл
     home:
       index:
         add_spec: Тохиролцоо оруулах
