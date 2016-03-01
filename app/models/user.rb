@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   
   validates :first_name,
     format: {
-      with: /[[:alpha:] -]+$/,
+      with: /[[:alpha:] -]*$/,
       message: I18n.t('user.validations.name')
     },
     presence: true,

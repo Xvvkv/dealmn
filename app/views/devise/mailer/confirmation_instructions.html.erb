@@ -1,5 +1,5 @@
-<p>Welcome <%= @email %>!</p>
+<p>Deal.mn сайтад тавтай морилно уу <%= @email %>!</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>Та доорхи линк дээр дарснаар бүртгэлээ баталгаажуулах болно.</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+<p><%= link_to 'Бүртгэл баталгаажуулах', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>

@@ -9,6 +9,9 @@
       <% if resource.errors.full_messages.count > 0 || devise_mapping.confirmable? && resource.pending_reconfirmation? %>
         <div class="alert alert-warning">
           <ul>
+            <% if flash[:notice] %>
+              <li><%= flash[:notice] %></li>
+            <% end %>
             <%= raw resource.errors.full_messages.map { |msg| content_tag(:li, msg) }.join %>
             <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
               <li>И-Мэйл хаягаа баталгаажуулна уу: <%= resource.unconfirmed_email %></li>
@@ -16,8 +19,6 @@
           </ul>
         </div>
       <% end %>
-
-      
 
       <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
         
