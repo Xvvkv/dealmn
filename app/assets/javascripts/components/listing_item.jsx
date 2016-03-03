@@ -43,10 +43,10 @@ var ListingItem = React.createClass({
     var listing_item_buttons = <ListingItemButtons current_user_id={this.props.current_user_id} listing={this.props.listing} handleCloseListing={this.handleCloseListing} is_closed={this.props.listing.is_closed}/>
     return (
       <div className="timeline-content">
-        <ListingItemUserInfo user={this.props.listing.user} />
-        <div className="timeline-cyrcle"></div>
+        {!this.props.is_mobile && <ListingItemUserInfo user={this.props.listing.user} />}
+        {!this.props.is_mobile && <div className="timeline-cyrcle"></div>}
         <div className="timeline-deal-item">
-          <div className="timeline-arrow"></div>
+          {!this.props.is_mobile && <div className="timeline-arrow"></div>}
           {this.props.listing.is_free && this.props.listing.is_for_donation && <div className="badget donation-badget"></div>}
           {this.props.listing.is_free && !this.props.listing.is_for_donation && <div className="badget free-badget"></div>}
           <div className="timeline-deal-item-container">

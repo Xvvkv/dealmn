@@ -18,5 +18,6 @@
 //= require jquery.Jcrop.min
 //= require jquery.als-1.7.min
 //= require growl
+//= require slideout.min
 //= require react_ujs
 //= require components

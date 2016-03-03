@@ -3,37 +3,41 @@
   <head>
     <title>Deal.MN</title>
     <script>window.I18n = <%= current_translations.to_json.html_safe %></script>
-    
     <%= stylesheet_link_tag    "application", :media => "all" %>
     <%= javascript_include_tag "application" %>
     <%= csrf_meta_tags %>
+    <% if is_mobile? %> 
+      <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=4, user-scalable=yes">
+    <% end %>
   </head>
   <body>
-    <div class="header_top">
-      <div class="container">
-        <%= react_component("HeaderInfoBar", site_stat: SiteStat.first) %>
-        <div class="header_top_menu">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <%= link_to t('view.header.about_us'), '#' %>
-            </li>
-            <li>
-              <%= link_to t('view.header.terms_of_use'), '/terms' %>
-            </li>
-          <% unless user_signed_in? %>
-            <li>
-              <%= link_to t('view.registration.register'), new_registration_path('user') %>
-            </li>
-          <% end %>
-            <li class="header_top_menu_last">
-              <%= link_to tag(:span, class: ["glyphicon","glyphicon-question-sign"]), '#', style: "font-size:14px;" %>
-            </li>
-          </ul>
+    <% unless is_mobile? %>
+      <div class="header_top">
+        <div class="container">
+          <%= react_component("HeaderInfoBar", site_stat: SiteStat.first) %>
+          <div class="header_top_menu">
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <%= link_to t('view.header.about_us'), '#' %>
+              </li>
+              <li>
+                <%= link_to t('view.header.terms_of_use'), '/terms' %>
+              </li>
+            <% unless user_signed_in? %>
+              <li>
+                <%= link_to t('view.registration.register'), new_registration_path('user') %>
+              </li>
+            <% end %>
+              <li class="header_top_menu_last">
+                <%= link_to tag(:span, class: ["glyphicon","glyphicon-question-sign"]), '#', style: "font-size:14px;" %>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="clearfix"></div>
+      <div class="clearfix"></div>
+    <% end %>
 
     <div class="header_mid">
       <div class="container">
@@ -48,49 +52,61 @@
           </div>
           <% end %>
         </div>
-        
-        <%= react_component("SearchBar", url: "/rest/categories.json?exclude_children=true") %>
-        
+        <%= react_component("SearchBar", url: "/rest/categories.json?exclude_children=true") unless is_mobile? %>
         <%= react_component("HeaderProfile", current_user_id: current_user.try(:id)) %>
-
       </div>    
     </div>
 
     <div class="clearfix"></div>
 
-    <%= yield %>
+    <% if is_mobile? %>
+      <div id="menu">
+        <%= react_component("CategoryMenuMobile", url: "/rest/categories.json") %>
+      </div>
+      <div id="panel">
+        <button class="toggle-button">☰</button>
+        <%= yield %>
+      </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
 
     <div class="footer">
-
-        <div class="container">
-
-            <div class="links">
-                <a href="#">Нүүр</a>
-                <a href="#">Бидний тухай</a>
-                <a href="/terms">Үйлчилгээний нөхцөл</a>
-                <a href="#">Түгээмэл асуулт хариулт</a>
-                <a href="#">Сурталчилгаа байршуулах</a>
-                <a href="#">Сайтын бүтэц</a>
-                <a href="#">Холбоо барих</a>
-            </div>
-            <div class="footer-tm">
-
-                ©2016 Deal.mn. All rights reserved.
-
-            </div>
-
+      <div class="container">
+        <div class="links">
+          <a href="#">Нүүр</a>
+          <a href="#">Бидний тухай</a>
+          <a href="/terms">Үйлчилгээний нөхцөл</a>
+          <a href="#">Түгээмэл асуулт хариулт</a>
+          <a href="#">Сурталчилгаа байршуулах</a>
+          <a href="#">Сайтын бүтэц</a>
+          <a href="#">Холбоо барих</a>
         </div>
-
+        <div class="footer-tm">
+          ©2016 Deal.mn. All rights reserved.
+        </div>
+      </div>
     </div>
 
     <script>
+      $(window).load(function(){
+        $(".header_mid").sticky({ topSpacing: 0, className: 'header-sticked' });
+      });
+    </script>
 
-    $(window).load(function(){
-      $(".header_mid").sticky({ topSpacing: 0, className: 'header-sticked' });
-    });
+    <% if is_mobile? %>
+      <script>
+        var slideout = new Slideout({
+          'panel': document.getElementById('panel'),
+          'menu': document.getElementById('menu'),
+          'padding': 256,
+          'tolerance': 70
+        });
 
-    </script> 
-
-
+        document.querySelector('.toggle-button').addEventListener('click', function() {
+          slideout.toggle();
+        });
+      </script>
+    <% end %>
   </body>
 </html>
