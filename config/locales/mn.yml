@@ -54,6 +54,8 @@ mn:
         total_active_listing: Идэвхитэй тохиролцоо
         total_accepted_bid: Тохиролцсон
         send_pm: Холбогдох
+      tos:
+        title: Deal.MN сайтын үйлчилгээний нөхцөл
     home:
       index:
         add_spec: Тохиролцоо оруулах
@@ -85,7 +87,7 @@ mn:
           section_title: Солилцооны мэдээлэл
           free_item: Үнэгүй хэлбэрээр байршуулах
           free_item_tooltip: Та өөрт хэрэгцээ багатай бараа бүтээгдэхүүнээ үнэгүй хэмээн байршуулснаар хэрэг болох нэгэн нь тантай холбогдон авах боломжтой юм
-          for_donation: Deal.MN сангийн тусламжийн бараанд хандивлах
+          for_donation: Сайн үйлсийн аянд хандивлах
           for_donation_tooltip: TODO
           price_range: Мөнгөн үнэлгээ
           price_range_tooltip: TODO
@@ -119,7 +121,7 @@ mn:
           section_title: Солилцооны мэдээлэл
           free_item: Үнэгүй хэлбэрээр байршуулах
           free_item_tooltip: Та өөрт хэрэгцээ багатай бараа бүтээгдэхүүнээ үнэгүй хэмээн байршуулснаар хэрэг болох нэгэн нь тантай холбогдон авах боломжтой юм
-          for_donation: Deal.MN сангийн тусламжийн бараанд хандивлах
+          for_donation: Сайн үйлсийн аянд хандивлах
           for_donation_tooltip: TODO
           price_range: Мөнгөн үнэлгээ
           price_range_tooltip: TODO

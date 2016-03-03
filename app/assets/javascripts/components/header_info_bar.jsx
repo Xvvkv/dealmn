@@ -46,7 +46,7 @@ var HeaderInfoBar = React.createClass({
         var info_items = this.state.info_items;
 
         bids.forEach(function(bid) {
-          info_items.push(<span>{bid.accepted_date}{"\u00a0\u00a0\u00a0"}<a href={'/users/' + bid.biddable.user_id}>{bid.biddable.user_name}</a>, <a href={'/users/'+bid.user.id}>{bid.user.display_name}</a> хэрэглэгч нарын хооронд <a href={'/listings/' + bid.biddable.id}>{bid.biddable.title}</a> тохиролцоо хийгдлээ</span>)
+          info_items.push(<span><a href={'/users/' + bid.biddable.user_id}>{bid.biddable.user_name}</a>, <a href={'/users/'+bid.user.id}>{bid.user.display_name}</a> хэрэглэгч нарын хооронд <a href={'/listings/' + bid.biddable.id}>{bid.biddable.title}</a> тохиролцоо хийгдлээ</span>)
         });
 
         this.setState({
@@ -84,7 +84,7 @@ var HeaderInfoBar = React.createClass({
     return (
       <div className="header_info_bar">
         <ReactCSSTransitionGroup transitionName="slider" transitionEnterTimeout={300} transitionLeaveTimeout={1}>
-          {this.state.info_idx != -1 && <div key={this.state.info_idx}>{this.state.info_items[this.state.info_idx]}</div>}
+          {this.state.info_idx != -1 && <div key={this.state.info_idx}><div className='header_info_bar_text'>{this.state.info_items[this.state.info_idx]}</div></div>}
         </ReactCSSTransitionGroup>
       </div>
     );

@@ -183,8 +183,8 @@ var HeaderUserProfileMessagePanel = React.createClass({
                 <div className={message.unread ? "notification-dropdown-content notification-unread" : "notification-dropdown-content"}>
                   <div className="notification-content-img"><img src={message.participant_hash.prof_pic ? message.participant_hash.prof_pic : '/images/no_avatar.png'} /></div>
                   <div className="notification-content-text">
-                    <strong>{message.participant_hash.full_name}</strong><br/>
-                    <div>{message.last_message}</div>
+                    <div className='title-1'><strong>{message.participant_hash.full_name}</strong></div>
+                    <div className='info-1'>{message.last_message}</div>
                     <div className="notification-content-date">{message.last_message_at_in_words}</div>
                   </div>
                   <div className="clearfix"></div>
@@ -235,7 +235,7 @@ var HeaderUserProfileNotificationPanel = React.createClass({
                 <div className={notification.unseen ? "notification-dropdown-content notification-unread" : "notification-dropdown-content"}>
                   <div className="notification-content-img"><img src={avatar} /></div>
                   <div className="notification-content-text">
-                    <div>{name} {notification.message}</div>
+                    <div className="info-1">{name} {notification.message}</div>
                     <div className="notification-content-date">{notification.created_at_in_words}</div>
                   </div>
                   <div className="clearfix"></div>
@@ -276,8 +276,8 @@ var HeaderUserProfileWishListPanel = React.createClass({
                 <div className={item.listing.is_closed ? "notification-dropdown-content notification-closed" : "notification-dropdown-content"}>
                   <div className="notification-content-img"><img src={item.listing.image ? item.listing.image.thumb : '/images/no_image.jpg'} /></div>
                   <div className="notification-content-text">
-                    <strong>{item.listing.title}</strong><br/>
-                    <div>{item.listing.text_description}</div>
+                    <div className='title-1'><strong>{item.listing.title}</strong></div>
+                    <div className='info-1'>{item.listing.text_description}</div>
                   </div>                
                   <div className="clearfix"></div>
                 </div>

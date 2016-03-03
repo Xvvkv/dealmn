@@ -10,4 +10,8 @@ module ApplicationHelper
   def is_non_negative_integer val
     val.to_i >= 0 && val.to_i.to_s == val.to_s
   end
+
+  def is_mobile?
+    browser.device.mobile?
+  end
 end

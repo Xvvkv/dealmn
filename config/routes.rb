@@ -42,6 +42,9 @@ Dealmn::Application.routes.draw do
         end
       end
       resources :notifications, onlly: [:index]
+      member do
+        put :tos_agree
+      end
     end
   end
 
@@ -78,4 +81,8 @@ Dealmn::Application.routes.draw do
   match "/404", :to => "errors#render404"
   match "/422", :to => "errors#render422"
   match "/500", :to => "errors#render500"
+
+  match 'about' => 'home#about', via: :get
+  match 'terms' => 'home#terms', via: :get
+
 end

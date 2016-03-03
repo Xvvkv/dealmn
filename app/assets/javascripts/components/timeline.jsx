@@ -172,7 +172,7 @@ var Timeline = React.createClass({
   render: function() {
     var items = this.state.listings.map(function(listing,index) {
       return (
-        <ListingItem key={index} listing={listing} wish_listed={this.state.wish_list ? this.state.wish_list.indexOf(listing.id) > -1 : null} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} current_user_id={this.props.current_user_id} />
+        <ListingItem key={index} listing={listing} wish_listed={this.state.wish_list ? this.state.wish_list.indexOf(listing.id) > -1 : null} handleWishList={this._handleWishList} handleRevertWishList={this._handleRevertWishList} current_user_id={this.props.current_user_id} is_mobile={this.props.is_mobile}/>
       );
     }.bind(this))
     var timeline;

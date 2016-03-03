@@ -1,1 +1,1 @@
-<%= react_component("ListingEditorPage", listing_id: @listing.id, p_conditions: @product_conditions, service_cat: Service::SERVICE_CATEGORY_ID, edit_mode: true) %>
+<%= react_component("ListingEditorPage", listing_id: @listing.id, p_conditions: @product_conditions, service_cat: Service::SERVICE_CATEGORY_ID, edit_mode: true, current_user_id: current_user.try(:id)) %>

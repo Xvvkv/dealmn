@@ -19,6 +19,8 @@ gem 'thin'
 gem 'figaro'
 gem 'puma', '2.11.2'
 
+gem 'browser'
+
 group :development do
     gem 'capistrano'
     gem 'capistrano-rvm'

@@ -40,4 +40,13 @@ class Rest::UsersController < ActionController::Base
     render json: user # put request was sending 204 no content response.
   end
 
+  def tos_agree
+    user = User.find(params[:id])
+    raise "invalid request" unless user.id == current_user.id && user.tos_agreed_at.blank?
+
+    user.update_attribute(:tos_agreed_at,Time.now)
+
+    render json: user
+  end
+
 end

@@ -1,1 +1,1 @@
-<%= react_component("BidEditorPage", bid_id: @bid.id, edit_mode: true) %>
+<%= react_component("BidEditorPage", bid_id: @bid.id, edit_mode: true, current_user_id: current_user.try(:id)) %>

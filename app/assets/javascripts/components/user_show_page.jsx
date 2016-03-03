@@ -337,8 +337,8 @@ var UserShowPage = React.createClass({
     if(attr == 'first_name' || attr == 'last_name'){
       value = value.replace(/[^a-zA-Zа-яА-ЯөӨүҮ \-]|^[\- ]*/g,'')
 
-      if(value.length > 50){
-        value = value.slice(0,50);
+      if(value.length > 20){
+        value = value.slice(0,20);
       }
       user[attr] = value;
     }else if(attr == 'email' || attr == 'phone'){

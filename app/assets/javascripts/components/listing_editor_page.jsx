@@ -5,10 +5,13 @@ var ContactInfo = require('./contact_info.jsx');
 var FreeItemList = require('./free_item_list.jsx');
 var LatestDealList = require('./latest_deal_list.jsx');
 var ItemSelector = require('./item_selector.jsx');
+var TosAgreement = require('./tos_agreement.jsx');
 
 var ListingEditorPage = React.createClass({
   getInitialState: function() {
     return {
+      user: {},
+      user_loaded: false,
       bids: []
     };
   },
@@ -16,6 +19,20 @@ var ListingEditorPage = React.createClass({
     this.loadDataFromServer();
   },
   loadDataFromServer: function () {
+
+    $.ajax({
+      url: '/rest/users/' + this.props.current_user_id + '.json',
+      dataType: 'json',
+      success: function (user) {
+        this.setState({
+          user: user,
+          user_loaded: true
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/users.json', status, err.toString());
+      }.bind(this)
+    });
 
     $.ajax({
       url: '/rest/bids.json?limit=5',
@@ -33,17 +50,36 @@ var ListingEditorPage = React.createClass({
   _handleSelectItem: function(item) {
     this.refs.editor._handleSelectBidItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddListing component
   },
+  _handleTosAgree: function() {
+    var user = this.state.user;
+    user.tos_agreed = true;
+    this.setState({user: user});
+  },
   render: function() {
-    var bid_selector;
+    var bid_selector, tos_agreement;
     if(this.state.bids.length > 0){
       bid_selector = (
         <ItemSelector items={this.state.bids} onSelectItem={this._handleSelectItem} title="Саналууд" hint="Бусдад санал болгосон бараа, үйлчилгээний мэдээллээ тохиролцоонд ашиглах" />
+      );
+    }
+    if(this.state.user_loaded && !this.state.user.tos_agreed){
+      tos_agreement = (
+        <div className="modal show" id="tosModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-body">
+                <TosAgreement current_user_id={this.props.current_user_id} user={this.state.user} handleAgree={this._handleTosAgree} />
+              </div>
+            </div>
+          </div>
+        </div>
       );
     }
     return (
       <div className="main">
         <div className="container">
           <ListingEditor ref="editor" {...this.props} />
+          {tos_agreement}
           <div className="main-right">
             {bid_selector}
             <FreeItemList />
@@ -412,15 +448,15 @@ var ListingEditor = React.createClass({
 
     var free_item_section = (
       <div className="free-item-section col-md-12">
-        <div className="free-item-checkbox">
-          <label>
-            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,false)} checked={this.state.is_free && !this.state.is_for_donation}/> {I18n.page.wanted.free_item} <a href="#" data-tooltip={I18n.page.wanted.free_item_tooltip}>[?]</a>
-          </label>
-        </div>
-        <div className="free-item-checkbox">
-          <label>
-            <input type="checkbox" onChange={this._handleIsFreeCheck.bind(null,true)} checked={this.state.is_free && this.state.is_for_donation}/> {I18n.page.wanted.for_donation} <a href="#" data-tooltip={I18n.page.wanted.for_donation_tooltip}>[?]</a>
-          </label>
+        <div className="price-free">
+          <div className="col-md-6">
+              <input id="free_item" type="checkbox" onChange={this._handleIsFreeCheck.bind(null,false)} checked={this.state.is_free && !this.state.is_for_donation}/>
+              <label htmlFor="free_item">{I18n.page.wanted.free_item}</label>
+          </div>
+          <div className="col-md-6">
+              <input id="for_donation" type="checkbox" onChange={this._handleIsFreeCheck.bind(null,true)} checked={this.state.is_free && this.state.is_for_donation}/>
+              <label htmlFor="for_donation">{I18n.page.wanted.for_donation}</label>
+          </div>
         </div>
       </div>
     );

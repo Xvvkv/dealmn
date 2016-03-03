@@ -1,47 +1,25 @@
 <div class="main">
   <div class="container">
-    <div class="main-left">
-      <%= react_component("CategoryMenu", url: "/rest/categories.json", include_header: true) %>
-      <div class="left-banner">
-        <%= image_tag('banner1.png')%>
+    <% unless is_mobile? %>
+      <div class="main-left">
+        <%= react_component("CategoryMenu", url: "/rest/categories.json", include_header: true) %>
+        <div class="left-banner">
+          <%= image_tag('banner1.png')%>
+        </div>
       </div>
-    </div>
-    <%= react_component("Timeline", current_user_id: current_user.try(:id)) %>
-
-
-
-
-<div class="main-right">
-
-  <div class="right-banner">
-
-    <a href="#"><%= image_tag('bobby_banner.jpg')%></a>
-
+    <% end %>
+    <%= react_component("Timeline", current_user_id: current_user.try(:id), is_mobile: is_mobile?) %>
+    <% unless is_mobile? %>
+      <div class="main-right">
+        <div class="right-banner">
+          <a href="#"><%= image_tag('bobby_banner.jpg')%></a>
+        </div>
+        <%= react_component("FreeItemList") %>
+        <div class="right-banner">
+          <a href="#"><%= image_tag('banner1.png')%></a>
+        </div>
+        <%= react_component("LatestDealList") %>
+      </div>
+    <% end %>
   </div>
-
-
-  <%= react_component("FreeItemList") %>
-
-  <div class="right-banner">
-
-    <a href="#"><%= image_tag('banner1.png')%></a>
-
-  </div>
-
-  <%= react_component("LatestDealList") %>
-
 </div>
-
-
-
-
-
-
-
-
-
-</div>
-
-</div>
-
-

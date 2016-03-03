@@ -2,10 +2,13 @@ var ImageUpload = require('./image_upload.jsx');
 var ContactInfo = require('./contact_info.jsx');
 var FreeItemList = require('./free_item_list.jsx');
 var ItemSelector = require('./item_selector.jsx');
+var TosAgreement = require('./tos_agreement.jsx');
 
 var BidEditorPage = React.createClass({
   getInitialState: function() {
     return {
+      user: {},
+      user_loaded: false,
       listings: []
     };
   },
@@ -13,6 +16,20 @@ var BidEditorPage = React.createClass({
     this.loadDataFromServer();
   },
   loadDataFromServer: function () {
+    $.ajax({
+      url: '/rest/users/' + this.props.current_user_id + '.json',
+      dataType: 'json',
+      success: function (user) {
+        this.setState({
+          user: user,
+          user_loaded: true
+        });
+      }.bind(this),
+      error: function (xhr, status, err) {
+        console.error('/rest/users.json', status, err.toString());
+      }.bind(this)
+    });
+
     $.ajax({
       url: '/rest/listings.json',
       dataType: 'json',
@@ -29,17 +46,36 @@ var BidEditorPage = React.createClass({
   _handleSelectItem: function(item) {
     this.refs.editor._handleSelectListingItem(item); // using refs here is kind of not ideal solution. But this allows us to put every logic inside AddBid component
   },
+  _handleTosAgree: function() {
+    var user = this.state.user;
+    user.tos_agreed = true;
+    this.setState({user: user});
+  },
   render: function() {
-    var listing_selector;
+    var listing_selector, tos_agreement;
     if(this.state.listings.length > 0){
       listing_selector = (
         <ItemSelector items={this.state.listings} onSelectItem={this._handleSelectItem} title="Тохиролцоонууд" hint="Сүүлд оруулсан тохиролцооны мэдээллээ санал илгээхэд ашиглах" />
+      );
+    }
+    if(this.state.user_loaded && !this.state.user.tos_agreed){
+      tos_agreement = (
+        <div className="modal show" id="tosModal" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-body">
+                <TosAgreement current_user_id={this.props.current_user_id} user={this.state.user} handleAgree={this._handleTosAgree} />
+              </div>
+            </div>
+          </div>
+        </div>
       );
     }
     return (
       <div className="main">
         <div className="container">
           <BidEditor ref="editor" {...this.props} />
+          {tos_agreement}
           <div className="main-right">
             {listing_selector}
             <div className="right-banner">
