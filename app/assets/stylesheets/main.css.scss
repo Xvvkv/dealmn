@@ -2,9 +2,6 @@
 /* CSS Document */
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300&subset=latin,cyrillic);
 
-*{
-  word-break: break-all;
-}
 
 html{
   height: 100%;
@@ -21,7 +18,7 @@ body{
 }
 *{
   font-family: 'Open Sans', sans-serif;
-  word-break: break-all;
+  word-wrap: break-word;
 }
 
 
@@ -1418,6 +1415,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
   margin-right: 10px;
   margin-bottom: 10px;
   position: relative;
+  height: 381px;
 }
 .full-width .profile-user-deals{
   width: 24%;
@@ -1425,6 +1423,7 @@ background: image-url('arrow_right.png') no-repeat 0 0;
 .profile-user-deals-img img{
   width: 100%;
   margin-bottom: 10px;
+  height: 235px;
 }
 .profile-user-deals-name a{
   font-size: 14px;
@@ -2469,6 +2468,14 @@ address strong{
     color:#333;
     margin-bottom: 3px;
 }
+.profile-user-deals-name{
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
 .notification-content-text div:nth-child(1){
   -webkit-line-clamp: 3 !important;
 }
@@ -2661,7 +2668,7 @@ address strong{
 }
 
 
-.about-us-page{
+.about-us-page, .help-page{
   width: 100%;
   height: 100%;
 }
@@ -2670,6 +2677,10 @@ address strong{
   width: 100%;
   padding: 10px 20px;
   color: #666;
+}
+.help-page .full-width{
+  background: #fff;
+  border: 1px solid #ddd;
 }
 
 .price-free input {
@@ -2737,7 +2748,73 @@ address strong{
   border: 1px solid #0081ff;
   transition:0.3s;
 }
-
+h4{
+  color: #0081ff;
+  font-size: 22px;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+.question{
+  width: 100%;
+  border: 1px solid #eee;
+  background: #f6f6f6;
+}
+.question-icon{
+  float: left;
+  background: #0081ff;
+  height: 44px;
+  width: 50px;
+  color:#fff;
+  font-size: 22px;
+  text-align: center;
+  padding-top: 7px;
+  margin-right: 15px;
+}
+.answer{
+  padding: 10px;
+  line-height: 20px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.answer img{
+  width: 100%;
+  margin: 5px 0;
+  border: 1px solid #eee; 
+}
+.video-title{
+  font-weight: normal;
+  font-size: 20px;
+  margin-top: 10px;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+.about-us-partners-title{
+  font-weight: normal;
+  font-size: 40px;
+  margin-top: 20px;
+  font-family: 'Open Sans Condensed', sans-serif;
+  text-align: center;
+  color:#fff;
+  padding-bottom: 20px;
+  background: image-url('about-title-line.png') no-repeat bottom center;
+  margin-bottom: 20px;
+}
+.about-left-image{
+  padding: 40px;
+}
+.about-right-logo{
+  margin-top: 150px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #dbdbdb;
+  margin-bottom: 15px;
+}
+.about-right-text{
+  line-height: 22px;
+  color: #696969;
+}
+.about-us-partners-logo{
+  background: image-url('about-partners-bg.jpg') no-repeat center center;
+  min-height: 400px;
+  width: 100%
+}
 
 
 
@@ -2755,16 +2832,48 @@ address strong{
 a:hover{
   text-decoration: none;
 }
+
+
+
 @media screen and (max-width:1199px) {
   body{
     zoom:91%;
   }
 }
+
 @media screen and (max-width:1100px) {
   body{
     zoom:85%;
   }
 }
-.container{
-  width:1170px;
+@media screen and (min-width:600px) {
+  .container{
+    width:1170px;
+  }
+}
+
+
+
+
+
+@media screen and (max-width:599px) {
+  
+  body{
+    zoom:1;
+    width: 100%;
+    max-width: 599px;
+  }
+  .main-left{
+    display: none;
+  }
+  .main-right{
+    display: none;
+  }
+  .container{
+  width:100% !important;
+  }
+  .main-timeline {
+    width:100%;
+  }
+
 }
